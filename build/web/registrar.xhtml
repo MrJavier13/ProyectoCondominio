@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Registro</title>
+        <f:event type="preRenderView" listener="#{loginController.verificarSesion()}"/>
+    </h:head>
+    <h:body style="margin: 0; padding: 0; background: linear-gradient(to bottom, #ffffff, #1e4fa5);">
+ <style type="text/css">
+    .label {
+        width: 20%;
+        padding: 4px;
+    }
+
+    .value {
+        width: 80%;
+        padding: 4px;
+    }
+
+    .grid {
+        width: 100%;
+    }
+
+    .error {
+        color: red;
+    }
+
+    .outputLabel {
+        font-weight: bold;
+    }
+
+    .grid {
+        width: 33%;
+        padding: 4px;
+    }
+</style>
+        <style>
+            .Registro
+            {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+            }
+            
+            .custom-tab {
+                width: 800px; /* ajusta el ancho del tab */
+                height: 600px; /* ajusta la altura del tab */
+            }
+
+            
+           
+        </style>
+
+<div class="Registro">
+    <h:form>
+
+
+        <p:growl id="growl" sticky="true" showDetail="true"/>
+
+        <p:wizard flowListener="#{signInController.onFlowProcess}" styleClass="custom-tab">
+            <p:tab id="tipo" title="Usuario">
+                <p:panel header="Tipo de usuario" >
+                    <p:messages/>
+                    <h:panelGrid columns="4" columnClasses="label" style="margin-right: 20px; white-space: nowrap;">
+                        <p:selectOneRadio id="radioOption" columns="3" layout="grid" value="#{signInController.selectedOption}">
+                            <f:selectItem itemLabel="Administrador" itemValue="Administrador" />
+                            <f:selectItem itemLabel="Guarda" itemValue="Guarda" />
+                            <f:selectItem itemLabel="Residente" itemValue="Residente" />
+                        </p:selectOneRadio>
+                    </h:panelGrid>
+                </p:panel>
+            </p:tab>
+            <p:tab id="personal" title="Registro">
+                <p:panel header="Información Personal">
+                    <p:messages/>
+                    <h:panelGrid columns="3" columnClasses="label" style="margin-right: 20px; white-space: nowrap;">
+                        
+
+                        <h:outputText value="Nombre completo:*"/>
+                        <p:inputText id="nombre" widgetVar="inputWidget" required="true" label="Nombre completo" style="width: 300px; height: 25px;"/>
+                        <p:tooltip for="nombre" value="Digite su nombre." position="right"/>
+
+                        <h:outputText value="Cedula:*" style="width: 40%;"/>
+                        <p:inputText id="cedula" required="true" label="Cedula" style="width: 300px; height: 25px;">
+                        <p:keyFilter mask="num" />
+                        </p:inputText>
+                        <p:tooltip for="cedula" value="Digite su cedula, solo numeros." position="right"/>
+
+                        <h:outputText value="Telefono:*"/>
+                        <p:inputText id="telefono" required="true" label="Telefono" style="width: 300px; height: 25px;">
+                        <p:keyFilter mask="num" />
+                        </p:inputText>
+                        <p:tooltip for="telefono" value="Digite su telefono, solo numeros." position="right"/>
+
+                        <h:outputText value="Correo electronico:*" />
+                        <p:inputText id="correo" required="true"  label="Correo electronico" style="width: 300px; height: 25px;"/>
+                        <p:tooltip for="correo" value="Digite su correo electrónico" position="right"/>
+
+                        <h:outputText value="Numero de Casa:*" rendered="#{signInController.selectedOption eq 'Residente'}"/>
+                        <p:inputText id="NumeroCasa" required="true"  label="Numero de Casa" style="width: 300px; height: 25px;" rendered="#{signInController.selectedOption eq 'Residente'}"/>
+                        <p:tooltip for="NumeroCasa" value="Digite el numero de casa" position="right" rendered="#{signInController.selectedOption eq 'Residente'}"/>
+
+                        <h:outputText value="Placa del vehículo:*" rendered="#{signInController.selectedOption eq 'Residente'}"/>
+                        <p:inputText id="PlacaVehiculo" required="true"   label="Placa del vehículo" style="width: 300px; height: 25px;" rendered="#{signInController.selectedOption eq 'Residente'}"/>
+                        <p:tooltip for="PlacaVehiculo" value="Digite la placa del vehiculo" position="right" rendered="#{signInController.selectedOption eq 'Residente'}"/>
+
+                        <p:outputLabel for="pwd1" styleClass="p-col-fixed" style="width:100px" value="Contraseña"/>
+                        <p:password id="pwd1"  match="pwd2" label="Password 1" style="width: 300px; height: 25px;" required="true"/>
+                        <p:tooltip for="pwd1" value="Digite su contraseña" position="right"/>
+
+                        <p:outputLabel for="pwd2" styleClass="p-col-fixed" style="width:100px" value="Confirmar Contraseña"/>
+                        <p:password id="pwd2"  label="Password 2" style="width: 300px; height: 25px;" required="true"/>
+                        <p:tooltip for="pwd2" value="Vuelva a digitar su contraseña" position="right"/>
+
+                    </h:panelGrid>
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+                            // Al cargar la página, ocultar y deshabilitar el grupo
+                            $('#groupToDisable :input').prop('disabled', true);
+
+
+                            // Cuando se selecciona una opción, mostrar u ocultar y activar o desactivar el grupo
+                            $('input[name="form:radioOption"]').change(function() {
+                                var selectedOption = $('input[name="form:radioOption"]:checked').val();
+                                if (selectedOption === 'Residente') {
+                                    $('#groupToDisable :input').prop('disabled', false);
+                                } else {
+                                    $('#groupToDisable :input').prop('disabled', true);
+                                }
+                            });
+                        });
+                    </script>
+                </p:panel>
+            </p:tab>
+            
+            <p:tab id="tipo2" title="Usuario">
+                <p:commandButton value="Registrar" update="growl" process="@this"/>
+            </p:tab>
+
+
+        </p:wizard>
+        
+ 
+    </h:form>
+</div>
+    </h:body>
+</html>
