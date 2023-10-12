@@ -16,6 +16,7 @@ public class UsuarioTO implements Serializable{
     private String correoElectronico;
     private String contrasenna;
     private int rol;
+    private String estado;
 
     public UsuarioTO() {
     }
@@ -49,6 +50,14 @@ public class UsuarioTO implements Serializable{
 
     public void setRol(int rol) {
         this.rol = rol;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
     
