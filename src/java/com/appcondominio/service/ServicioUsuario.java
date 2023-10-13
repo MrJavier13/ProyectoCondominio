@@ -32,21 +32,19 @@ public class ServicioUsuario extends Servicios{
         try {
 
             //super.conectar();
-            ps = conn.prepareStatement("SELECT correoElectronico, contrasena, idrol, estado FROM usuario");
+            ps = conn.prepareStatement("SELECT idUsuario, usuario, cedulaResidente, cedulaEmpleado, contrasena, idrol, estado FROM usuario");
             rs = ps.executeQuery();
 
             while (rs.next()) {
 
-                String correoElectronico = rs.getString("correoElectronico");
-                String contrasena = rs.getString("contrasena");
-                int rol = rs.getInt("idrol");
-                String estado = rs.getString("estado");
-
                 UsuarioTO usuarios = new UsuarioTO();
-                usuarios.setCorreoElectronico(correoElectronico);
-                usuarios.setContrasenna(contrasena);
-                usuarios.setRol(rol);
-                usuarios.setEstado(estado);
+                usuarios.setIdUsuario(rs.getInt("idUsuario"));
+                usuarios.setUsuario(rs.getString("usuario"));
+                usuarios.setContrasena(rs.getString("contrasena"));
+                usuarios.setCedulaResidente(rs.getInt("cedulaResidente"));
+                usuarios.setCedulaEmpleado(rs.getInt("cedulaEmpleado"));
+                usuarios.setIdRol(rs.getInt("idrol"));
+                usuarios.setEstado(rs.getString("estado"));
                 listaRetornar.add(usuarios);
 
                 
@@ -79,7 +77,7 @@ public class ServicioUsuario extends Servicios{
         UsuarioTO usuarios = null;
         try {
 
-            ps = conn.prepareStatement("SELECT correoElectronico, contrasena, idrol FROM usuario WHERE correoElectronico = ? AND contrasena = ?");
+            ps = conn.prepareStatement("SELECT usuario, contrasena, idrol FROM usuario WHERE usuario = ? AND contrasena = ?");
             ps.setString(1, usuario);
             ps.setString(2, contrasena);
             rs = ps.executeQuery();
@@ -88,7 +86,7 @@ public class ServicioUsuario extends Servicios{
 
                 usuarios = new UsuarioTO();
 
-                usuarios.setCorreoElectronico(rs.getString("correoElectronico"));
+                usuarios.setUsuario(rs.getString("usuario"));
 
             }
         } catch (Exception ex) {

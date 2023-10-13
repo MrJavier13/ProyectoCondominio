@@ -13,42 +13,63 @@ import java.io.Serializable;
  */
 public class UsuarioTO implements Serializable{
     
-    private String correoElectronico;
+    private int idUsuario;
+    private String usuario;
     private String contrasena;
-    private int rol;
+    private int cedulaResidente;
+    private int cedulaEmpleado;
+    private int idRol;
     private String estado;
+    
     public UsuarioTO() {
     }
 
-    public UsuarioTO(String correoElectronico, String contrasenna) {
-        this.correoElectronico = correoElectronico;
-        this.contrasena = contrasenna;
-    }
-    
-
-    public String getCorreoElectronico() {
-        return correoElectronico;
+    public int getIdUsuario() {
+        return idUsuario;
     }
 
-    public void setCorreoElectronico(String correoElectronico) {
-        this.correoElectronico = correoElectronico;
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
+    public String getUsuario() {
+        return usuario;
+    }
 
-    public String getContrasenna() {
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
+    }
+
+    public String getContrasena() {
         return contrasena;
     }
 
-    public void setContrasenna(String contrasenna) {
-        this.contrasena = contrasenna;
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
     }
 
-    public int getRol() {
-        return rol;
+    public int getCedulaResidente() {
+        return cedulaResidente;
     }
 
-    public void setRol(int rol) {
-        this.rol = rol;
+    public void setCedulaResidente(int cedulaResidente) {
+        this.cedulaResidente = cedulaResidente;
+    }
+
+    public int getCedulaEmpleado() {
+        return cedulaEmpleado;
+    }
+
+    public void setCedulaEmpleado(int cedulaEmpleado) {
+        this.cedulaEmpleado = cedulaEmpleado;
+    }
+
+    public int getIdRol() {
+        return idRol;
+    }
+
+    public void setIdRol(int idRol) {
+        this.idRol = idRol;
     }
 
     public String getEstado() {
@@ -59,7 +80,15 @@ public class UsuarioTO implements Serializable{
         this.estado = estado;
     }
 
-    
-    
-    
+    public UsuarioTO(int idUsuario, String usuario, String contrasena, int cedulaResidente, int cedulaEmpleado, int idRol, String estado) {
+        this.idUsuario = idUsuario;
+        this.usuario = usuario;
+        this.contrasena = contrasena;
+        this.cedulaResidente = cedulaResidente;
+        this.cedulaEmpleado = cedulaEmpleado;
+        this.idRol = idRol;
+        this.estado = estado;
+    }
+
+
 }
