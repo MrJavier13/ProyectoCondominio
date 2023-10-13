@@ -19,7 +19,7 @@
 
         <h:form id="form">
             <p:growl id="growl" showDetail="true" />
-        
+            <p:growl id="messages" showDetail="true"/>
                    
 
             <div class="card crud-demo">
@@ -40,8 +40,11 @@
                     <p:column headerText="Nombre" sortBy="#{residente.nombre}"  filterMatchMode="contains">
                         <h:outputText value="#{residente.nombre}"/>
                     </p:column>
-                    <p:column headerText="Apellido" sortBy="#{residente.apellido}"  filterMatchMode="contains">
-                        <h:outputText value="#{residente.apellido}"/>
+                    <p:column headerText="Primer Apellido" sortBy="#{residente.primerApellido}"  filterMatchMode="contains">
+                        <h:outputText value="#{residente.primerApellido}"/>
+                    </p:column>
+                    <p:column headerText="Segundo Apellido" sortBy="#{residente.segundoApellido}"  filterMatchMode="contains">
+                        <h:outputText value="#{residente.segundoApellido}"/>
                     </p:column>
                     <p:column headerText="Telefono" sortBy="#{residente.telefono}" exportable="false">
                         <h:outputText value="#{residente.telefono}"/>
@@ -55,11 +58,14 @@
                     <p:column headerText="Placa Vehículo" sortBy="#{residente.placaVehiculo}"   filterMatchMode="contains">
                         <h:outputText value="#{residente.placaVehiculo}"/>
                     </p:column>
+                    <p:column headerText="Estado" sortBy="#{residente.estado}"   filterMatchMode="contains">
+                        <h:outputText value="#{residente.estado}"/>
+                    </p:column>
                     
                     <p:column>
                         <p:panelGrid columns="1" layout="grid" style="border:0px none; text-align: center">
 
-                            <p:commandButton icon="pi pi-pencil" value="Editar"
+                            <p:commandButton icon="pi pi-pencil" value="Editar" actionListener="#{residentesController.openNew}"
                                              oncomplete="PF('nuevoResidenteDialog').show()" update=":form:administrar-residente-content"
                                              styleClass="edit-button rounded-button ui-button-success" process="@this">
                                 <f:setPropertyActionListener value="#{residente}" target="#{residentesController.residenteSeleccionado}"/>
@@ -80,16 +86,17 @@
                         <p:commandButton value="Agregar un nuevo residente" icon="pi pi-plus" 
                                          actionListener="#{residentesController.openNew}"
                                          update=":form" oncomplete="PF('nuevoResidenteDialog').show()"                                         
-                                         style="margin-right: .5rem">  
+                                         style="margin-right: .5rem">
+                            <p:resetInput target=":form:administrar-residente-content"/>
                         </p:commandButton>
                     </p:toolbarGroup>
                 </p:toolbar>
                 
                 <p:dialog header="Registrar nuevo residente" showEffect="fade" modal="true"
-                          widgetVar="nuevoResidenteDialog" responsive="true" >
+                          widgetVar="nuevoResidenteDialog" responsive="true" visible="#{residentesController.residenteSeleccionado ne null}">
 
                     <p:outputPanel id="administrar-residente-content" class="ui-fluid">
-
+                        <p:outputPanel rendered="#{not empty residentesController.residenteSeleccionado}">
                             <div class="p-field">
                                 <div class="disenho">
                                 <p:outputLabel for="cedula" style="font-size: 18px; font-weight: bold;">Cédula</p:outputLabel>
@@ -105,9 +112,15 @@
                             </div>
                             <div class="p-field">
                                 <div class="disenho">
-                                <p:outputLabel for="apellido" style="font-size: 18px; font-weight: bold;">Apellido</p:outputLabel>
+                                <p:outputLabel for="primerApellido" style="font-size: 18px; font-weight: bold;">Primer Apellido</p:outputLabel>
                                 </div>
-                                <p:inputText id="apellido" value="#{residentesController.residenteSeleccionado.apellido}" required="true"/>
+                                <p:inputText id="primerApellido" value="#{residentesController.residenteSeleccionado.primerApellido}" required="true"/>
+                            </div>
+                            <div class="p-field">
+                                <div class="disenho">
+                                <p:outputLabel for="segundoApellido" style="font-size: 18px; font-weight: bold;">Segundo Apellido</p:outputLabel>
+                                </div>
+                                <p:inputText id="segundoApellido" value="#{residentesController.residenteSeleccionado.segundoApellido}" required="true"/>
                             </div>
 
                             <div class="p-field">
@@ -145,12 +158,23 @@
 
                                 </p:inputText>
                             </div>
+                        
+                            <div class="p-field">
+                                <div class="disenho">
+                                <p:outputLabel for="estado" style="font-size: 18px; font-weight: bold;">Estado</p:outputLabel>
+                                </div>
+                                <p:selectOneMenu id="estado" value="#{residentesController.residenteSeleccionado.estado}" style="width:12rem">
+                                    <f:selectItem itemLabel="Activo" itemValue="Activo"/>
+                                    <f:selectItem itemLabel="Inactivo" itemValue="Inactivo"/>
+                                </p:selectOneMenu>
+                            </div>
 
-                        </p:outputPanel>
+                        </p:outputPanel>    
+                    </p:outputPanel>
 
                     <f:facet name="footer">
-                        <p:commandButton value="Guadar" icon="pi pi-check" 
-                                         update="administrar-residente-content" process="administrar-residente-content @this"/>
+                        <p:commandButton value="Guadar" icon="pi pi-check" actionListener="#{residentesController.guardarResidente}" 
+                                         update="administrar-residente-content" process="administrar-residente-content @this" />
                         <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('nuevoResidenteDialog').hide()"
                                          class="ui-button-secondary"/>
                     </f:facet>

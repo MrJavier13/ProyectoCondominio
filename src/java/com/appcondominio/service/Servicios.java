@@ -43,7 +43,7 @@ public class Servicios {
             if (this.conexion == null || !conexion.isClosed()) {
                 
                 this.conectar();
-                System.out.println("conectado");
+    
             }
         } catch (SQLException ex) {
             Logger.getLogger(Servicios.class.getName()).log(Level.SEVERE, null, ex);

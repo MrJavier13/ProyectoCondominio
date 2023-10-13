@@ -13,20 +13,21 @@ import java.io.Serializable;
  */
 public class ResidenteTO implements Serializable{
     
-     private String cedula;
+    private int cedula;
     private String nombre;
-    private String apellido;
+    private String primerApellido;
+    private String segundoApellido;
     private int telefono;
     private int numeroCasa;
     private String correoElectronico;
-    private int tipoUsuario;
     private String placaVehiculo;
+    private String estado;
 
-    public String getCedula() {
+    public int getCedula() {
         return cedula;
     }
 
-    public void setCedula(String cedula) {
+    public void setCedula(int cedula) {
         this.cedula = cedula;
     }
 
@@ -38,13 +39,6 @@ public class ResidenteTO implements Serializable{
         this.nombre = nombre;
     }
 
-    public String getApellido() {
-        return apellido;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
 
     public int getTelefono() {
         return telefono;
@@ -70,14 +64,6 @@ public class ResidenteTO implements Serializable{
         this.correoElectronico = correoElectronico;
     }
 
-    public int getTipoUsuario() {
-        return tipoUsuario;
-    }
-
-    public void setTipoUsuario(int tipoUsuario) {
-        this.tipoUsuario = tipoUsuario;
-    }
-
     public String getPlacaVehiculo() {
         return placaVehiculo;
     }
@@ -89,18 +75,42 @@ public class ResidenteTO implements Serializable{
     public ResidenteTO() {
     }
 
-    public ResidenteTO(String cedula, String nombre, String apellido, int telefono, int numeroCasa, String correoElectronico, int tipoUsuario, String placaVehiculo) {
+    public String getPrimerApellido() {
+        return primerApellido;
+    }
+
+    public void setPrimerApellido(String primerApellido) {
+        this.primerApellido = primerApellido;
+    }
+
+    public String getSegundoApellido() {
+        return segundoApellido;
+    }
+
+    public void setSegundoApellido(String segundoApellido) {
+        this.segundoApellido = segundoApellido;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public ResidenteTO(int cedula, String nombre, String primerApellido, String segundoApellido, int telefono, int numeroCasa, String correoElectronico, String placaVehiculo, String estado) {
         this.cedula = cedula;
         this.nombre = nombre;
-        this.apellido = apellido;
+        this.primerApellido = primerApellido;
+        this.segundoApellido = segundoApellido;
         this.telefono = telefono;
         this.numeroCasa = numeroCasa;
         this.correoElectronico = correoElectronico;
-        this.tipoUsuario = tipoUsuario;
         this.placaVehiculo = placaVehiculo;
+        this.estado = estado;
     }
+    
+    
 
-    
-    
-    
 }

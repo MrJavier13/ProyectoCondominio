@@ -14,16 +14,15 @@ import java.io.Serializable;
 public class UsuarioTO implements Serializable{
     
     private String correoElectronico;
-    private String contrasenna;
+    private String contrasena;
     private int rol;
     private String estado;
-
     public UsuarioTO() {
     }
 
     public UsuarioTO(String correoElectronico, String contrasenna) {
         this.correoElectronico = correoElectronico;
-        this.contrasenna = contrasenna;
+        this.contrasena = contrasenna;
     }
     
 
@@ -37,11 +36,11 @@ public class UsuarioTO implements Serializable{
 
 
     public String getContrasenna() {
-        return contrasenna;
+        return contrasena;
     }
 
     public void setContrasenna(String contrasenna) {
-        this.contrasenna = contrasenna;
+        this.contrasena = contrasenna;
     }
 
     public int getRol() {

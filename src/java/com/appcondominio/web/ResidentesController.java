@@ -2,14 +2,16 @@ package com.appcondominio.web;
 
 import com.appcondominio.service.ResidenteTO;
 import com.appcondominio.service.ServicioResidente;
-import com.appcondominio.service.ServicioUsuario;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import org.primefaces.PrimeFaces;
 
 /**
  *
@@ -60,6 +62,20 @@ public class ResidentesController implements Serializable{
 
     public void setResidenteSeleccionado(ResidenteTO residenteSeleccionado) {
         this.residenteSeleccionado = residenteSeleccionado;
+    }
+    
+    public void guardarResidente() {
+        if (!servicioResidente.buscarCedulaResidente(this.residenteSeleccionado.getCedula())) { // Si es false inserta
+            servicioResidente.insertarResidente(residenteSeleccionado);
+
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Residente Agregado"));
+        } else {
+            servicioResidente.actualizarResidente(residenteSeleccionado);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Residente Actualizado"));
+        }
+        this.init();
+        PrimeFaces.current().executeScript("PF('nuevoResidenteDialog').hide()");
+        PrimeFaces.current().ajax().update("form:messages", "form:dt-residentes");
     }
     
     

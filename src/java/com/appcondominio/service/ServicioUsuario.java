@@ -71,7 +71,7 @@ public class ServicioUsuario extends Servicios{
         return listaRetornar;
     }
     
-    public UsuarioTO UsuarioContrasena(String usuario, String contrasena) {
+    public UsuarioTO UsuarioContrasenna(String usuario, String contrasena) {
 
         Connection conn = super.getConexion();
         PreparedStatement ps = null;

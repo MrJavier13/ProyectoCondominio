@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 public class LoginController implements Serializable {
     private UsuarioTO usuario = new UsuarioTO();
     private String correo;
-    private String contrasena;
+    private String contrasenna;
     
     
     public LoginController() {
@@ -28,7 +28,7 @@ public class LoginController implements Serializable {
     public void ingresar() {
         ServicioUsuario servicioUsuario = new ServicioUsuario();
         
-        this.usuario = servicioUsuario.UsuarioContrasena(correo, contrasena);
+        this.usuario = servicioUsuario.UsuarioContrasenna(correo, contrasenna);
         
         if(this.usuario != null){
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", this.usuario);
@@ -119,12 +119,12 @@ public class LoginController implements Serializable {
         this.correo = correo;
     }
 
-    public String getContrasena() {
-        return contrasena;
+    public String getContrasenna() {
+        return contrasenna;
     }
 
-    public void setContrasenna(String contrasena) {
-        this.contrasena = contrasena;
+    public void setContrasenna(String contrasenna) {
+        this.contrasenna = contrasenna;
     }
 
    
