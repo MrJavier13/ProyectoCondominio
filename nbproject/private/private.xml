@@ -3,14 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/aacas/Documents/NetBeansProjects/WebCondominio/web/index.xhtml</file>
-            <file>file:/C:/Users/aacas/Documents/NetBeansProjects/WebCondominio/src/java/com/appcondominio/web/LoginController.java</file>
-            <file>file:/C:/Users/aacas/Documents/NetBeansProjects/WebCondominio/web/residentes.xhtml</file>
-            <file>file:/C:/Users/aacas/Documents/NetBeansProjects/WebCondominio/src/java/com/appcondominio/service/ServicioResidente.java</file>
-            <file>file:/C:/Users/aacas/Documents/NetBeansProjects/WebCondominio/src/java/com/appcondominio/service/ResidenteTO.java</file>
-            <file>file:/C:/Users/aacas/Documents/NetBeansProjects/WebCondominio/src/java/com/appcondominio/service/Servicios.java</file>
-            <file>file:/C:/Users/aacas/Documents/NetBeansProjects/WebCondominio/web/personal.xhtml</file>
-            <file>file:/C:/Users/aacas/Documents/NetBeansProjects/WebCondominio/src/java/com/appcondominio/web/ResidentesController.java</file>
+            <file>file:/C:/Users/aacas/Documents/GitHub/ProyectoCondominio/web/index.xhtml</file>
+            <file>file:/C:/Users/aacas/Documents/GitHub/ProyectoCondominio/src/java/com/appcondominio/service/ServicioUsuario.java</file>
+            <file>file:/C:/Users/aacas/Documents/GitHub/ProyectoCondominio/src/java/com/appcondominio/service/UsuarioTO.java</file>
         </group>
     </open-files>
 </project-private>
