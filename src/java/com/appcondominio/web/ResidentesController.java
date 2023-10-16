@@ -2,6 +2,8 @@ package com.appcondominio.web;
 
 import com.appcondominio.service.ResidenteTO;
 import com.appcondominio.service.ServicioResidente;
+import com.appcondominio.service.ServicioUsuario;
+import com.appcondominio.service.UsuarioTO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +24,16 @@ import org.primefaces.PrimeFaces;
 @ViewScoped
 public class ResidentesController implements Serializable{
     private ResidenteTO residenteSeleccionado;
+    private UsuarioTO usuarioSeleccionado;
+    private UsuariosController usuariosController;
+    private ServicioUsuario servicioUsuario;
+    
     private List<ResidenteTO> residente = new ArrayList<>();
     
     @ManagedProperty("#{residenteService}")
     private ServicioResidente servicioResidente;
+    
+   
 
     public ResidentesController() {
     }
@@ -37,6 +45,7 @@ public class ResidentesController implements Serializable{
     
     public void openNew() {
        this.residenteSeleccionado = new ResidenteTO();
+      
        
     }
 
@@ -77,6 +86,32 @@ public class ResidentesController implements Serializable{
         PrimeFaces.current().executeScript("PF('nuevoResidenteDialog').hide()");
         PrimeFaces.current().ajax().update("form:messages", "form:dt-residentes");
     }
+    
+    public void guardarResidenteYUsuario() {
+    if (!servicioResidente.buscarCedulaResidente(this.residenteSeleccionado.getCedula())) { // Si es false inserta
+        servicioResidente.insertarResidente(residenteSeleccionado);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Residente Agregado"));
+
+        // Crear un nuevo usuario cada vez que se crea un nuevo residente
+     /*   UsuarioTO nuevoUsuario = new UsuarioTO();
+        nuevoUsuario.setUsuario(this.residenteSeleccionado.getCorreoElectronico()); // Usar el email como nombre de usuario
+        nuevoUsuario.setContrasena(String.valueOf(this.residenteSeleccionado.getCedula())); //usar cédula como
+        nuevoUsuario.setCedulaResidente(this.residenteSeleccionado.getCedula());
+        nuevoUsuario.setCedulaEmpleado(null);
+        nuevoUsuario.setIdRol(1); // esto hay que revisarlo
+        nuevoUsuario.setEstado("Activo"); //esto hay que revisarlo
+
+        servicioUsuario.insertarUsuario(nuevoUsuario);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Usuario Agregado"));**/
+    } else {
+        servicioResidente.actualizarResidente(residenteSeleccionado);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Residente Actualizado"));
+    }
+    this.init();
+    PrimeFaces.current().executeScript("PF('nuevoResidenteDialog').hide()");
+    PrimeFaces.current().ajax().update("form:messages", "form:dt-residentes");
+}
+
     
     
     

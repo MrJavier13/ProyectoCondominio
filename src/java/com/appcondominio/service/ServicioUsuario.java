@@ -32,19 +32,27 @@ public class ServicioUsuario extends Servicios{
         try {
 
             //super.conectar();
-            ps = conn.prepareStatement("SELECT idUsuario, usuario, cedulaResidente, cedulaEmpleado, contrasena, idrol, estado FROM usuario");
+            ps = conn.prepareStatement("SELECT idUsuario, usuario, contrasena, cedulaResidente, cedulaEmpleado, idRol, estado FROM usuario");
             rs = ps.executeQuery();
 
             while (rs.next()) {
+                
+                int idUsuario = rs.getInt("idUsuario");
+                String usuario = rs.getString("usuario");
+                String contrasena = rs.getString("contrasena");
+                int cedulaResidente = rs.getInt("cedulaResidente");
+                Integer cedulaEmpleado = rs.getInt("cedulaEmpleado");
+                int idRol = rs.getInt("idrol");
+                String estado = rs.getString("estado");
 
                 UsuarioTO usuarios = new UsuarioTO();
-                usuarios.setIdUsuario(rs.getInt("idUsuario"));
-                usuarios.setUsuario(rs.getString("usuario"));
-                usuarios.setContrasena(rs.getString("contrasena"));
-                usuarios.setCedulaResidente(rs.getInt("cedulaResidente"));
-                usuarios.setCedulaEmpleado(rs.getInt("cedulaEmpleado"));
-                usuarios.setIdRol(rs.getInt("idrol"));
-                usuarios.setEstado(rs.getString("estado"));
+                usuarios.setIdUsuario(idUsuario);
+                usuarios.setUsuario(usuario);
+                usuarios.setContrasena(contrasena);
+                usuarios.setCedulaResidente(cedulaResidente);
+                usuarios.setCedulaEmpleado(cedulaEmpleado);
+                usuarios.setIdRol(idRol);
+                usuarios.setEstado(estado);
                 listaRetornar.add(usuarios);
 
                 
@@ -77,7 +85,7 @@ public class ServicioUsuario extends Servicios{
         UsuarioTO usuarios = null;
         try {
 
-            ps = conn.prepareStatement("SELECT usuario, contrasena, idrol FROM usuario WHERE usuario = ? AND contrasena = ?");
+            ps = conn.prepareStatement("SELECT usuario, contrasena, idRol FROM usuario WHERE usuario = ? AND contrasena = ?");
             ps.setString(1, usuario);
             ps.setString(2, contrasena);
             rs = ps.executeQuery();
@@ -109,5 +117,93 @@ public class ServicioUsuario extends Servicios{
         return usuarios;
     }
     
+    public boolean buscarUsuario(String buscar) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        boolean busqueda = true;
+
+        try {
+
+            ps = super.getConexion().prepareStatement("SELECT usuario FROM usuario WHERE usuario = ?");
+            ps.setString(1, buscar);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                busqueda = true;
+
+            } else {
+                busqueda = false;
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (ps != null && ps.isClosed()) {
+                    ps.close();
+                }
+                if (rs != null && !rs.isClosed()) {
+                    rs.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return busqueda;
+    }
     
+        public void insertarUsuario(UsuarioTO usuario) {
+
+        PreparedStatement ps = null;
+
+        try {
+            ps = super.getConexion().prepareStatement("INSERT INTO usuario (usuario, contrasena, cedulaResidente, cedulaEmpleado, idRol, estado) VALUES (?,?,?,?,?,?,?,?,?)");
+            ps.setString(1, usuario.getUsuario());
+            ps.setString(2, usuario.getContrasena());
+            ps.setInt(3, usuario.getCedulaResidente());
+            ps.setInt(4, usuario.getCedulaEmpleado());
+            ps.setInt(5, usuario.getIdRol());
+            ps.setString(6, usuario.getEstado());
+            ps.execute();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (ps != null && ps.isClosed()) {
+                    ps.close();
+                }
+
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+        
+        public void actualizarUsuario(UsuarioTO usuario) {
+
+        PreparedStatement ps = null;
+
+        try {
+            ps = super.getConexion().prepareStatement("UPDATE usuario SET usuario=?, contrasena=?, cedulaResidente=?, cedulaEmpleado=?, idRol=?, estado=?  WHERE usuario =?");
+            ps.setString(1, usuario.getUsuario());
+            ps.setString(2, usuario.getContrasena());
+            ps.setInt(3, usuario.getCedulaResidente());
+            ps.setInt(4, usuario.getCedulaEmpleado());
+            ps.setInt(5, usuario.getIdRol());
+            ps.setString(6, usuario.getEstado());
+            ps.execute();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (ps != null && ps.isClosed()) {
+                    ps.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
 }

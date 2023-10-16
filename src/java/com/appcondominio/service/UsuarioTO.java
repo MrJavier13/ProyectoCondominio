@@ -16,12 +16,16 @@ public class UsuarioTO implements Serializable{
     private int idUsuario;
     private String usuario;
     private String contrasena;
-    private int cedulaResidente;
-    private int cedulaEmpleado;
+    private Integer cedulaResidente;
+    private Integer cedulaEmpleado;
     private int idRol;
     private String estado;
-    
     public UsuarioTO() {
+    }
+
+    public UsuarioTO(String usuario, String contrasenna) {
+        this.usuario = usuario;
+        this.contrasena = contrasenna;
     }
 
     public int getIdUsuario() {
@@ -48,19 +52,19 @@ public class UsuarioTO implements Serializable{
         this.contrasena = contrasena;
     }
 
-    public int getCedulaResidente() {
+    public Integer getCedulaResidente() {
         return cedulaResidente;
     }
 
-    public void setCedulaResidente(int cedulaResidente) {
+    public void setCedulaResidente(Integer cedulaResidente) {
         this.cedulaResidente = cedulaResidente;
     }
 
-    public int getCedulaEmpleado() {
+    public Integer getCedulaEmpleado() {
         return cedulaEmpleado;
     }
 
-    public void setCedulaEmpleado(int cedulaEmpleado) {
+    public void setCedulaEmpleado(Integer cedulaEmpleado) {
         this.cedulaEmpleado = cedulaEmpleado;
     }
 
@@ -79,16 +83,5 @@ public class UsuarioTO implements Serializable{
     public void setEstado(String estado) {
         this.estado = estado;
     }
-
-    public UsuarioTO(int idUsuario, String usuario, String contrasena, int cedulaResidente, int cedulaEmpleado, int idRol, String estado) {
-        this.idUsuario = idUsuario;
-        this.usuario = usuario;
-        this.contrasena = contrasena;
-        this.cedulaResidente = cedulaResidente;
-        this.cedulaEmpleado = cedulaEmpleado;
-        this.idRol = idRol;
-        this.estado = estado;
-    }
-
-
+      
 }

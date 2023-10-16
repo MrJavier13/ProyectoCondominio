@@ -11,9 +11,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import org.primefaces.PrimeFaces;
 
 /**
  *
@@ -23,6 +26,7 @@ import javax.faces.bean.ViewScoped;
 @ManagedBean(name = "usuariosController")
 @ViewScoped
 public class UsuariosController implements Serializable{
+    private UsuarioTO usuarioSeleccionado;
     private List<UsuarioTO> usuario = new ArrayList<>();
     
     @ManagedProperty("#{usuarioService}")
@@ -34,6 +38,11 @@ public class UsuariosController implements Serializable{
     @PostConstruct
     public void init() {
         this.usuario = servicioUsuario.mostrarUsuarios();
+    }
+    
+    public void openNew() {
+       this.usuarioSeleccionado = new UsuarioTO();
+       
     }
 
     public List<UsuarioTO> getUsuario() {
@@ -50,6 +59,28 @@ public class UsuariosController implements Serializable{
 
     public void setServicioUsuario(ServicioUsuario servicioUsuario) {
         this.servicioUsuario = servicioUsuario;
+    }
+    
+    public UsuarioTO getUsuarioSeleccionado() {
+        return usuarioSeleccionado;
+    }
+
+    public void setUsuarioSeleccionado(UsuarioTO usuarioSeleccionado) {
+        this.usuarioSeleccionado = usuarioSeleccionado;
+    }
+    
+    public void guardarUsuario() {
+        if (!servicioUsuario.buscarUsuario(this.usuarioSeleccionado.getUsuario())) { // Si es false inserta
+            servicioUsuario.insertarUsuario(usuarioSeleccionado);
+
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Usuario Agregado"));
+        } else {
+            servicioUsuario.actualizarUsuario(usuarioSeleccionado);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Usuario Actualizado"));
+        }
+        this.init();
+        PrimeFaces.current().executeScript("PF('nuevoResidenteDialog').hide()");
+        PrimeFaces.current().ajax().update("form:messages", "form:dt-residentes");
     }
     
     
