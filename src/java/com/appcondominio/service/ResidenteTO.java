@@ -13,21 +13,21 @@ import java.io.Serializable;
  */
 public class ResidenteTO implements Serializable{
     
-    private int cedula;
+    private Integer cedula;
     private String nombre;
     private String primerApellido;
     private String segundoApellido;
-    private int telefono;
-    private int numeroCasa;
+    private Integer telefono;
+    private Integer numeroCasa;
     private String correoElectronico;
     private String placaVehiculo;
     private String estado;
 
-    public int getCedula() {
+    public Integer getCedula() {
         return cedula;
     }
 
-    public void setCedula(int cedula) {
+    public void setCedula(Integer cedula) {
         this.cedula = cedula;
     }
 
@@ -40,19 +40,19 @@ public class ResidenteTO implements Serializable{
     }
 
 
-    public int getTelefono() {
+    public Integer getTelefono() {
         return telefono;
     }
 
-    public void setTelefono(int telefono) {
+    public void setTelefono(Integer telefono) {
         this.telefono = telefono;
     }
 
-    public int getNumeroCasa() {
+    public Integer getNumeroCasa() {
         return numeroCasa;
     }
 
-    public void setNumeroCasa(int numeroCasa) {
+    public void setNumeroCasa(Integer numeroCasa) {
         this.numeroCasa = numeroCasa;
     }
 
@@ -99,7 +99,7 @@ public class ResidenteTO implements Serializable{
         this.estado = estado;
     }
 
-    public ResidenteTO(int cedula, String nombre, String primerApellido, String segundoApellido, int telefono, int numeroCasa, String correoElectronico, String placaVehiculo, String estado) {
+    public ResidenteTO(Integer cedula, String nombre, String primerApellido, String segundoApellido, Integer telefono, Integer numeroCasa, String correoElectronico, String placaVehiculo, String estado) {
         this.cedula = cedula;
         this.nombre = nombre;
         this.primerApellido = primerApellido;

@@ -7,6 +7,7 @@ import com.appcondominio.service.UsuarioTO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -24,16 +25,17 @@ import org.primefaces.PrimeFaces;
 @ViewScoped
 public class ResidentesController implements Serializable{
     private ResidenteTO residenteSeleccionado;
-    private UsuarioTO usuarioSeleccionado;
-    private UsuariosController usuariosController;
-    private ServicioUsuario servicioUsuario;
-    
+    private boolean activo;
+    private boolean selectOneMenuDisabled = false;
     private List<ResidenteTO> residente = new ArrayList<>();
+    private List<ResidenteTO> filteredResidentes;
+    private String dialogHeader;
     
     @ManagedProperty("#{residenteService}")
     private ServicioResidente servicioResidente;
     
-   
+    @ManagedProperty("#{usuarioService}")
+    private ServicioUsuario servicioUsuario;
 
     public ResidentesController() {
     }
@@ -41,13 +43,46 @@ public class ResidentesController implements Serializable{
     @PostConstruct
     public void init() {
         this.residente = servicioResidente.mostrarResidentes();
+        this.filteredResidentes = this.residente.stream()
+        .filter(residente -> "Activo".equals(residente.getEstado()))
+        .collect(Collectors.toList());
+        this.activo = true;
+    }
+    
+    public String getDialogHeader() {
+        return dialogHeader;
+    }
+
+    public void setDialogHeader(String dialogHeader) {
+        this.dialogHeader = dialogHeader;
+    }
+    
+    public boolean isSelectOneMenuDisabled() {
+        return selectOneMenuDisabled;
+    }
+
+    public void disableSelectOneMenu() {
+        selectOneMenuDisabled = true;
+    }
+
+    public void enableSelectOneMenu() {
+        selectOneMenuDisabled = false;
     }
     
     public void openNew() {
        this.residenteSeleccionado = new ResidenteTO();
-      
+       this.residenteSeleccionado.setEstado("Activo");
+       disableSelectOneMenu();
+       dialogHeader = "Registrar nuevo residente";
        
     }
+    
+    public void openEdit() {
+        this.residenteSeleccionado = new ResidenteTO();
+        enableSelectOneMenu(); 
+        dialogHeader = "Editar residente";
+       
+}
 
     public List<ResidenteTO> getResidente() {
         return residente;
@@ -72,47 +107,91 @@ public class ResidentesController implements Serializable{
     public void setResidenteSeleccionado(ResidenteTO residenteSeleccionado) {
         this.residenteSeleccionado = residenteSeleccionado;
     }
-    
-    public void guardarResidente() {
-        if (!servicioResidente.buscarCedulaResidente(this.residenteSeleccionado.getCedula())) { // Si es false inserta
-            servicioResidente.insertarResidente(residenteSeleccionado);
 
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Residente Agregado"));
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
+
+    public ServicioUsuario getServicioUsuario() {
+        return servicioUsuario;
+    }
+
+    public void setServicioUsuario(ServicioUsuario servicioUsuario) {
+        this.servicioUsuario = servicioUsuario;
+    }
+
+    public List<ResidenteTO> getFilteredResidentes() {
+        return filteredResidentes;
+    }
+
+    public void setFilteredResidentes(List<ResidenteTO> filteredResidentes) {
+        this.filteredResidentes = filteredResidentes;
+    }
+    
+    
+    public void filtrarResidentes() {
+    filteredResidentes.clear();
+    for (ResidenteTO residente : residente) {
+        if ((activo && "Activo".equals(residente.getEstado())) || (!activo && "Inactivo".equals(residente.getEstado()))) {
+            filteredResidentes.add(residente);
+        }
+    }
+}
+    
+    
+    public void guardarResidenteYUsuario() {
+        if (residenteSeleccionado.getCorreoElectronico() == null || residenteSeleccionado.getCorreoElectronico().trim().isEmpty()) {
+            FacesContext.getCurrentInstance().addMessage("form:correoElectronico", 
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Correo electrónico es requerido", 
+                    "Por favor, ingrese un correo electrónico válido."));
+            return;
+        }
+
+        if (!servicioResidente.buscarCedulaResidente(this.residenteSeleccionado.getCedula())) { 
+            // Si es false inserta
+            if (!correoValido(residenteSeleccionado.getCorreoElectronico())) {
+                FacesContext.getCurrentInstance().addMessage("form:correoElectronico", 
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Formato de correo electrónico inválido", 
+                        "Por favor, ingrese un correo electrónico válido. Ejemplo: juan@gmail.com"));
+                return;
+            } else {
+                servicioResidente.insertarResidente(residenteSeleccionado);
+                UsuarioTO usuario = new UsuarioTO();
+                usuario.setCedulaResidente(residenteSeleccionado.getCedula());
+                usuario.setUsuario(residenteSeleccionado.getCorreoElectronico());
+                usuario.setContrasena(String.valueOf(residenteSeleccionado.getCedula()));
+                usuario.setEstado(residenteSeleccionado.getEstado());
+                usuario.setIdRol(1);
+                servicioUsuario.insertarUsuarioResidente(usuario);
+                
+                FacesContext.getCurrentInstance().addMessage(null, 
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Residente y usuario agregado"));
+                
+            }
         } else {
-            servicioResidente.actualizarResidente(residenteSeleccionado);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Residente Actualizado"));
+            if (!correoValido(residenteSeleccionado.getCorreoElectronico())) {
+                FacesContext.getCurrentInstance().addMessage("form:correoElectronico", 
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Formato de correo electrónico inválido", 
+                        "Por favor, ingrese un correo electrónico válido."));
+                return;
+            } else {
+                servicioResidente.actualizarResidente(residenteSeleccionado);
+                FacesContext.getCurrentInstance().addMessage(null, 
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Residente Actualizado"));
+            }
         }
         this.init();
         PrimeFaces.current().executeScript("PF('nuevoResidenteDialog').hide()");
         PrimeFaces.current().ajax().update("form:messages", "form:dt-residentes");
     }
-    
-    public void guardarResidenteYUsuario() {
-    if (!servicioResidente.buscarCedulaResidente(this.residenteSeleccionado.getCedula())) { // Si es false inserta
-        servicioResidente.insertarResidente(residenteSeleccionado);
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Residente Agregado"));
 
-        // Crear un nuevo usuario cada vez que se crea un nuevo residente
-     /*   UsuarioTO nuevoUsuario = new UsuarioTO();
-        nuevoUsuario.setUsuario(this.residenteSeleccionado.getCorreoElectronico()); // Usar el email como nombre de usuario
-        nuevoUsuario.setContrasena(String.valueOf(this.residenteSeleccionado.getCedula())); //usar cédula como
-        nuevoUsuario.setCedulaResidente(this.residenteSeleccionado.getCedula());
-        nuevoUsuario.setCedulaEmpleado(null);
-        nuevoUsuario.setIdRol(1); // esto hay que revisarlo
-        nuevoUsuario.setEstado("Activo"); //esto hay que revisarlo
-
-        servicioUsuario.insertarUsuario(nuevoUsuario);
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Usuario Agregado"));**/
-    } else {
-        servicioResidente.actualizarResidente(residenteSeleccionado);
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Residente Actualizado"));
+        private boolean correoValido(String email) {
+            String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        return email.matches(regex);
     }
-    this.init();
-    PrimeFaces.current().executeScript("PF('nuevoResidenteDialog').hide()");
-    PrimeFaces.current().ajax().update("form:messages", "form:dt-residentes");
-}
 
-    
-    
-    
 }

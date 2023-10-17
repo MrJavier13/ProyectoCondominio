@@ -5,6 +5,7 @@
  */
 package com.appcondominio.service;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,7 +21,7 @@ import javax.faces.bean.ManagedBean;
  */
 @ManagedBean(name="usuarioService")
 @ApplicationScoped
-public class ServicioUsuario extends Servicios{
+public class ServicioUsuario extends Servicios implements Serializable{
     
     public List<UsuarioTO> mostrarUsuarios() {
         Connection conn = super.getConexion();
@@ -152,18 +153,17 @@ public class ServicioUsuario extends Servicios{
         return busqueda;
     }
     
-        public void insertarUsuario(UsuarioTO usuario) {
+        public void insertarUsuarioResidente(UsuarioTO usuario) {
 
         PreparedStatement ps = null;
 
         try {
-            ps = super.getConexion().prepareStatement("INSERT INTO usuario (usuario, contrasena, cedulaResidente, cedulaEmpleado, idRol, estado) VALUES (?,?,?,?,?,?,?,?,?)");
+            ps = super.getConexion().prepareStatement("INSERT INTO usuario (usuario, contrasena, cedulaResidente, idRol, estado) VALUES (?,?,?,?,?)");
             ps.setString(1, usuario.getUsuario());
             ps.setString(2, usuario.getContrasena());
             ps.setInt(3, usuario.getCedulaResidente());
-            ps.setInt(4, usuario.getCedulaEmpleado());
-            ps.setInt(5, usuario.getIdRol());
-            ps.setString(6, usuario.getEstado());
+            ps.setInt(4, usuario.getIdRol());
+            ps.setString(5, usuario.getEstado());
             ps.execute();
 
         } catch (Exception ex) {
