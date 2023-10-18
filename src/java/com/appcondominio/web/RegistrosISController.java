@@ -9,6 +9,7 @@ import com.appcondominio.service.RegistroIngresosSalidasTO;
 import com.appcondominio.service.ServicioRegistroIS;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -35,10 +36,24 @@ public class RegistrosISController implements Serializable{
     }
 
     public void buscarPorFecha() {
-        java.sql.Timestamp inicio = new java.sql.Timestamp(fechaInicio.getTime());
-        java.sql.Timestamp fin = new java.sql.Timestamp(fechaFin.getTime());
-        this.registroIS = servicioRegistroIS.mostrarRegistroPorFecha(inicio, fin);
-    }
+    Calendar cal = Calendar.getInstance();
+
+    cal.setTime(fechaInicio);
+    cal.set(Calendar.HOUR_OF_DAY, 0);
+    cal.set(Calendar.MINUTE, 0);
+    cal.set(Calendar.SECOND, 0);
+    cal.set(Calendar.MILLISECOND, 0);
+    java.sql.Timestamp inicio = new java.sql.Timestamp(cal.getTimeInMillis());
+
+    cal.setTime(fechaFin);
+    cal.set(Calendar.HOUR_OF_DAY, 23);
+    cal.set(Calendar.MINUTE, 59);
+    cal.set(Calendar.SECOND, 59);
+    cal.set(Calendar.MILLISECOND, 999);
+    java.sql.Timestamp fin = new java.sql.Timestamp(cal.getTimeInMillis());
+
+    this.registroIS = servicioRegistroIS.mostrarRegistroPorFecha(inicio, fin);
+}
 
     public List<RegistroIngresosSalidasTO> getRegistroIS() {
         return registroIS;
