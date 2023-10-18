@@ -28,6 +28,10 @@
             <div class="card crud-demo">
                 <p:growl id="messages" showDetail="true"/>
  
+                <p:calendar id="fechaInicio" value="#{registrosISController.fechaInicio}" showOn="button" />
+<p:calendar id="fechaFin" value="#{registrosISController.fechaFin}" showOn="button" />
+<p:commandButton value="Buscar registro por fecha" action="#{registrosISController.buscarPorFecha}" update="dt-products" />
+                
                 <p:dataTable id="dt-products" widgetVar="dtProducts" var="registroIS" value="#{registrosISController.registroIS}"
                              reflow="true" styleClass="products-table"
                              paginator="true"

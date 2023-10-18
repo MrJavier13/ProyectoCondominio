@@ -21,10 +21,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 
-/**
- *
- * @author aacas
- */
+
 @ManagedBean(name="registroISService")
 @ApplicationScoped
 public class ServicioRegistroIS extends Servicios implements Serializable{
@@ -95,7 +92,64 @@ public class ServicioRegistroIS extends Servicios implements Serializable{
         return listaRetornar;
     }
     
+    public List<RegistroIngresosSalidasTO> mostrarRegistroPorFecha(Timestamp fechaInicio, Timestamp fechaFin) {
+    Connection conn = super.getConexion();
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    List<RegistroIngresosSalidasTO> listaRetornar = new ArrayList<RegistroIngresosSalidasTO>();
+
+    try {
+        ps = conn.prepareStatement("SELECT * FROM registro_Ingreso_Salida WHERE fechaIngreso BETWEEN ? AND ?");
+        ps.setTimestamp(1, fechaInicio);
+        ps.setTimestamp(2, fechaFin);
+        rs = ps.executeQuery();
+
+        while (rs.next()) {
+            int idRegistro = rs.getInt("idRegistro");
+            int cedulaInvitadoTemporal = rs.getInt("cedulaInvitadoTemporal");
+            int cedulaInvitadoPermanente = rs.getInt("cedulaInvitadoPermanente");
+            String nombreCompletoInvitado = rs.getString("nombreCompletoInvitadoTemp");
+            String nombreEmpresa = rs.getString("nombreEmpresa");
+            String placaVehicular = rs.getString("placaVehicular");
+            String detalle = rs.getString("detalle");
+            Timestamp  fechaIngreso = rs.getTimestamp("fechaIngreso");
+            Timestamp  fechaSalida = rs.getTimestamp("fechaSalida");
+            int cedulaGuardaSeguridad = rs.getInt("cedulaGuardaSeguridad");
+
+            RegistroIngresosSalidasTO registroIngresosSalidas = new RegistroIngresosSalidasTO();
+
+            registroIngresosSalidas.setIdRegistro(idRegistro);
+            registroIngresosSalidas.setCedulaInvitadoTemporal(cedulaInvitadoTemporal);
+            registroIngresosSalidas.setCedulaInvitadoPermanente(cedulaInvitadoPermanente);
+            registroIngresosSalidas.setNombreCompletoInvitado(nombreCompletoInvitado);
+            registroIngresosSalidas.setNombreEmpresa(nombreEmpresa);
+            registroIngresosSalidas.setPlacaVehicular(placaVehicular);
+            registroIngresosSalidas.setDetalle(detalle);
+            registroIngresosSalidas.setFechaIngreso(fechaIngreso);
+            registroIngresosSalidas.setFechaSalida(fechaSalida);
+            registroIngresosSalidas.setCedulaGuardaSeguridad(cedulaGuardaSeguridad);
+
+            listaRetornar.add(registroIngresosSalidas);
+        }
+
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    } finally {
+        try {
+            if (ps != null && ps.isClosed()) {
+                ps.close();
+            }
+            if (rs != null && !rs.isClosed()) {
+                rs.close();
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    return listaRetornar;
+}
+
         
     
 }
-
