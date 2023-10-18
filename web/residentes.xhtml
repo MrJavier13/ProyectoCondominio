@@ -43,7 +43,10 @@
         <h:form id="form">
             <p:growl id="growl" showDetail="true" />
             <p:growl id="messages" showDetail="true"/>
-
+            
+            <div class="card">
+                <p:commandButton value="Principal" icon="pi pi-home" actionListener="#{residentesController.principal()}" styleClass="mr-2"/>
+            </div>
 
             <div class="card crud-demo">
 
@@ -133,6 +136,7 @@
                                 <p:inputText id="cedula" value="#{residentesController.residenteSeleccionado.cedula}" required="true" requiredMessage="Por favor, ingrese su número de cédula">
                                 <p:keyFilter mask="num" />
                                 </p:inputText>
+                                <p:tooltip for="cedula" value="Digite su número de cédula. Solo se permite números" position="right"/>
                                 <p:message id="cedulaMessage" for="cedula" />
                             </div>
 
@@ -142,6 +146,7 @@
                                 </div>
                                 
                                 <p:inputText id="nombre" value="#{residentesController.residenteSeleccionado.nombre}" required="true" requiredMessage="Por favor, ingrese el nombre"/>
+                                <p:tooltip for="nombre" value="Digite el nombre del residente." position="right"/>
                                 <p:message id="nombreMessage" for="nombre" />
                             </div>
                             <div class="p-field">
@@ -150,6 +155,7 @@
                                 </div>
                                 
                                 <p:inputText id="primerApellido" value="#{residentesController.residenteSeleccionado.primerApellido}" required="true" requiredMessage="Por favor, ingrese el primer apellido"/>
+                                <p:tooltip for="primerApellido" value="Digite el primer apellido." position="right"/>
                                 <p:message id="primerApellidoMessage" for="primerApellido" />
                             </div>
                             <div class="p-field">
@@ -158,6 +164,7 @@
                                 </div>
                                 
                                 <p:inputText id="segundoApellido" value="#{residentesController.residenteSeleccionado.segundoApellido}" required="true" requiredMessage="Por favor, ingrese el segundo apellido"/>
+                                <p:tooltip for="segundoApellido" value="Digite el segundo apellido." position="right"/>
                                 <p:message id="segundoApellidoMessage" for="segundoApellido" />
                                
                                 
@@ -165,12 +172,13 @@
 
                             <div class="p-field">
                                 <div class="disenho">
-                                <p:outputLabel  style="font-size: 18px; font-weight: bold;">Telefono</p:outputLabel>
+                                <p:outputLabel  style="font-size: 18px; font-weight: bold;">Teléfono</p:outputLabel>
                                 </div>
                                 
                                 <p:inputText id="telefono" value="#{residentesController.residenteSeleccionado.telefono}" styleClass="input-field" required="true" requiredMessage="Por favor, ingrese el número de teléfono">
                                 <p:keyFilter mask="num" />
                                 </p:inputText>
+                                <p:tooltip for="telefono" value="Digite el número de teléfono. Solo se permite números" position="right"/>
                                 <p:message id="telefonoMessage" for="telefono" />
                             </div>
                             
@@ -182,7 +190,8 @@
                                 <p:inputText id="numeroCasa" value="#{residentesController.residenteSeleccionado.numeroCasa}" styleClass="input-field" required="true" requiredMessage="Por favor, ingrese el número de casa">
                                     <p:keyFilter mask="num" />
                                 </p:inputText>
-                                <p:message id="numeroCasaMessage" for="numeroCasa" />
+                                <p:tooltip for="numeroCasa" value="Digite el número de casa. Solo se permite números" position="right"/>
+                                 <p:message id="numeroCasaMessage" for="numeroCasa" />
                             </div>
                             
                             <div class="p-field">
@@ -194,6 +203,7 @@
                                         
                                          <p:ajax event="blur" update="correoElectronicoMessage"/>
                                     </p:inputText>
+                                    <p:tooltip for="correoElectronico" value="Digite el correo electrónico." position="right"/>
                                     <p:message id="correoElectronicoMessage" for="correoElectronico"  display="text"/>
                                 </div>
                             </div>
@@ -205,6 +215,7 @@
                                 </div>
                                 
                                 <p:inputText id="placaVehiculo" value="#{residentesController.residenteSeleccionado.placaVehiculo}" styleClass="input-field" required="true" requiredMessage="Por favor, ingrese la placa del vehículo"/>
+                                <p:tooltip for="placaVehiculo" value="Digite el placa del vehículo, si tiene." position="right"/>
                                 <p:message id="placaVehiculoMessage" styleClass="tooltipDialog" for="placaVehiculo" />
                             </div>
                         
@@ -224,9 +235,9 @@
                     <f:facet name="footer">
                         <p:commandButton value="Guadar" icon="pi pi-check" actionListener="#{residentesController.guardarResidenteYUsuario}" 
                                          update="administrar-residente-content" process="administrar-residente-content @this" />
-                        <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('nuevoResidenteDialog').hide()"
-                                         class="ui-button-secondary">
-                             <p:ajax update="form:administrar-residente-content" resetValues="true"/>
+                        <p:commandButton value="Cancelar" icon="pi pi-times"
+                                         class="ui-button-secondary" onclick="PF('nuevoResidenteDialog').hide()">
+                             <p:ajax update="form:administrar-residente-content" />
                         </p:commandButton>
                     </f:facet>
 
