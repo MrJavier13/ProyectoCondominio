@@ -17,9 +17,9 @@ import java.time.LocalDateTime;
 public class RegistroIngresosSalidasTO implements Serializable{
     
     private int idRegistro;
-    private int cedulaInvitado;
+    private int cedulaInvitadoTemporal;
+    private int cedulaInvitadoPermanente;
     private String nombreCompletoInvitado;
-    private String tipoInvitado;
     private String nombreEmpresa;
     private String placaVehicular;
     private String detalle;
@@ -30,11 +30,11 @@ public class RegistroIngresosSalidasTO implements Serializable{
     public RegistroIngresosSalidasTO() {
     }
 
-    public RegistroIngresosSalidasTO(int idRegistro, int cedulaInvitado, String nombreCompletoInvitado, String tipoInvitado, String nombreEmpresa, String placaVehicular, String detalle, Timestamp  fechaIngreso, Timestamp  fechaSalida, int cedulaGuardaSeguridad) {
+    public RegistroIngresosSalidasTO(int idRegistro, int cedulaInvitadoTemporal, int cedulaInvitadoPermanente, String nombreCompletoInvitado, String nombreEmpresa, String placaVehicular, String detalle, Timestamp fechaIngreso, Timestamp fechaSalida, int cedulaGuardaSeguridad) {
         this.idRegistro = idRegistro;
-        this.cedulaInvitado = cedulaInvitado;
+        this.cedulaInvitadoTemporal = cedulaInvitadoTemporal;
+        this.cedulaInvitadoPermanente = cedulaInvitadoPermanente;
         this.nombreCompletoInvitado = nombreCompletoInvitado;
-        this.tipoInvitado = tipoInvitado;
         this.nombreEmpresa = nombreEmpresa;
         this.placaVehicular = placaVehicular;
         this.detalle = detalle;
@@ -43,6 +43,7 @@ public class RegistroIngresosSalidasTO implements Serializable{
         this.cedulaGuardaSeguridad = cedulaGuardaSeguridad;
     }
 
+    
     public int getIdRegistro() {
         return idRegistro;
     }
@@ -51,14 +52,21 @@ public class RegistroIngresosSalidasTO implements Serializable{
         this.idRegistro = idRegistro;
     }
 
-    public int getCedulaInvitado() {
-        return cedulaInvitado;
+    public int getCedulaInvitadoTemporal() {
+        return cedulaInvitadoTemporal;
     }
 
-    public void setCedulaInvitado(int cedulaInvitado) {
-        this.cedulaInvitado = cedulaInvitado;
+    public void setCedulaInvitadoTemporal(int cedulaInvitadoTemporal) {
+        this.cedulaInvitadoTemporal = cedulaInvitadoTemporal;
     }
 
+    public int getCedulaInvitadoPermanente() {
+        return cedulaInvitadoPermanente;
+    }
+
+    public void setCedulaInvitadoPermanente(int cedulaInvitadoPermanente) {
+        this.cedulaInvitadoPermanente = cedulaInvitadoPermanente;
+    }
 
     public String getNombreCompletoInvitado() {
         return nombreCompletoInvitado;
@@ -68,14 +76,6 @@ public class RegistroIngresosSalidasTO implements Serializable{
         this.nombreCompletoInvitado = nombreCompletoInvitado;
     }
 
-    public String getTipoInvitado() {
-        return tipoInvitado;
-    }
-
-    public void setTipoInvitado(String tipoInvitado) {
-        this.tipoInvitado = tipoInvitado;
-    }
-    
     public String getNombreEmpresa() {
         return nombreEmpresa;
     }
@@ -100,19 +100,19 @@ public class RegistroIngresosSalidasTO implements Serializable{
         this.detalle = detalle;
     }
 
-    public Timestamp  getFechaIngreso() {
+    public Timestamp getFechaIngreso() {
         return fechaIngreso;
     }
 
-    public void setFechaIngreso(Timestamp  fechaIngreso) {
+    public void setFechaIngreso(Timestamp fechaIngreso) {
         this.fechaIngreso = fechaIngreso;
     }
 
-    public Timestamp  getFechaSalida() {
+    public Timestamp getFechaSalida() {
         return fechaSalida;
     }
 
-    public void setFechaSalida(Timestamp  fechaSalida) {
+    public void setFechaSalida(Timestamp fechaSalida) {
         this.fechaSalida = fechaSalida;
     }
 
@@ -123,13 +123,7 @@ public class RegistroIngresosSalidasTO implements Serializable{
     public void setCedulaGuardaSeguridad(int cedulaGuardaSeguridad) {
         this.cedulaGuardaSeguridad = cedulaGuardaSeguridad;
     }
-    
-    
-    
 
 
-    
-    
-    
 }
 

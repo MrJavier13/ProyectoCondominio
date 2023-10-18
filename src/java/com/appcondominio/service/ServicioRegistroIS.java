@@ -5,6 +5,7 @@
  */
 package com.appcondominio.service;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -26,7 +27,7 @@ import java.util.Calendar;
  */
 @ManagedBean(name="registroISService")
 @ApplicationScoped
-public class ServicioRegistroIS extends Servicios{
+public class ServicioRegistroIS extends Servicios implements Serializable{
     
     public List<RegistroIngresosSalidasTO> mostrarRegistro() {
         Connection conn = super.getConexion();
@@ -38,16 +39,16 @@ public class ServicioRegistroIS extends Servicios{
         try {
 
             //super.conectar();
-            ps = conn.prepareStatement("SELECT idRegistro, cedulaInvitado, nombreCompletoInvitado, tipoInvitado, nombreEmpresa, placaVehicular, detalle, fechaIngreso, fechaSalida, cedulaGuardaSeguridad FROM registro_Ingreso_Salida");
+            ps = conn.prepareStatement("SELECT idRegistro, cedulaInvitadoTemporal, cedulaInvitadoPermanente, nombreCompletoInvitadoTemp, nombreEmpresa, placaVehicular, detalle, fechaIngreso, fechaSalida, cedulaGuardaSeguridad FROM registro_Ingreso_Salida");
             rs = ps.executeQuery();
 
 
             while (rs.next()) {
 
                 int idRegistro = rs.getInt("idRegistro");
-                int cedulaInvitado = rs.getInt("cedulaInvitado");
-                String nombreCompletoInvitado = rs.getString("nombreCompletoInvitado");
-                String tipoInvitado = rs.getString("tipoInvitado");
+                int cedulaInvitadoTemporal = rs.getInt("cedulaInvitadoTemporal");
+                int cedulaInvitadoPermanente = rs.getInt("cedulaInvitadoPermanente");
+                String nombreCompletoInvitado = rs.getString("nombreCompletoInvitadoTemp");
                 String nombreEmpresa = rs.getString("nombreEmpresa");
                 String placaVehicular = rs.getString("placaVehicular");
                 String detalle = rs.getString("detalle");
@@ -60,9 +61,9 @@ public class ServicioRegistroIS extends Servicios{
                 RegistroIngresosSalidasTO registroIngresosSalidas = new RegistroIngresosSalidasTO();
                 
                 registroIngresosSalidas.setIdRegistro(idRegistro);
-                registroIngresosSalidas.setCedulaInvitado(cedulaInvitado);
+                registroIngresosSalidas.setCedulaInvitadoTemporal(cedulaInvitadoTemporal);
+                registroIngresosSalidas.setCedulaInvitadoPermanente(cedulaInvitadoPermanente);
                 registroIngresosSalidas.setNombreCompletoInvitado(nombreCompletoInvitado);
-                registroIngresosSalidas.setTipoInvitado(tipoInvitado);
                 registroIngresosSalidas.setNombreEmpresa(nombreEmpresa);
                 registroIngresosSalidas.setPlacaVehicular(placaVehicular);
                 registroIngresosSalidas.setDetalle(detalle);
@@ -94,6 +95,7 @@ public class ServicioRegistroIS extends Servicios{
         return listaRetornar;
     }
     
+        
     
 }
 

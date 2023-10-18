@@ -42,13 +42,10 @@
                         <h:outputText value="#{registroIS.idRegistro}"/>
                     </p:column>
                     <p:column headerText="Cédula del Invitado" filterMatchMode="contains">
-                        <h:outputText value="#{registroIS.cedulaInvitado}" />
+                        <h:outputText value="#{registroIS.cedulaInvitadoTemporal} #{registroIS.cedulaInvitadoPermanente}" />
                     </p:column>
                     <p:column headerText="Nombre Completo Invitado" sortBy="#{registroIS.nombreCompletoInvitado}" filterMatchMode="contains">
                         <h:outputText value="#{registroIS.nombreCompletoInvitado}"/>
-                    </p:column>
-                    <p:column headerText="Tipo de invitado" sortBy="#{registroIS.tipoInvitado}" filterMatchMode="contains">
-                        <h:outputText value="#{registroIS.tipoInvitado}"/>
                     </p:column>
                     <p:column headerText="Nombre Empresa" sortBy="#{registroIS.nombreEmpresa}" filterMatchMode="contains">
                         <h:outputText value="#{registroIS.nombreEmpresa}"/>
