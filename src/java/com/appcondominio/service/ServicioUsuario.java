@@ -5,6 +5,7 @@
  */
 package com.appcondominio.service;
 
+import encriptar.BCrypt;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,10 +20,10 @@ import javax.faces.bean.ManagedBean;
  *
  * @author aacas
  */
-@ManagedBean(name="usuarioService")
+@ManagedBean(name = "usuarioService")
 @ApplicationScoped
-public class ServicioUsuario extends Servicios implements Serializable{
-    
+public class ServicioUsuario extends Servicios implements Serializable {
+
     public List<UsuarioTO> mostrarUsuarios() {
         Connection conn = super.getConexion();
         PreparedStatement ps = null;
@@ -37,7 +38,7 @@ public class ServicioUsuario extends Servicios implements Serializable{
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                
+
                 Integer idUsuario = rs.getInt("idUsuario");
                 String usuario = rs.getString("usuario");
                 Integer cedulaResidente = rs.getInt("cedulaResidente");
@@ -54,7 +55,6 @@ public class ServicioUsuario extends Servicios implements Serializable{
                 usuarios.setEstado(estado);
                 listaRetornar.add(usuarios);
 
-                
             }
 
         } catch (Exception ex) {
@@ -75,7 +75,7 @@ public class ServicioUsuario extends Servicios implements Serializable{
 
         return listaRetornar;
     }
-    
+
     public UsuarioTO UsuarioContrasenna(String usuario, String contrasena) {
 
         Connection conn = super.getConexion();
@@ -84,16 +84,24 @@ public class ServicioUsuario extends Servicios implements Serializable{
         UsuarioTO usuarios = null;
         try {
 
-            ps = conn.prepareStatement("SELECT usuario, contrasena, idRol FROM usuario WHERE usuario = ? AND contrasena = ?");
+            ps = conn.prepareStatement("SELECT * FROM usuario WHERE usuario = ?");
             ps.setString(1, usuario);
-            ps.setString(2, contrasena);
             rs = ps.executeQuery();
 
             while (rs.next()) {
-
                 usuarios = new UsuarioTO();
 
-                usuarios.setUsuario(rs.getString("usuario"));
+                if (BCrypt.checkpw(contrasena, rs.getString("contrasena"))) {
+                    usuarios.setIdUsuario(rs.getInt("idUsuario"));
+                    usuarios.setUsuario(rs.getString("usuario"));
+                    usuarios.setContrasena(rs.getString("contrasena"));
+                    usuarios.setCedulaResidente(rs.getInt("cedulaResidente"));
+                    usuarios.setCedulaEmpleado(rs.getInt("cedulaEmpleado"));
+                    usuarios.setIdRol(rs.getInt("idRol"));
+                    usuarios.setEstado(rs.getString("estado"));
+                } else {
+                    usuarios = null;
+                }
 
             }
         } catch (Exception ex) {
@@ -115,7 +123,7 @@ public class ServicioUsuario extends Servicios implements Serializable{
         }
         return usuarios;
     }
-    
+
     public boolean buscarUsuario(String buscar) {
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -150,15 +158,15 @@ public class ServicioUsuario extends Servicios implements Serializable{
         }
         return busqueda;
     }
-    
-        public void insertarUsuarioResidente(UsuarioTO usuario) {
+
+    public void insertarUsuarioResidente(UsuarioTO usuario) {
 
         PreparedStatement ps = null;
 
         try {
             ps = super.getConexion().prepareStatement("INSERT INTO usuario (usuario, contrasena, cedulaResidente, idRol, estado) VALUES (?,?,?,?,?)");
             ps.setString(1, usuario.getUsuario());
-            ps.setString(2, usuario.getContrasena());
+            ps.setString(2, BCrypt.hashpw(usuario.getContrasena(), BCrypt.gensalt(10)));
             ps.setInt(3, usuario.getCedulaResidente());
             ps.setInt(4, usuario.getIdRol());
             ps.setString(5, usuario.getEstado());
@@ -177,8 +185,8 @@ public class ServicioUsuario extends Servicios implements Serializable{
             }
         }
     }
-        
-        public void actualizarUsuario(UsuarioTO usuario) {
+
+    public void actualizarUsuario(UsuarioTO usuario) {
 
         PreparedStatement ps = null;
 
