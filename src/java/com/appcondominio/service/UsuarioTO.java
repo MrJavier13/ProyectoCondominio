@@ -13,13 +13,14 @@ import java.io.Serializable;
  */
 public class UsuarioTO implements Serializable{
     
-    private int idUsuario;
+    private Integer idUsuario;
     private String usuario;
     private String contrasena;
     private Integer cedulaResidente;
     private Integer cedulaEmpleado;
     private int idRol;
     private String estado;
+    
     public UsuarioTO() {
     }
 
@@ -28,11 +29,11 @@ public class UsuarioTO implements Serializable{
         this.contrasena = contrasenna;
     }
 
-    public int getIdUsuario() {
+    public Integer getIdUsuario() {
         return idUsuario;
     }
 
-    public void setIdUsuario(int idUsuario) {
+    public void setIdUsuario(Integer idUsuario) {
         this.idUsuario = idUsuario;
     }
 
@@ -68,11 +69,11 @@ public class UsuarioTO implements Serializable{
         this.cedulaEmpleado = cedulaEmpleado;
     }
 
-    public int getIdRol() {
+    public Integer getIdRol() {
         return idRol;
     }
 
-    public void setIdRol(int idRol) {
+    public void setIdRol(Integer idRol) {
         this.idRol = idRol;
     }
 
@@ -83,5 +84,14 @@ public class UsuarioTO implements Serializable{
     public void setEstado(String estado) {
         this.estado = estado;
     }
-      
+
+    public UsuarioTO(Integer idUsuario, String usuario, String contrasena, Integer cedulaResidente, Integer cedulaEmpleado, int idRol, String estado) {
+        this.idUsuario = idUsuario;
+        this.usuario = usuario;
+        this.contrasena = contrasena;
+        this.cedulaResidente = cedulaResidente;
+        this.cedulaEmpleado = cedulaEmpleado;
+        this.idRol = idRol;
+        this.estado = estado;
+    }
 }

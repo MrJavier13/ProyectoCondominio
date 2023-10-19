@@ -13,24 +13,82 @@
                line-height: 40px;
                 
             }
+            body {
+                margin: 0;
+                font-family: Verdana, sans-serif;
+            }
+            .filter-container {
+                display: flex;
+                align-items: center;
+                justify-content: flex-end; 
+                margin-right: 10px; 
+            }
+            .filter-container span {
+                margin-right: 5px; 
+            }
+            .topbar {
+                background-color: #1e4fa5;
+                color: white;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 20px;
+                transition: background-color 0.3s;
+            }
+
+
+            .topbar-logo {
+                font-size: 24px;
+                font-weight: bold;
+                text-decoration: none;
+                color: #e6e6e6;
+            }
+            .topbar-menu {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                display: flex;
+            }
+
+            .custom-commandlink {
+                position: relative;
+                color: white;
+                text-decoration: none;
+                font-size: 14px;
+                margin: 0 15px;
+                font-size: 20px;
+            }
+            .custom-commandlink:hover::after{
+                content: "";
+                position: absolute;
+                left: 0;
+                bottom: -13px;
+                width: 100%;
+                border-bottom: 5px solid white;
+            }
         </style>
     </h:head>
     <h:body style=" background: linear-gradient(to bottom, #ffffff, #1e4fa5);">
 
         <h:form id="form">
             <p:growl id="growl" showDetail="true" />
-            <div>
-                <p:menubar>
-                    
-     
-                </p:menubar>
+            
+            <div class="topbar">
+                <a class="topbar-logo">Gestión de usuarios</a>
+                <ul class="topbar-menu">
+                    <p:commandLink value="Inicio" actionListener="#{usuariosController.principal}" ajax="false" styleClass="custom-commandlink" />
+                    <p:commandLink value="Residentes" actionListener="#{usuariosController.residentes}" ajax="false" styleClass="custom-commandlink" />
+                    <p:commandLink value="Personal" actionListener="#{usuariosController.personal}" ajax="false" styleClass="custom-commandlink" />
+                    <p:commandLink value="Cerrar Sesión"  actionListener="#{usuariosController.cerrarSesion}" ajax="false" styleClass="custom-commandlink" />
+                </ul>
             </div>
+            
             <div class="card crud-demo">
                 <p:growl id="messages" showDetail="true"/>
  
                 <p:calendar id="fechaInicio" value="#{registrosISController.fechaInicio}" showOn="button" />
-<p:calendar id="fechaFin" value="#{registrosISController.fechaFin}" showOn="button" />
-<p:commandButton value="Buscar registro por fecha" action="#{registrosISController.buscarPorFecha}" update="dt-products" />
+                <p:calendar id="fechaFin" value="#{registrosISController.fechaFin}" showOn="button" />
+                <p:commandButton value="Buscar registro por fecha" action="#{registrosISController.buscarPorFecha}" update="dt-products" />
                 
                 <p:dataTable id="dt-products" widgetVar="dtProducts" var="registroIS" value="#{registrosISController.registroIS}"
                              reflow="true" styleClass="products-table"

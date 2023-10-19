@@ -13,54 +13,192 @@
                line-height: 40px;
                 
             }
+                        body {
+                margin: 0;
+                font-family: Verdana, sans-serif;
+            }
+            .filter-container {
+                display: flex;
+                align-items: center;
+                justify-content: flex-end; 
+                margin-right: 10px; 
+            }
+            .filter-container span {
+                margin-right: 5px; 
+            }
+            .topbar {
+                background-color: #1e4fa5;
+                color: white;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 20px;
+                transition: background-color 0.3s;
+            }
+
+
+            .topbar-logo {
+                font-size: 24px;
+                font-weight: bold;
+                text-decoration: none;
+                color: #e6e6e6;
+            }
+            .topbar-menu {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                display: flex;
+            }
+
+            .custom-commandlink {
+                position: relative;
+                color: white;
+                text-decoration: none;
+                font-size: 14px;
+                margin: 0 15px;
+                font-size: 20px;
+            }
+            .custom-commandlink:hover::after{
+                content: "";
+                position: absolute;
+                left: 0;
+                bottom: -13px;
+                width: 100%;
+                border-bottom: 5px solid white;
+            }
         </style>
     </h:head>
     <h:body style=" background: linear-gradient(to bottom, #ffffff, #1e4fa5);">
 
         <h:form id="form">
-            <p:growl id="growl" showDetail="true" />
-                <p:messages id="messages" showDetail="true" closable="true">
-                    <p:autoUpdate/>
-                </p:messages>
+            <p:growl id="messages" showDetail="true" />
+            
+            <div class="topbar">
+                <a class="topbar-logo">Gestión de usuarios</a>
+                <ul class="topbar-menu">
+                    <p:commandLink value="Inicio" actionListener="#{usuariosController.principal}" ajax="false" styleClass="custom-commandlink" />
+                    <p:commandLink value="Residentes" actionListener="#{usuariosController.residentes}" ajax="false" styleClass="custom-commandlink" />
+                    <p:commandLink value="Personal" actionListener="#{usuariosController.personal}" ajax="false" styleClass="custom-commandlink" />
+                    <p:commandLink value="Cerrar Sesión"  actionListener="#{usuariosController.cerrarSesion}" ajax="false" styleClass="custom-commandlink" />
+                </ul>
+            </div>
                    
 
             <div class="card crud-demo">
  
-                <p:dataTable id="dt-products" widgetVar="dtProducts" var="usuario" value="#{usuariosController.usuario}"
+                <p:dataTable id="dt-usuarios" widgetVar="dtUsuarios" var="usuario" value="#{usuariosController.filteredUsuarios}"
                              reflow="true" styleClass="products-table"
                              paginator="true"
                              rows="10" rowSelectMode="add" paginatorPosition="bottom">
                     <f:facet name="header">
-                        <div class="products-table-header">
-                            <span style="font-weight: bold">Usuarios</span>                     
+                        <div class="usuarios-table-header">
+                            <div class="filter-container">
+                                <span>Mostrar:</span>
+                                <p:selectBooleanButton value="#{usuariosController.activo}" 
+                                                       onLabel="Activo" offLabel="Inactivo">
+                                    <p:ajax update="dt-usuarios" listener="#{usuariosController.filtrarUsuarios}" />
+                                </p:selectBooleanButton>
+                            </div>
                         </div>
                     </f:facet>
-
-                    <p:column headerText="Correo Electrónico" sortBy="#{usuario.correoElectronico}" exportable="false">
-                        <h:outputText value="#{usuario.correoElectronico}"/>
+                    
+                    <p:column headerText="Identificador" sortBy="#{usuario.idUsuario}" filterMatchMode="contains">
+                        <h:outputText value="#{usuario.idUsuario}"/>
+                    </p:column>
+                    <p:column headerText="Usuario" sortBy="#{usuario.usuario}" filterMatchMode="contains">
+                        <h:outputText value="#{usuario.usuario}"/>
+                    </p:column>
+                    <p:column headerText="Cédula" sortBy="#{usuario.cedulaResidente} #{usuario.cedulaEmpleado}" filterMatchMode="contains">
+                        <h:outputText value="#{usuario.cedulaResidente != 0 ? usuario.cedulaResidente : ''} #{usuario.cedulaEmpleado != 0 ? usuario.cedulaEmpleado : ''}"/>
+                    </p:column>
+                    <p:column headerText="Rol" sortBy="#{usuario.idRol}" filterMatchMode="contains">
+                        <h:outputText value="#{usuario.idRol}"/>
                     </p:column>
                     
-                    <p:column headerText="Estado" sortBy="#{usuario.estado}" exportable="false">
+                    <p:column headerText="Estado" sortBy="#{usuario.estado}" filterMatchMode="contains" sortable="false">
                         <h:outputText value="#{usuario.estado}"/>
                     </p:column>
                     
-                    <p:column headerText="Rol" sortBy="#{usuario.rol}" exportable="false">
-                        <h:outputText value="#{usuario.rol}"/>
-                    </p:column>
-
-                    <div class= "disenho">
-                    </div>
-
-
-                </p:dataTable>
                     
-                <p:panel >
-                    <p:menubar>
-                        <f:facet name="options">
-                           <p:commandButton value="Registrar Usuario" icon="pi pi-plus"  actionListener="#{loginController.registrar()}"  update="growl, messages" />
-                        </f:facet>
-                    </p:menubar>
-                </p:panel>
+                    <p:column>
+                        <p:panelGrid columns="1" layout="grid" style="border:0px none; text-align: center">
+
+                            <p:commandButton icon="pi pi-pencil" value="Editar" actionListener="#{usuariosController.openEdit}"
+                                             oncomplete="PF('nuevoUsuarioDialog').show()" update=":form"
+                                             styleClass="edit-button rounded-button ui-button-success" process="@this">
+                                <f:setPropertyActionListener value="#{usuario}" target="#{usuariosController.usuarioSeleccionado}"/>
+                            </p:commandButton>
+
+
+                        </p:panelGrid>
+                    </p:column>
+                </p:dataTable>
+
+                <p:dialog header="Editar Usuario" showEffect="fade" modal="true"
+                          widgetVar="nuevoUsuarioDialog" responsive="true" visible="#{usuariosController.usuarioSeleccionado ne null}">
+
+                    <p:outputPanel id="administrar-usuario-content" class="ui-fluid">
+                        <p:outputPanel rendered="#{not empty usuariosController.usuarioSeleccionado}">
+                            <div class="p-field">
+                                <div class="disenho">
+                                <p:outputLabel  style="font-size: 18px; font-weight: bold;">Identificador</p:outputLabel>
+                                </div>
+                                
+                                <p:inputText id="idUsuario" value="#{usuariosController.usuarioSeleccionado.idUsuario}" required="true" disabled="true">
+                                <p:keyFilter mask="num" />
+                                </p:inputText>
+                                <p:message id="idUsuarioMessage" for="idUsuario" />
+                            </div>
+                            
+                            <div class="p-field">
+                                <div class="disenho">
+                                <p:outputLabel style="font-size: 18px; font-weight: bold;">Usuario</p:outputLabel>
+                                </div>
+                                
+                                <p:inputText id="usuario" value="#{usuariosController.usuarioSeleccionado.usuario}" disabled="true" required="true"/>
+                                <p:message id="usuarioMessage" for="usuario" />
+                            </div>
+
+                            <div class="p-field">
+                                <div class="disenho">
+                                <p:outputLabel style="font-size: 18px; font-weight: bold;">Cedula</p:outputLabel>
+                                </div>
+                                
+                                <p:inputText id="cedula" value="#{usuariosController.usuarioSeleccionado.cedulaEmpleado} #{usuariosController.usuarioSeleccionado.cedulaResidente}" disabled="true" required="true"/>
+                                <p:message id="cedulaMessage" for="cedula" />
+                            </div>
+                            <div class="p-field">
+                                <div class="disenho">
+                                <p:outputLabel  style="font-size: 18px; font-weight: bold;">Rol</p:outputLabel>
+                                </div>
+                                
+                                <p:inputText id="idRol" value="#{usuariosController.usuarioSeleccionado.idRol}" required="true" disabled="true"/>
+                                <p:message id="idRolMessage" for="idRol" />
+                            </div>
+                        
+                            <div class="p-field">
+                                <div class="disenho">
+                                <p:outputLabel for="estado" style="font-size: 18px; font-weight: bold;">Estado</p:outputLabel>
+                                </div>
+                                <p:selectOneMenu id="estado" value="#{usuariosController.usuarioSeleccionado.estado}" style="width:12rem">
+                                    <f:selectItem itemLabel="Activo" itemValue="Activo"/>
+                                    <f:selectItem itemLabel="Inactivo" itemValue="Inactivo"/>
+                                </p:selectOneMenu>
+                            </div>
+
+                        </p:outputPanel>    
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Guadar" icon="pi pi-check" actionListener="#{usuariosController.actualizarUsuario()}" 
+                                         update="administrar-usuario-content" process="administrar-usuario-content @this" />
+                        <p:commandButton value="Cancelar" icon="pi pi-times"
+                                         class="ui-button-secondary" onclick="PF('nuevoUsuarioDialog').hide()">
+                             <p:ajax update="form:administrar-usuario-content" />
+                        </p:commandButton>
+                    </f:facet>
+
+                </p:dialog>
             </div>
         </h:form>
     </h:body>

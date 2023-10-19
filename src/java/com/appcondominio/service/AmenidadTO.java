@@ -9,7 +9,7 @@ import java.io.Serializable;
  */
 public class AmenidadTO implements Serializable{
     
-    private int idAmenidad;
+    private Integer idAmenidad;
     private String nombreAmenidad;
     private String descripcion;
     private String estado;
@@ -17,18 +17,18 @@ public class AmenidadTO implements Serializable{
     public AmenidadTO() {
     }
 
-    public AmenidadTO(int idAmenidad, String nombreAmenidad, String descripcion, String estado) {
+    public AmenidadTO(Integer idAmenidad, String nombreAmenidad, String descripcion, String estado) {
         this.idAmenidad = idAmenidad;
         this.nombreAmenidad = nombreAmenidad;
         this.descripcion = descripcion;
         this.estado = estado;
     }
     
-    public int getIdAmenidad() {
+    public Integer getIdAmenidad() {
         return idAmenidad;
     }
 
-    public void setIdAmenidad(int idAmenidad) {
+    public void setIdAmenidad(Integer idAmenidad) {
         this.idAmenidad = idAmenidad;
     }
 

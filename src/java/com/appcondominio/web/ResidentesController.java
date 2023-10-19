@@ -14,6 +14,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 import org.primefaces.PrimeFaces;
 
 /**
@@ -134,13 +135,34 @@ public class ResidentesController implements Serializable{
     
     
     public void filtrarResidentes() {
-    filteredResidentes.clear();
-    for (ResidenteTO residente : residente) {
-        if ((activo && "Activo".equals(residente.getEstado())) || (!activo && "Inactivo".equals(residente.getEstado()))) {
-            filteredResidentes.add(residente);
+        filteredResidentes.clear();
+        for (ResidenteTO residente : residente) {
+            if ((activo && "Activo".equals(residente.getEstado())) || (!activo && "Inactivo".equals(residente.getEstado()))) {
+                filteredResidentes.add(residente);
+            }
         }
     }
-}
+        public void principal() {
+
+        this.redireccionar("/faces/principal.xhtml");
+
+    }
+    
+    public void usuarios() {
+
+        this.redireccionar("/faces/usuarios.xhtml");
+
+    }
+    
+    public void redireccionar(String ruta) {
+        HttpServletRequest request;
+        try {
+            request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+            FacesContext.getCurrentInstance().getExternalContext().redirect(request.getContextPath() + ruta);
+        } catch (Exception e) {
+
+        }
+    }
     
     
     public void guardarResidenteYUsuario() {

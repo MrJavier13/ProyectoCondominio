@@ -26,11 +26,10 @@ and open the template in the editor.
             }
 
              .button{
-                font-size: 30px;
+                font-size: 60px;
                 padding: 15px 30px;
                 margin: 10px;
-                background-color: #ff6600;
-                color: white;
+
              }
             .boton-con-icono {
                 background: url('../imagenes/CondominioLogo.png') center center no-repeat;
@@ -60,9 +59,7 @@ and open the template in the editor.
 
 
             <p:panel style="background: transparent; border: transparent">
-                
-                 
-                
+
                 <div style=" text-align: right;">
                      
                     <button type="button" class="boton-con-icono">
@@ -75,18 +72,23 @@ and open the template in the editor.
                 
                 <div class="container">
                     <div class="buttons-container">
-                        <p:commandButton value="Gestión de Amenidades" actionListener="#{loginController.amenidades()}" styleClass="button boton-naranja"  update="growl, messages" />
+                        <p:commandButton value="Gestión de Amenidades" actionListener="#{loginController.amenidades()}" styleClass="button"  update="growl, messages" />
                     </div>
                 </div>
                 
                 <div class="container">
                     <div class="buttons-container">
-                        <p:commandButton value="Gestión de Residentes"   actionListener="#{loginController.residentes()}"  styleClass="button boton-naranja" update="growl, messages" />
+                        <p:commandButton value="Gestión de Residentes"   actionListener="#{loginController.residentes()}"  styleClass="button" update="growl, messages" />
                     </div>
                 </div>
                 <div class="container">
                     <div class="buttons-container">
                         <p:commandButton value="Gestión del Personal"  actionListener="#{loginController.personal()}"  styleClass="button" update="growl, messages" />
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="buttons-container">
+                        <p:commandButton value="Gestión de Usuarios"  actionListener="#{loginController.usuarios()}"  styleClass="button" update="growl, messages" />
                     </div>
                 </div>
                 <div class="container">

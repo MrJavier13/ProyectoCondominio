@@ -11,30 +11,75 @@
             .disenho
             {
                 line-height: 40px;
-
             }
             .input-container {
                 position: relative;
             }
             .ui-message-error {
                 position: relative;
-                float: right; /* Alinea el mensaje a la derecha */
-                right: 0; /* Asegura que esté pegado al borde derecho del contenedor */
+                float: right; 
+                right: 0; 
                 top: 0;
-
             }
             .ui-message-error .ui-message-error-icon {
-                display: none; /* Oculta el icono "x" de los mensajes de error */
+                display: none; 
             }
             .filter-container {
                 display: flex;
                 align-items: center;
-                justify-content: flex-end; /* Alinea el contenido a la derecha */
-                margin-right: 10px; /* Ajusta el margen si es necesario */
+                justify-content: flex-end; 
+                margin-right: 10px; 
+            }
+            .filter-container span {
+                margin-right: 5px; 
+            }
+            .custom-button {
+                padding: 10px 10px;
+                font-size: 0.93em;
+            }
+            body {
+                margin: 0;
+                font-family: Verdana, sans-serif;
+            }
+            .topbar {
+                background-color: #1e4fa5;
+                color: white;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 20px;
+                transition: background-color 0.3s;
             }
 
-            .filter-container span {
-                margin-right: 5px; /* Espaciado entre el texto y el botón */
+
+            .topbar-logo {
+                font-size: 24px;
+                font-weight: bold;
+                text-decoration: none;
+                color: #e6e6e6;
+            }
+            .topbar-menu {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                display: flex;
+            }
+
+            .custom-commandlink {
+                position: relative;
+                color: white;
+                text-decoration: none;
+                font-size: 14px;
+                margin: 0 15px;
+                font-size: 20px;
+            }
+            .custom-commandlink:hover::after{
+                content: "";
+                position: absolute;
+                left: 0;
+                bottom: -13px;
+                width: 100%;
+                border-bottom: 5px solid white;
             }
         </style>
     </h:head>
@@ -44,10 +89,14 @@
             <p:growl id="growl" showDetail="true" />
             <p:growl id="messages" showDetail="true"/>
             
-            <div class="card">
-                <p:commandButton value="Principal" icon="pi pi-home" actionListener="#{residentesController.principal()}" styleClass="mr-2"/>
+            <div class="topbar">
+                <a class="topbar-logo">Gestión de residentes</a>
+                <ul class="topbar-menu">
+                    <p:commandLink value="Inicio" actionListener="#{residentesController.principal}" ajax="false" styleClass="custom-commandlink" />
+                    <p:commandLink value="Usuarios" actionListener="#{residentesController.usuarios}" ajax="false" styleClass="custom-commandlink" />
+                    <p:commandLink value="Cerrar Sesión" actionListener="#{loginController.cerrarSesion}" ajax="false" styleClass="custom-commandlink" />
+                </ul>
             </div>
-
             <div class="card crud-demo">
 
                 <p:dataTable id="dt-residentes" widgetVar="dtResidentes" var="residente" value="#{residentesController.filteredResidentes}"

@@ -33,23 +33,21 @@ public class ServicioUsuario extends Servicios implements Serializable{
         try {
 
             //super.conectar();
-            ps = conn.prepareStatement("SELECT idUsuario, usuario, contrasena, cedulaResidente, cedulaEmpleado, idRol, estado FROM usuario");
+            ps = conn.prepareStatement("SELECT idUsuario, usuario, cedulaResidente, cedulaEmpleado, idRol, estado FROM usuario");
             rs = ps.executeQuery();
 
             while (rs.next()) {
                 
-                int idUsuario = rs.getInt("idUsuario");
+                Integer idUsuario = rs.getInt("idUsuario");
                 String usuario = rs.getString("usuario");
-                String contrasena = rs.getString("contrasena");
-                int cedulaResidente = rs.getInt("cedulaResidente");
+                Integer cedulaResidente = rs.getInt("cedulaResidente");
                 Integer cedulaEmpleado = rs.getInt("cedulaEmpleado");
-                int idRol = rs.getInt("idrol");
+                Integer idRol = rs.getInt("idrol");
                 String estado = rs.getString("estado");
 
                 UsuarioTO usuarios = new UsuarioTO();
                 usuarios.setIdUsuario(idUsuario);
                 usuarios.setUsuario(usuario);
-                usuarios.setContrasena(contrasena);
                 usuarios.setCedulaResidente(cedulaResidente);
                 usuarios.setCedulaEmpleado(cedulaEmpleado);
                 usuarios.setIdRol(idRol);
@@ -185,13 +183,13 @@ public class ServicioUsuario extends Servicios implements Serializable{
         PreparedStatement ps = null;
 
         try {
-            ps = super.getConexion().prepareStatement("UPDATE usuario SET usuario=?, contrasena=?, cedulaResidente=?, cedulaEmpleado=?, idRol=?, estado=?  WHERE usuario =?");
+            ps = super.getConexion().prepareStatement("UPDATE usuario SET usuario=?, cedulaResidente=?, cedulaEmpleado=?, idRol=?, estado=?  WHERE idUsuario =?");
             ps.setString(1, usuario.getUsuario());
-            ps.setString(2, usuario.getContrasena());
-            ps.setInt(3, usuario.getCedulaResidente());
-            ps.setInt(4, usuario.getCedulaEmpleado());
-            ps.setInt(5, usuario.getIdRol());
-            ps.setString(6, usuario.getEstado());
+            ps.setInt(2, usuario.getCedulaResidente());
+            ps.setInt(3, usuario.getCedulaEmpleado());
+            ps.setInt(4, usuario.getIdRol());
+            ps.setString(5, usuario.getEstado());
+            ps.setInt(6, usuario.getIdUsuario());
             ps.execute();
 
         } catch (Exception ex) {
