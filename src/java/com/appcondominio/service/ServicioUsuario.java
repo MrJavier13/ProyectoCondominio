@@ -185,6 +185,33 @@ public class ServicioUsuario extends Servicios implements Serializable {
             }
         }
     }
+    
+    public void insertarUsuarioPersonal(UsuarioTO usuario) {
+
+        PreparedStatement ps = null;
+
+        try {
+            ps = super.getConexion().prepareStatement("INSERT INTO usuario (usuario, contrasena, cedulaEmpleado, idRol, estado) VALUES (?,?,?,?,?)");
+            ps.setString(1, usuario.getUsuario());
+            ps.setString(2, BCrypt.hashpw(usuario.getContrasena(), BCrypt.gensalt(10)));
+            ps.setInt(3, usuario.getCedulaEmpleado());
+            ps.setInt(4, usuario.getIdRol());
+            ps.setString(5, usuario.getEstado());
+            ps.execute();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (ps != null && ps.isClosed()) {
+                    ps.close();
+                }
+
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
 
     public void actualizarUsuario(UsuarioTO usuario) {
 

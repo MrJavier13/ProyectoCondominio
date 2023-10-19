@@ -5,13 +5,81 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
-        <title>Gestión de personal</title>
+        <title>Gestión de Empleados</title>
         <f:event type="preRenderView" listener="#{loginController.verificarSesion()}"/>
         <style>
             .disenho
             {
-               line-height: 60px;
-                
+                line-height: 40px;
+            }
+            .input-container {
+                position: relative;
+            }
+            .ui-message-error {
+                position: relative;
+                float: right; 
+                right: 0; 
+                top: 0;
+            }
+            .ui-message-error .ui-message-error-icon {
+                display: none; 
+            }
+            .filter-container {
+                display: flex;
+                align-items: center;
+                justify-content: flex-end; 
+                margin-right: 10px; 
+            }
+            .filter-container span {
+                margin-right: 5px; 
+            }
+            .custom-button {
+                padding: 10px 10px;
+                font-size: 0.93em;
+            }
+            body {
+                margin: 0;
+                font-family: Verdana, sans-serif;
+            }
+            .topbar {
+                background-color: #1e4fa5;
+                color: white;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 20px;
+                transition: background-color 0.3s;
+            }
+
+
+            .topbar-logo {
+                font-size: 24px;
+                font-weight: bold;
+                text-decoration: none;
+                color: #e6e6e6;
+            }
+            .topbar-menu {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                display: flex;
+            }
+
+            .custom-commandlink {
+                position: relative;
+                color: white;
+                text-decoration: none;
+                font-size: 14px;
+                margin: 0 15px;
+                font-size: 20px;
+            }
+            .custom-commandlink:hover::after{
+                content: "";
+                position: absolute;
+                left: 0;
+                bottom: -13px;
+                width: 100%;
+                border-bottom: 5px solid white;
             }
         </style>
     </h:head>
@@ -19,122 +87,193 @@
 
         <h:form id="form">
             <p:growl id="growl" showDetail="true" />
-        
-                   
+            <p:growl id="messages" showDetail="true"/>
+            
+            <div class="topbar">
+                <a class="topbar-logo">Gestión de Personal</a>
+                <ul class="topbar-menu">
+                    <p:commandLink value="Inicio" actionListener="#{residentesController.principal}" ajax="false" styleClass="custom-commandlink" />
+                    <p:commandLink value="Usuarios" actionListener="#{residentesController.usuarios}" ajax="false" styleClass="custom-commandlink" />
+                    <p:commandLink value="Cerrar Sesión" actionListener="#{loginController.cerrarSesion}" ajax="false" styleClass="custom-commandlink" />
+                </ul>
+            </div>
 
             <div class="card crud-demo">
- 
-                <p:dataTable id="dt-personal" widgetVar="dtPersonal" var="residente" value="#{residentesController.residente}"
+
+                <p:dataTable id="dt-empleados" widgetVar="dtEmpleados" var="personal" value="#{personalController.filteredPersonal}"
                              reflow="true" styleClass="products-table"
                              paginator="true"
                              rows="10" rowSelectMode="add" paginatorPosition="bottom">
                     <f:facet name="header">
                         <div class="products-table-header">
-                            <span style="font-weight: bold">Personal</span>                     
+                            <span style="font-weight: bold">Personal</span> 
+                            <div class="filter-container">
+                                <span>Mostrar:</span>
+                                <p:selectBooleanButton value="#{personalController.activo}" 
+                                                       onLabel="Activo" offLabel="Inactivo">
+                                    <p:ajax update="dt-empleados" listener="#{personalController.filtrarPersonal}" />
+                                </p:selectBooleanButton>
+                            </div>
                         </div>
                     </f:facet>
 
-                    <p:column headerText="Cedula" sortBy="#{residente.cedula}"  filterMatchMode="contains">
-                        <h:outputText value="#{residente.cedula}"/>
+                    <p:column headerText="Cédula" sortBy="#{personal.cedula}"  filterMatchMode="contains">
+                        <h:outputText value="#{personal.cedula}"/>
                     </p:column>
-                    <p:column headerText="Nombre" sortBy="#{residente.nombre}"  filterMatchMode="contains">
-                        <h:outputText value="#{residente.nombre}"/>
+
+
+                    <p:column headerText="Nombre Completo" sortBy="#{personal.nombre}"  filterMatchMode="contains">
+                        <h:outputText value="#{personal.nombre} #{personal.apellido1} #{personal.apellido2}"/>
+                    </p:column>                    
+                    <p:column headerText="Estado" sortBy="#{personal.estado}"   filterMatchMode="contains" sortable="false">
+                        <h:outputText value="#{personal.estado}"/>
                     </p:column>
-                    <p:column headerText="Apellido" sortBy="#{residente.apellido}"  filterMatchMode="contains">
-                        <h:outputText value="#{residente.apellido}"/>
-                    </p:column>
-                    <p:column headerText="Telefono" sortBy="#{residente.telefono}" exportable="false">
-                        <h:outputText value="#{residente.telefono}"/>
-                    </p:column>
-                    <p:column headerText="Correo Electrónico" sortBy="#{residente.correoElectronico}" exportable="false">
-                        <h:outputText value="#{residente.correoElectronico}"/>
-                    </p:column>
-                    
-                    
+
                     <p:column>
                         <p:panelGrid columns="1" layout="grid" style="border:0px none; text-align: center">
 
-                            <p:commandButton icon="pi pi-pencil" value="Editar"
-                                             oncomplete="PF('nuevoResidenteDialog').show()" update=":form:administrar-residente-content"
+                            <p:commandButton icon="pi pi-pencil" value="Editar" actionListener="#{personalController.openEdit}"
+                                             oncomplete="PF('nuevoPersonalDialog').show()" update=":form"
                                              styleClass="edit-button rounded-button ui-button-success" process="@this">
-                                <f:setPropertyActionListener value="#{residente}" target="#{residentesController.residenteSeleccionado}"/>
+                                <f:setPropertyActionListener value="#{personal}" target="#{personalController.personalSeleccionado}"/>
                             </p:commandButton>
-                            
-                   
+
+
                         </p:panelGrid>
                     </p:column>
-                    
-                    
+
                     <div class= "disenho">
                     </div>
 
 
                 </p:dataTable>
-                
-            <p:toolbar>
-                <p:toolbarGroup>
-                    <p:commandButton value="Agregar nuevo empleado" icon="pi pi-plus"
-                        actionListener="#{residentesController.openNew}"
-                        update=":form" oncomplete="PF('nuevoResidenteDialog').show()"                                         
-                        style="margin-right: .5rem">  
-                    </p:commandButton>
-                </p:toolbarGroup>
-            </p:toolbar>
-                
-                <p:dialog header="Registrar nuevo empleado" showEffect="fade" modal="true"
-                          widgetVar="nuevoResidenteDialog" responsive="true" >
 
-                    <p:outputPanel id="administrar-residente-content" class="ui-fluid">
-                         <div class="disenho">
-                            <div class="p-field">
-                                <p:outputLabel for="cedula" style="font-size: 18px; font-weight: bold;">Cédula</p:outputLabel>
-                                <p:inputText id="cedula" value="#{residentesController.residenteSeleccionado.cedula}" required="true"/>
-                            </div>
+                <p:toolbar>
+                    <p:toolbarGroup>
+                        <p:commandButton value="Agregar un nuevo empleado" icon="pi pi-plus" 
+                                         actionListener="#{personalController.openNew}"
+                                         update=":form" oncomplete="PF('nuevoPersonalDialog').show()"                                         
+                                         style="margin-right: .5rem">
+                            <p:resetInput target=":form:administrar-personal-content"/>
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
 
-                            <div class="p-field">
-                                <p:outputLabel for="nombre" style="font-size: 18px; font-weight: bold;">Nombre</p:outputLabel>
-                                <p:inputText id="nombre" value="#{residentesController.residenteSeleccionado.nombre}" required="true"/>
-                            </div>
-                            <div class="p-field">
-                                <p:outputLabel for="apellido" style="font-size: 18px; font-weight: bold;">Apellido</p:outputLabel>
-                                <p:inputText id="apellido" value="#{residentesController.residenteSeleccionado.apellido}" required="true"/>
-                            </div>
+                <p:dialog header="#{personalController.dialogHeader}" showEffect="fade" modal="true"
+                          widgetVar="nuevoPersonalDialog" responsive="true" visible="#{personalController.personalSeleccionado ne null}">
 
+                    <p:outputPanel id="administrar-personal-content" class="ui-fluid">
+                        <p:outputPanel rendered="#{not empty personalController.personalSeleccionado}">
                             <div class="p-field">
-                                <p:outputLabel for="telefono" style="font-size: 18px; font-weight: bold;">Telefono</p:outputLabel>
-                                <p:inputText id="telefono" value="#{residentesController.residenteSeleccionado.telefono}">
-
+                                <div class="disenho">
+                                <p:outputLabel  style="font-size: 18px; font-weight: bold;">Cédula</p:outputLabel>
+                                </div>
+                                
+                                <p:inputText id="cedula" value="#{personalController.personalSeleccionado.cedula}" required="true" requiredMessage="Por favor, ingrese su número de cédula">
+                                <p:keyFilter mask="num" />
                                 </p:inputText>
+                                <p:tooltip for="cedula" value="Digite su número de cédula. Solo se permite números" position="right"/>
+                                <p:message id="cedulaMessage" for="cedula" />
                             </div>
 
-                            
                             <div class="p-field">
-                                <p:outputLabel for="correoElectronico" style="font-size: 18px; font-weight: bold;">Correo Electrónico</p:outputLabel>
-                                <p:inputText id="correoElectronico" value="#{residentesController.residenteSeleccionado.correoElectronico}">
+                                <div class="disenho">
+                                <p:outputLabel style="font-size: 18px; font-weight: bold;">Nombre</p:outputLabel>
+                                </div>
+                                
+                                <p:inputText id="nombre" value="#{personalController.personalSeleccionado.nombre}" required="true" requiredMessage="Por favor, ingrese el nombre"/>
+                                <p:tooltip for="nombre" value="Digite el nombre del empleado." position="right"/>
+                                <p:message id="nombreMessage" for="nombre" />
+                            </div>
+                            <div class="p-field">
+                                <div class="disenho">
+                                <p:outputLabel  style="font-size: 18px; font-weight: bold;">Primer Apellido</p:outputLabel>
+                                </div>
+                                
+                                <p:inputText id="primerApellido" value="#{personalController.personalSeleccionado.apellido1}" required="true" requiredMessage="Por favor, ingrese el primer apellido"/>
+                                <p:tooltip for="primerApellido" value="Digite el primer apellido." position="right"/>
+                                <p:message id="primerApellidoMessage" for="primerApellido" />
+                            </div>
+                            <div class="p-field">
+                                <div class="disenho">
+                                <p:outputLabel  style="font-size: 18px; font-weight: bold;">Segundo Apellido</p:outputLabel>
+                                </div>
+                                
+                                <p:inputText id="segundoApellido" value="#{personalController.personalSeleccionado.apellido2}" required="true" requiredMessage="Por favor, ingrese el segundo apellido"/>
+                                <p:tooltip for="segundoApellido" value="Digite el segundo apellido." position="right"/>
+                                <p:message id="segundoApellidoMessage" for="segundoApellido" />
+                               
+                                
+                            </div>
 
+                            <div class="p-field">
+                                <div class="disenho">
+                                <p:outputLabel  style="font-size: 18px; font-weight: bold;">Teléfono</p:outputLabel>
+                                </div>
+                                
+                                <p:inputText id="telefono" value="#{personalController.personalSeleccionado.telefono}" styleClass="input-field" required="true" requiredMessage="Por favor, ingrese el número de teléfono">
+                                <p:keyFilter mask="num" />
                                 </p:inputText>
-                            </div>
-                             
+                                <p:tooltip for="telefono" value="Digite el número de teléfono. Solo se permite números" position="right"/>
+                                <p:message id="telefonoMessage" for="telefono" />
+                            </div>                                                                                    
                             <div class="p-field">
-                            <p:selectOneRadio id="radioOption" columns="2" layout="grid" value="#{residentesController.residenteSeleccionado}">
-                            <f:selectItem itemLabel="Activado" itemValue="Activado" />
-                            <f:selectItem itemLabel="Desactivado" itemValue="Desactivado" />
-                            </p:selectOneRadio>
+                                <div class="disenho">
+                                    <p:outputLabel  style="font-size: 18px; font-weight: bold;">Correo Electrónico</p:outputLabel>
+                                </div>
+                                <div class="input-container">
+                                    <p:inputText id="correoElectronico" value="#{personalController.personalSeleccionado.correo}" styleClass="input-field" required="true" requiredMessage="Por favor, ingrese el correo electrónico">
+                                        
+                                         <p:ajax event="blur" update="correoElectronicoMessage"/>
+                                    </p:inputText>
+                                    <p:tooltip for="correoElectronico" value="Digite el correo electrónico." position="right"/>
+                                    <p:message id="correoElectronicoMessage" for="correoElectronico"  display="text"/>
+                                </div>
                             </div>
-                        </div>
+ 
+                            <div class="p-field">
+                                <div class="disenho">
+                                
+                                <p:outputLabel style="font-size: 18px; font-weight: bold;">Placa del Vehículo</p:outputLabel>
+                                </div>
+                                
+                                <p:inputText id="placaVehiculo" value="#{personalController.personalSeleccionado.placaVehiculo}" styleClass="input-field" required="true" requiredMessage="Por favor, ingrese la placa del vehículo"/>
+                                <p:tooltip for="placaVehiculo" value="Digite el placa del vehículo, si tiene." position="right"/>
+                                <p:message id="placaVehiculoMessage" styleClass="tooltipDialog" for="placaVehiculo" />
+                            </div>
+                        
+                            <div class="p-field">
+                                <div class="disenho">
+                                <p:outputLabel for="estado" style="font-size: 18px; font-weight: bold;">Estado</p:outputLabel>
+                                </div>
+                                <p:selectOneMenu id="estado" value="#{personalController.personalSeleccionado.estado}" style="width:12rem" disabled="#{personalController.selectOneMenuDisabled}">
+                                    <f:selectItem itemLabel="Activo" itemValue="Activo"/>
+                                    <f:selectItem itemLabel="Inactivo" itemValue="Inactivo"/>
+                                </p:selectOneMenu>
+                            </div>
+
+                        </p:outputPanel>    
                     </p:outputPanel>
 
                     <f:facet name="footer">
-                        <p:commandButton value="Guadar" icon="pi pi-check" 
-                                         update="administrar-residente-content" process="administrar-residente-content @this"/>
-                        <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('nuevoResidenteDialog').hide()"
-                                         class="ui-button-secondary"/>
+                        <p:commandButton value="Guadar" icon="pi pi-check" actionListener="#{personalController.guardarPersonal}" 
+                                         update="administrar-personal-content" process="administrar-personal-content @this" />
+                        <p:commandButton value="Cancelar" icon="pi pi-times"
+                                       
+                                         class="ui-button-secondary" onclick="PF('nuevoPersonalDialog').hide()">
+                             <p:ajax update="form:administrar-personal-content" />
+                        </p:commandButton>
+                        <p:commandButton value="Crear Usuario" icon="pi pi-check" actionListener="#{personalController.guardarUsuario}" 
+                                         update="administrar-personal-content" process="administrar-personal-content @this" />
                     </f:facet>
 
                 </p:dialog>
-                    
- 
+
+
             </div>
         </h:form>
     </h:body>
 </html>
+
+
+

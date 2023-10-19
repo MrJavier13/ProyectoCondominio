@@ -188,7 +188,7 @@ public class ResidentesController implements Serializable{
                 usuario.setContrasena(String.valueOf(residenteSeleccionado.getCedula()));
                 usuario.setEstado(residenteSeleccionado.getEstado());
                 usuario.setIdRol(1);
-                servicioUsuario.insertarUsuarioResidente(usuario);
+                servicioUsuario.insertarUsuarioPersonal(usuario);
                 
                 FacesContext.getCurrentInstance().addMessage(null, 
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Residente y usuario agregado"));
