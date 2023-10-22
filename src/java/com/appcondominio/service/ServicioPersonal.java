@@ -35,7 +35,7 @@ public class ServicioPersonal extends Servicios implements Serializable{
                 personal.setApellido1(rs.getString("primerApellido"));
                 personal.setApellido2(rs.getString("segundoApellido"));
                 personal.setTelefono(rs.getInt("telefono"));
-                personal.setCorreo(rs.getString("correoElectronico"));
+                personal.setCorreoElectronico(rs.getString("correoElectronico"));
                 personal.setPlacaVehiculo(rs.getString("placaVehiculo"));
                 personal.setEstado(rs.getString("estado"));
 
@@ -111,7 +111,7 @@ public class ServicioPersonal extends Servicios implements Serializable{
             ps.setString(4, personal.getApellido2());
             ps.setInt(5, personal.getTelefono());
             ps.setString(6, personal.getPlacaVehiculo());
-            ps.setString(7, personal.getCorreo());
+            ps.setString(7, personal.getCorreoElectronico());
             ps.setString(8, personal.getEstado());
             ps.execute();
 
@@ -142,7 +142,7 @@ public class ServicioPersonal extends Servicios implements Serializable{
             ps.setString(3, personal.getApellido2());
             ps.setInt(4, personal.getTelefono());
             ps.setString(5, personal.getPlacaVehiculo());
-            ps.setString(6, personal.getCorreo());
+            ps.setString(6, personal.getCorreoElectronico());
             ps.setString(7, personal.getEstado());
             ps.setInt(8, personal.getCedula());
             ps.execute();

@@ -1,5 +1,6 @@
 package com.appcondominio.service;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,7 +16,7 @@ import javax.faces.bean.ManagedBean;
  */
 @ManagedBean(name="amenidadService")
 @ApplicationScoped
-public class ServicioAmenidad extends Servicios{
+public class ServicioAmenidad extends Servicios implements Serializable{
     
     public List<AmenidadTO> mostrarAmenidades() {
         Connection conn = super.getConexion();

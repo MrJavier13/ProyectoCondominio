@@ -1,37 +1,41 @@
 
 package com.appcondominio.service;
 
+import java.io.Serializable;
 
-public class PersonalTO {
+
+public class PersonalTO implements Serializable{
     
-    private int cedula;
+    private Integer cedula;
     private String nombre;
     private String apellido1;
     private String apellido2;
-    private int telefono;
+    private Integer telefono;
     private String placaVehiculo;
-    private String Correo;
+    private String CorreoElectronico;
     private String estado;
 
     public PersonalTO() {
     }
 
-    public PersonalTO(int cedula, String nombre, String apellido1, String apellido2, int telefono, String placaVehiculo, String Correo, String estado) {
+    public PersonalTO(Integer cedula, String nombre, String apellido1, String apellido2, Integer telefono, String placaVehiculo, String CorreoElectronico, String estado) {
         this.cedula = cedula;
         this.nombre = nombre;
         this.apellido1 = apellido1;
         this.apellido2 = apellido2;
         this.telefono = telefono;
         this.placaVehiculo = placaVehiculo;
-        this.Correo = Correo;
+        this.CorreoElectronico = CorreoElectronico;
         this.estado = estado;
     }
+    
+    
 
-    public int getCedula() {
+    public Integer getCedula() {
         return cedula;
     }
 
-    public void setCedula(int cedula) {
+    public void setCedula(Integer cedula) {
         this.cedula = cedula;
     }
 
@@ -59,11 +63,11 @@ public class PersonalTO {
         this.apellido2 = apellido2;
     }
 
-    public int getTelefono() {
+    public Integer getTelefono() {
         return telefono;
     }
 
-    public void setTelefono(int telefono) {
+    public void setTelefono(Integer telefono) {
         this.telefono = telefono;
     }
 
@@ -75,12 +79,12 @@ public class PersonalTO {
         this.placaVehiculo = placaVehiculo;
     }
 
-    public String getCorreo() {
-        return Correo;
+    public String getCorreoElectronico() {
+        return CorreoElectronico;
     }
 
-    public void setCorreo(String Correo) {
-        this.Correo = Correo;
+    public void setCorreoElectronico(String CorreoElectronico) {
+        this.CorreoElectronico = CorreoElectronico;
     }
 
     public String getEstado() {
@@ -90,7 +94,7 @@ public class PersonalTO {
     public void setEstado(String estado) {
         this.estado = estado;
     }
-    
+
     
     
 }

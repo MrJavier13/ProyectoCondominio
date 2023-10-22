@@ -13,6 +13,18 @@
                line-height: 40px;
                 
             }
+            .input-container {
+                position: relative;
+            }
+            .ui-message-error {
+                position: relative;
+                float: right; 
+                right: 0; 
+                top: 0;
+            }
+            .ui-message-error .ui-message-error-icon {
+                display: none; 
+            }
             body {
                 margin: 0;
                 font-family: Verdana, sans-serif;
@@ -67,6 +79,12 @@
                 border-bottom: 5px solid white;
             }
         </style>
+        <script type="text/javascript">
+            function resetFormFields() {
+            document.getElementById('form:nombreAmenidad').value = ' ';
+            document.getElementById('form:descripcion').value = ' ';
+            }
+        </script>
     </h:head>
     <h:body style=" background: linear-gradient(to bottom, #ffffff, #1e4fa5);">
 
@@ -143,19 +161,11 @@
                 </p:toolbar>
                 
                 <p:dialog header="#{amenidadesController.dialogHeader}" showEffect="fade" modal="true"
-                          widgetVar="nuevaAmenidadDialog" responsive="true" visible="#{amenidadesController.amenidadSeleccionada ne null}">
+                          widgetVar="nuevaAmenidadDialog" responsive="true" onHide="resetFormFields();" visible="#{amenidadesController.amenidadSeleccionada ne null}">
 
                     <p:outputPanel id="administrar-amenidad-content" class="ui-fluid">
                         <p:outputPanel rendered="#{not empty amenidadesController.amenidadSeleccionada}">
                             
-                            <div class="p-field">
-                                <div class="disenho">
-                                <p:outputLabel for="idAmenidad" style="font-size: 18px; font-weight: bold;">Nombre de la amenidad</p:outputLabel>
-                                </div>
-                                <p:inputText id="idAmenidad" value="#{amenidadesController.amenidadSeleccionada.idAmenidad}" required="true" requiredMessage="Por favor, ingrese el identificador de la amenidad"/>
-                                <p:tooltip for="idAmenidad" value="Escriba el nombre de la amenidad." position="right"/>
-                                <p:message id="idAmenidadMessage" for="idAmenidad" />
-                            </div>
                             
                             <div class="p-field">
                                 <div class="disenho">
@@ -191,7 +201,7 @@
                     <f:facet name="footer">
                         <p:commandButton value="Guardar" icon="pi pi-check" actionListener="#{amenidadesController.guardarAmenidad}"
                                          update="administrar-amenidad-content" process="administrar-amenidad-content @this"/>
-                        <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('nuevaAmenidadDialog').hide()"
+                        <p:commandButton value="Cancelar" icon="pi pi-times" onclick="resetFormFields(); PF('nuevaAmenidadDialog').hide(); return false;"
                                          class="ui-button-secondary">
                             <p:ajax update="form:administrar-amenidad-content" />
                         </p:commandButton>

@@ -166,21 +166,15 @@ public class ResidentesController implements Serializable{
     
     
     public void guardarResidenteYUsuario() {
-        if (residenteSeleccionado.getCorreoElectronico() == null || residenteSeleccionado.getCorreoElectronico().trim().isEmpty()) {
+        if (!correoValido(residenteSeleccionado.getCorreoElectronico())) {
             FacesContext.getCurrentInstance().addMessage("form:correoElectronico", 
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Correo electrónico es requerido", 
-                    "Por favor, ingrese un correo electrónico válido."));
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Formato de correo electrónico inválido", 
+                    "Por favor, ingrese un correo electrónico válido. Ejemplo: juan@gmail.com"));
             return;
         }
 
         if (!servicioResidente.buscarCedulaResidente(this.residenteSeleccionado.getCedula())) { 
             // Si es false inserta
-            if (!correoValido(residenteSeleccionado.getCorreoElectronico())) {
-                FacesContext.getCurrentInstance().addMessage("form:correoElectronico", 
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Formato de correo electrónico inválido", 
-                        "Por favor, ingrese un correo electrónico válido. Ejemplo: juan@gmail.com"));
-                return;
-            } else {
                 servicioResidente.insertarResidente(residenteSeleccionado);
                 UsuarioTO usuario = new UsuarioTO();
                 usuario.setCedulaResidente(residenteSeleccionado.getCedula());
@@ -188,23 +182,15 @@ public class ResidentesController implements Serializable{
                 usuario.setContrasena(String.valueOf(residenteSeleccionado.getCedula()));
                 usuario.setEstado(residenteSeleccionado.getEstado());
                 usuario.setIdRol(1);
-                servicioUsuario.insertarUsuarioPersonal(usuario);
+                servicioUsuario.insertarUsuarioResidente(usuario);
                 
                 FacesContext.getCurrentInstance().addMessage(null, 
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Residente y usuario agregado"));
-                
-            }
         } else {
-            if (!correoValido(residenteSeleccionado.getCorreoElectronico())) {
-                FacesContext.getCurrentInstance().addMessage("form:correoElectronico", 
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Formato de correo electrónico inválido", 
-                        "Por favor, ingrese un correo electrónico válido."));
-                return;
-            } else {
+
                 servicioResidente.actualizarResidente(residenteSeleccionado);
                 FacesContext.getCurrentInstance().addMessage(null, 
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Residente Actualizado"));
-            }
         }
         this.init();
         PrimeFaces.current().executeScript("PF('nuevoResidenteDialog').hide()");

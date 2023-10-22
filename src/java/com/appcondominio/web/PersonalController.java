@@ -4,6 +4,7 @@ import com.appcondominio.service.PersonalTO;
 import com.appcondominio.service.ServicioPersonal;
 import com.appcondominio.service.ServicioUsuario;
 import com.appcondominio.service.UsuarioTO;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,7 +18,7 @@ import org.primefaces.PrimeFaces;
 
 @ManagedBean(name = "personalController")
 @ViewScoped
-public class PersonalController {
+public class PersonalController implements Serializable{
 
     private PersonalTO personalSeleccionado;
     private String dialogHeader;
@@ -136,52 +137,37 @@ public class PersonalController {
     }
 
     public void guardarPersonal() {
-        if (personalSeleccionado.getCorreo() == null || personalSeleccionado.getCorreo().trim().isEmpty()) {
-            FacesContext.getCurrentInstance().addMessage("form:correoElectronico",
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "El Correo electrónico es requerido",
-                            "Por favor, ingrese un correo electrónico válido."));
+        if (!correoValido(personalSeleccionado.getCorreoElectronico())) {
+            FacesContext.getCurrentInstance().addMessage("form:correoElectronico", 
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Formato de correo electrónico inválido", 
+                    "Por favor, ingrese un correo electrónico válido. Ejemplo: juan@gmail.com"));
             return;
         }
-
         if (!servicioPersonal.buscarCedulaPersonal(this.personalSeleccionado.getCedula())) {
             // Si es false inserta
-            if (!correoValido(personalSeleccionado.getCorreo())) {
-                FacesContext.getCurrentInstance().addMessage("form:correoElectronico",
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Formato de correo electrónico inválido",
-                                "Por favor, ingrese un correo electrónico válido. Ejemplo: usuario@gmail.com"));
-                return;
-            } else {
                 servicioPersonal.insertarPersonal(personalSeleccionado);
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Empleado agregado"));
 
-            }
-        } else {
-            if (!correoValido(personalSeleccionado.getCorreo())) {
-                FacesContext.getCurrentInstance().addMessage("form:correoElectronico",
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Formato de correo electrónico inválido",
-                                "Por favor, ingrese un correo electrónico válido."));
-                return;
-            } else {
+            }else {
                 servicioPersonal.actualizarPersonal(personalSeleccionado);
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Empleado Actualizado"));
             }
-        }
         this.init();
         PrimeFaces.current().executeScript("PF('nuevoPersonalDialog').hide()");
         PrimeFaces.current().ajax().update("form:messages", "form:dt-empleados");
     }
 
     public void guardarUsuario() {
-        if (servicioUsuario.buscarUsuario(this.personalSeleccionado.getCorreo())) {
+        if (servicioUsuario.buscarUsuario(this.personalSeleccionado.getCorreoElectronico())) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Error", "Usuario ya existe"));
 
         } else {
             UsuarioTO usuario = new UsuarioTO();
 
-            usuario.setUsuario(personalSeleccionado.getCorreo());
+            usuario.setUsuario(personalSeleccionado.getCorreoElectronico());
             usuario.setContrasena(String.valueOf(personalSeleccionado.getCedula()));
             usuario.setCedulaEmpleado(personalSeleccionado.getCedula());
             usuario.setEstado(personalSeleccionado.getEstado());

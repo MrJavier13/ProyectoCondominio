@@ -82,6 +82,17 @@
                 border-bottom: 5px solid white;
             }
         </style>
+        <script type="text/javascript">
+        function resetFormFields() {
+            document.getElementById('form:cedula').value = 1;
+            document.getElementById('form:nombre').value = ' ';
+            document.getElementById('form:primerApellido').value = ' ';
+            document.getElementById('form:segundoApellido').value = ' ';
+            document.getElementById('form:telefono').value = 1;
+            document.getElementById('form:correoElectronico').value = ' ';
+            document.getElementById('form:placaVehiculo').value = ' ';
+         }
+        </script>
     </h:head>
     <h:body style=" background: linear-gradient(to bottom, #ffffff, #1e4fa5);">
 
@@ -160,7 +171,7 @@
                 </p:toolbar>
 
                 <p:dialog header="#{personalController.dialogHeader}" showEffect="fade" modal="true"
-                          widgetVar="nuevoPersonalDialog" responsive="true" visible="#{personalController.personalSeleccionado ne null}">
+                          widgetVar="nuevoPersonalDialog" responsive="true" onHide="resetFormFields();" visible="#{personalController.personalSeleccionado ne null}">
 
                     <p:outputPanel id="administrar-personal-content" class="ui-fluid">
                         <p:outputPanel rendered="#{not empty personalController.personalSeleccionado}">
@@ -222,7 +233,7 @@
                                     <p:outputLabel  style="font-size: 18px; font-weight: bold;">Correo Electrónico</p:outputLabel>
                                 </div>
                                 <div class="input-container">
-                                    <p:inputText id="correoElectronico" value="#{personalController.personalSeleccionado.correo}" styleClass="input-field" required="true" requiredMessage="Por favor, ingrese el correo electrónico">
+                                    <p:inputText id="correoElectronico" value="#{personalController.personalSeleccionado.correoElectronico}" styleClass="input-field" required="true" requiredMessage="Por favor, ingrese el correo electrónico">
                                         
                                          <p:ajax event="blur" update="correoElectronicoMessage"/>
                                     </p:inputText>
@@ -258,9 +269,8 @@
                     <f:facet name="footer">
                         <p:commandButton value="Guadar" icon="pi pi-check" actionListener="#{personalController.guardarPersonal}" 
                                          update="administrar-personal-content" process="administrar-personal-content @this" />
-                        <p:commandButton value="Cancelar" icon="pi pi-times"
-                                       
-                                         class="ui-button-secondary" onclick="PF('nuevoPersonalDialog').hide()">
+                        <p:commandButton value="Cancelar" icon="pi pi-times" 
+                                         class="ui-button-secondary" onclick="resetFormFields(); PF('nuevoPersonalDialog').hide(); return false;">
                              <p:ajax update="form:administrar-personal-content" />
                         </p:commandButton>
                         <p:commandButton value="Crear Usuario" icon="pi pi-check" actionListener="#{personalController.guardarUsuario}" 
