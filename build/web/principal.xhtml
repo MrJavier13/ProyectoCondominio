@@ -93,6 +93,11 @@ and open the template in the editor.
                 </div>
                 <div class="container">
                     <div class="buttons-container">
+                        <p:commandButton value="Gestión de Roles"  actionListener="#{loginController.roles()}"  styleClass="button" update="growl, messages" />
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="buttons-container">
                         <p:commandButton value="Bitácora de ingresos/salidas" actionListener="#{loginController.bitacora()}"  styleClass="button" update="growl, messages" />
                     </div>
                 </div>

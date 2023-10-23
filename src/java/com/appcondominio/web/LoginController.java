@@ -87,6 +87,12 @@ public class LoginController implements Serializable {
 
     }
     
+    public void roles() {
+
+        this.redireccionar("/faces/roles.xhtml");
+
+    }
+    
     public void bitacora() {
 
         this.redireccionar("/faces/bitacora.xhtml");
