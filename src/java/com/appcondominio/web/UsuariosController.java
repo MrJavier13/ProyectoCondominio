@@ -137,6 +137,24 @@ public class UsuariosController implements Serializable{
 
     }
     
+    public void amenidades() {
+
+    this.redireccionar("/faces/amenidades.xhtml");
+
+    }
+    
+    public void reservaAmenidades() {
+
+    this.redireccionar("/faces/reservas_amenidades.xhtml");
+
+    }
+    
+    public void roles() {
+
+    this.redireccionar("/faces/roles.xhtml");
+
+    }
+    
     public void redireccionar(String ruta) {
     HttpServletRequest request;
     try {
