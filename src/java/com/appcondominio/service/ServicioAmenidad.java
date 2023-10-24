@@ -109,11 +109,10 @@ public class ServicioAmenidad extends Servicios implements Serializable{
 
         PreparedStatement ps = null;
         try {
-            ps = super.getConexion().prepareStatement("INSERT INTO amenidad (idAmenidad,nombreAmenidad, descripcion, estado) VALUES (?,?,?,?)");
-            ps.setInt(1, amenidad.getIdAmenidad());
-            ps.setString(2, amenidad.getNombreAmenidad());
-            ps.setString(3, amenidad.getDescripcion());
-            ps.setString(4, amenidad.getEstado());
+            ps = super.getConexion().prepareStatement("INSERT INTO amenidad (nombreAmenidad, descripcion, estado) VALUES (?,?,?)");
+            ps.setString(1, amenidad.getNombreAmenidad());
+            ps.setString(2, amenidad.getDescripcion());
+            ps.setString(3, amenidad.getEstado());
             ps.execute();
 
         } catch (Exception ex) {

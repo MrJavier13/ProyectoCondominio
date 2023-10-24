@@ -61,3 +61,13 @@ build/web/WEB-INF/classes/com/appcondominio/web/LoginController.class
 build/web/WEB-INF/classes/com/appcondominio/web/LoginController.class
 nbproject/private/private.properties
 nbproject/private/private.properties
+build/web/WEB-INF/classes/com/appcondominio/service/ServicioAmenidad.class
+build/web/WEB-INF/classes/com/appcondominio/web/LoginController.class
+build/web/WEB-INF/classes/com/appcondominio/web/ReservasAmenidadesController.class
+build/web/WEB-INF/classes/com/appcondominio/web/RolesController.class
+build/web/WEB-INF/classes/com/appcondominio/service/ServicioAmenidad.class
+build/web/WEB-INF/classes/com/appcondominio/web/LoginController.class
+build/web/WEB-INF/classes/com/appcondominio/web/UsuariosController.class
+build/web/WEB-INF/lib/mssql-jdbc-8.2.2.jre13.jar
+nbproject/private/private.xml
+nbproject/project.properties
