@@ -82,17 +82,6 @@
                 border-bottom: 5px solid white;
             }
         </style>
-        <script type="text/javascript">
-        function resetFormFields() {
-            document.getElementById('form:cedula').value = 1;
-            document.getElementById('form:nombre').value = ' ';
-            document.getElementById('form:primerApellido').value = ' ';
-            document.getElementById('form:segundoApellido').value = ' ';
-            document.getElementById('form:telefono').value = 1;
-            document.getElementById('form:correoElectronico').value = ' ';
-            document.getElementById('form:placaVehiculo').value = ' ';
-         }
-        </script>
     </h:head>
     <h:body style=" background: linear-gradient(to bottom, #ffffff, #1e4fa5);">
 
@@ -104,7 +93,9 @@
                 <a class="topbar-logo">Gestión de Personal</a>
                 <ul class="topbar-menu">
                     <p:commandLink value="Inicio" actionListener="#{residentesController.principal}" ajax="false" styleClass="custom-commandlink" />
+                    <p:divider layout="vertical" />
                     <p:commandLink value="Usuarios" actionListener="#{residentesController.usuarios}" ajax="false" styleClass="custom-commandlink" />
+                    <p:divider layout="vertical" />
                     <p:commandLink value="Cerrar Sesión" actionListener="#{loginController.cerrarSesion}" ajax="false" styleClass="custom-commandlink" />
                 </ul>
             </div>
@@ -121,7 +112,7 @@
                             <div class="filter-container">
                                 <span>Mostrar:</span>
                                 <p:selectBooleanButton value="#{personalController.activo}" 
-                                                       onLabel="Activo" offLabel="Inactivo">
+                                                       onLabel="Inactivo" offLabel="Activo">
                                     <p:ajax update="dt-empleados" listener="#{personalController.filtrarPersonal}" />
                                 </p:selectBooleanButton>
                             </div>
@@ -141,23 +132,29 @@
                     </p:column>
 
                     <p:column>
-                        <p:panelGrid columns="1" layout="grid" style="border:0px none; text-align: center">
+                        <p:panelGrid columns="2" layout="grid" style="border:0px none; text-align: center">
 
                             <p:commandButton icon="pi pi-pencil" value="Editar" actionListener="#{personalController.openEdit}"
                                              oncomplete="PF('nuevoPersonalDialog').show()" update=":form"
                                              styleClass="edit-button rounded-button ui-button-success" process="@this">
                                 <f:setPropertyActionListener value="#{personal}" target="#{personalController.personalSeleccionado}"/>
                             </p:commandButton>
-
+                            
+                            <p:commandButton value="Crear Usuario" icon="pi pi-user"
+                                         update=":form" process="@this" oncomplete="PF('confirmationDialog').show()" >
+                                <f:setPropertyActionListener value="#{personal}" target="#{personalController.personalSeleccionado}"/>
+                            </p:commandButton>
 
                         </p:panelGrid>
                     </p:column>
-
-                    <div class= "disenho">
-                    </div>
-
-
                 </p:dataTable>
+                
+                <p:confirmDialog header="Confirmación" message="¿Desea crear un usuario predeterminado?" 
+                    widgetVar="confirmationDialog">
+                    <p:commandButton value="Si" update=":form" process="@this" oncomplete="PF('confirmationDialog').hide();" actionListener="#{personalController.guardarUsuarioPredeterminado()}"/>
+                    <p:commandButton value="No" update=":form" process="@this" oncomplete="PF('confirmationDialog').hide(); PF('nuevoUsuarioDialog').show();" actionListener="#{personalController.openNewUsuario}"/>
+                    <p:commandButton value="Cancerlar" update=":form" process="@this" oncomplete="PF('confirmationDialog').hide();"/>
+                </p:confirmDialog>
 
                 <p:toolbar>
                     <p:toolbarGroup>
@@ -171,7 +168,7 @@
                 </p:toolbar>
 
                 <p:dialog header="#{personalController.dialogHeader}" showEffect="fade" modal="true"
-                          widgetVar="nuevoPersonalDialog" responsive="true" onHide="resetFormFields();" visible="#{personalController.personalSeleccionado ne null}">
+                          widgetVar="nuevoPersonalDialog" responsive="true">
 
                     <p:outputPanel id="administrar-personal-content" class="ui-fluid">
                         <p:outputPanel rendered="#{not empty personalController.personalSeleccionado}">
@@ -180,7 +177,7 @@
                                 <p:outputLabel  style="font-size: 18px; font-weight: bold;">Cédula</p:outputLabel>
                                 </div>
                                 
-                                <p:inputText id="cedula" value="#{personalController.personalSeleccionado.cedula}" required="true" requiredMessage="Por favor, ingrese su número de cédula">
+                                <p:inputText id="cedula" value="#{personalController.personalSeleccionado.cedula}">
                                 <p:keyFilter mask="num" />
                                 </p:inputText>
                                 <p:tooltip for="cedula" value="Digite su número de cédula. Solo se permite números" position="right"/>
@@ -192,7 +189,7 @@
                                 <p:outputLabel style="font-size: 18px; font-weight: bold;">Nombre</p:outputLabel>
                                 </div>
                                 
-                                <p:inputText id="nombre" value="#{personalController.personalSeleccionado.nombre}" required="true" requiredMessage="Por favor, ingrese el nombre"/>
+                                <p:inputText id="nombre" value="#{personalController.personalSeleccionado.nombre}"/>
                                 <p:tooltip for="nombre" value="Digite el nombre del empleado." position="right"/>
                                 <p:message id="nombreMessage" for="nombre" />
                             </div>
@@ -201,7 +198,7 @@
                                 <p:outputLabel  style="font-size: 18px; font-weight: bold;">Primer Apellido</p:outputLabel>
                                 </div>
                                 
-                                <p:inputText id="primerApellido" value="#{personalController.personalSeleccionado.apellido1}" required="true" requiredMessage="Por favor, ingrese el primer apellido"/>
+                                <p:inputText id="primerApellido" value="#{personalController.personalSeleccionado.apellido1}"/>
                                 <p:tooltip for="primerApellido" value="Digite el primer apellido." position="right"/>
                                 <p:message id="primerApellidoMessage" for="primerApellido" />
                             </div>
@@ -210,7 +207,7 @@
                                 <p:outputLabel  style="font-size: 18px; font-weight: bold;">Segundo Apellido</p:outputLabel>
                                 </div>
                                 
-                                <p:inputText id="segundoApellido" value="#{personalController.personalSeleccionado.apellido2}" required="true" requiredMessage="Por favor, ingrese el segundo apellido"/>
+                                <p:inputText id="segundoApellido" value="#{personalController.personalSeleccionado.apellido2}"/>
                                 <p:tooltip for="segundoApellido" value="Digite el segundo apellido." position="right"/>
                                 <p:message id="segundoApellidoMessage" for="segundoApellido" />
                                
@@ -222,7 +219,7 @@
                                 <p:outputLabel  style="font-size: 18px; font-weight: bold;">Teléfono</p:outputLabel>
                                 </div>
                                 
-                                <p:inputText id="telefono" value="#{personalController.personalSeleccionado.telefono}" styleClass="input-field" required="true" requiredMessage="Por favor, ingrese el número de teléfono">
+                                <p:inputText id="telefono" value="#{personalController.personalSeleccionado.telefono}" styleClass="input-field">
                                 <p:keyFilter mask="num" />
                                 </p:inputText>
                                 <p:tooltip for="telefono" value="Digite el número de teléfono. Solo se permite números" position="right"/>
@@ -233,7 +230,7 @@
                                     <p:outputLabel  style="font-size: 18px; font-weight: bold;">Correo Electrónico</p:outputLabel>
                                 </div>
                                 <div class="input-container">
-                                    <p:inputText id="correoElectronico" value="#{personalController.personalSeleccionado.correoElectronico}" styleClass="input-field" required="true" requiredMessage="Por favor, ingrese el correo electrónico">
+                                    <p:inputText id="correoElectronico" value="#{personalController.personalSeleccionado.correoElectronico}" styleClass="input-field">
                                         
                                          <p:ajax event="blur" update="correoElectronicoMessage"/>
                                     </p:inputText>
@@ -248,7 +245,7 @@
                                 <p:outputLabel style="font-size: 18px; font-weight: bold;">Placa del Vehículo</p:outputLabel>
                                 </div>
                                 
-                                <p:inputText id="placaVehiculo" value="#{personalController.personalSeleccionado.placaVehiculo}" styleClass="input-field" required="true" requiredMessage="Por favor, ingrese la placa del vehículo"/>
+                                <p:inputText id="placaVehiculo" value="#{personalController.personalSeleccionado.placaVehiculo}" styleClass="input-field"/>
                                 <p:tooltip for="placaVehiculo" value="Digite el placa del vehículo, si tiene." position="right"/>
                                 <p:message id="placaVehiculoMessage" styleClass="tooltipDialog" for="placaVehiculo" />
                             </div>
@@ -270,11 +267,62 @@
                         <p:commandButton value="Guadar" icon="pi pi-check" actionListener="#{personalController.guardarPersonal}" 
                                          update="administrar-personal-content" process="administrar-personal-content @this" />
                         <p:commandButton value="Cancelar" icon="pi pi-times" 
-                                         class="ui-button-secondary" onclick="resetFormFields(); PF('nuevoPersonalDialog').hide(); return false;">
-                             <p:ajax update="form:administrar-personal-content" />
+                                         class="ui-button-secondary" onclick="PF('nuevoPersonalDialog').hide();">
                         </p:commandButton>
-                        <p:commandButton value="Crear Usuario" icon="pi pi-check" actionListener="#{personalController.guardarUsuario}" 
-                                         update="administrar-personal-content" process="administrar-personal-content @this" />
+                        
+                    </f:facet>
+
+                </p:dialog>
+                
+                <p:dialog header="#{personalController.dialogHeader}" showEffect="fade" modal="true"
+                          widgetVar="nuevoUsuarioDialog" responsive="true">
+
+                    <p:outputPanel id="administrar-usuario-content" class="ui-fluid">
+                        <p:outputPanel rendered="#{not empty personalController.usuarioSeleccionado}">
+                            <div class="p-field">
+                                <div class="disenho">
+                                <p:outputLabel  style="font-size: 18px; font-weight: bold;">Usuario</p:outputLabel>
+                                </div>
+                                
+                                <p:inputText id="usuario" value="#{personalController.usuarioSeleccionado.usuario}">
+                                </p:inputText>
+                                <p:tooltip for="usuario" value="Digite el usuario." position="right"/>
+                                <p:message id="usuarioMessage" for="usuario" />
+                            </div>
+
+                            <div class="p-field">
+                                <div class="disenho">
+                                <p:outputLabel style="font-size: 18px; font-weight: bold;">Contraseña</p:outputLabel>
+                                </div>
+                                
+                                <p:password id="contrasena" value="#{personalController.usuarioSeleccionado.contrasena}" />
+                                <p:tooltip for="contrasena" value="Digite la contraseña." position="right"/>
+                                <p:message id="contrasenaMessage" for="contrasena" />
+                            </div>
+                            
+                            
+                            
+                            <div class="p-field">
+                                <div class="disenho">
+                                <p:outputLabel for="estadoUsuario" style="font-size: 18px; font-weight: bold;">Estado</p:outputLabel>
+                                </div>
+                                <p:selectOneMenu id="estadoUsuario" value="#{personalController.usuarioSeleccionado.estado}" style="width:12rem" disabled="#{personalController.selectOneMenuDisabled}">
+                                    <f:selectItem itemLabel="Activo" itemValue="Activo"/>
+                                    <f:selectItem itemLabel="Inactivo" itemValue="Inactivo"/>
+                                </p:selectOneMenu>
+                            </div>
+
+                        </p:outputPanel>    
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Guadar" icon="pi pi-check" actionListener="#{personalController.guardarUsuario}" 
+                                         update="administrar-personal-content" process="administrar-usuario-content @this" />
+                        <p:commandButton value="Cancelar" icon="pi pi-times" 
+                                         class="ui-button-secondary" onclick="PF('nuevoUsuarioDialog').hide();">
+                             <p:ajax update="form:administrar-usuario-content" />
+                        </p:commandButton>
+                        
                     </f:facet>
 
                 </p:dialog>
@@ -284,6 +332,5 @@
         </h:form>
     </h:body>
 </html>
-
 
 

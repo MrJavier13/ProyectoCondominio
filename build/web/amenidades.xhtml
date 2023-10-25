@@ -113,7 +113,7 @@
                             <div class="filter-container">
                                 <span>Mostrar:</span>
                                 <p:selectBooleanButton value="#{amenidadesController.activo}" 
-                                                       onLabel="Activo" offLabel="Inactivo">
+                                                       onLabel="Inactivo" offLabel="Activo">
                                     <p:ajax update="dt-amenidades" listener="#{amenidadesController.filtrarAmenidades}" />
                                 </p:selectBooleanButton>
                             </div>
@@ -170,7 +170,7 @@
                                 <div class="disenho">
                                 <p:outputLabel for="nombreAmenidad" style="font-size: 18px; font-weight: bold;">Nombre de la amenidad</p:outputLabel>
                                 </div>
-                                <p:inputText id="nombreAmenidad" value="#{amenidadesController.amenidadSeleccionada.nombreAmenidad}" required="true" requiredMessage="Por favor, ingrese el nombre de la amenidad"/>
+                                <p:inputText id="nombreAmenidad" value="#{amenidadesController.amenidadSeleccionada.nombreAmenidad}"/>
                                 <p:tooltip for="nombreAmenidad" value="Escriba el nombre de la amenidad." position="right"/>
                                 <p:message id="nombreAmenidadMessage" for="nombreAmenidad" />
                             </div>
@@ -179,7 +179,7 @@
                                 <div class="disenho">
                                 <p:outputLabel for="descripcion" style="font-size: 18px; font-weight: bold;">Descripción (si requiere)</p:outputLabel>
                                 </div>
-                                <p:inputText id="descripcion" value="#{amenidadesController.amenidadSeleccionada.descripcion}" requiredMessage="Por favor, ingrese una descripción de la amenidad"/>
+                                <p:inputText id="descripcion" value="#{amenidadesController.amenidadSeleccionada.descripcion}" />
                                 <p:tooltip for="descripcion" value="Escriba una descripción de la amenidad." position="right"/>
                                 <p:message id="descripcionMessage" for="descripcion" />
                             </div>

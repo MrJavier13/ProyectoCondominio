@@ -71,3 +71,7 @@ build/web/WEB-INF/classes/com/appcondominio/web/UsuariosController.class
 build/web/WEB-INF/lib/mssql-jdbc-8.2.2.jre13.jar
 nbproject/private/private.xml
 nbproject/project.properties
+build/web/WEB-INF/classes/AmenidadesController.class
+build/web/WEB-INF/classes/com/appcondominio/service/ServicioUsuario.class
+build/web/WEB-INF/classes/com/appcondominio/web/PersonalController.class
+build/web/WEB-INF/classes/com/appcondominio/web/ResidentesController.class

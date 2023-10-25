@@ -73,22 +73,39 @@ public class AmenidadesController implements Serializable{
     }
     
     public void guardarAmenidad() {
+        if (validarCampos()) {
+            if (!servicioAmenidad.buscarIdAmenidad(this.amenidadSeleccionada.getIdAmenidad())) { 
 
-        if (!servicioAmenidad.buscarIdAmenidad(this.amenidadSeleccionada.getIdAmenidad())) { 
+                    servicioAmenidad.insertarAmenidad(amenidadSeleccionada);
 
-                servicioAmenidad.insertarAmenidad(amenidadSeleccionada);
-                
-                FacesContext.getCurrentInstance().addMessage(null, 
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Amenidad agregada"));
-                
-            } else {
-                servicioAmenidad.actualizarAmenidad(amenidadSeleccionada);
-                FacesContext.getCurrentInstance().addMessage(null, 
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Amenidad Actualizada"));
-            }
-        this.init();
-        PrimeFaces.current().executeScript("PF('nuevaAmenidadDialog').hide()");
-        PrimeFaces.current().ajax().update("form:growl", "form:dt-amenidades");
+                    FacesContext.getCurrentInstance().addMessage(null, 
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Amenidad agregada"));
+
+                } else {
+                    servicioAmenidad.actualizarAmenidad(amenidadSeleccionada);
+                    FacesContext.getCurrentInstance().addMessage(null, 
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Amenidad Actualizada"));
+                }
+            this.init();
+            PrimeFaces.current().executeScript("PF('nuevaAmenidadDialog').hide()");
+            PrimeFaces.current().ajax().update("form:growl", "form:dt-amenidades");
+        }
+    }
+    
+    private boolean validarCampo(String valor, String nombreCampo, String nombreError) {
+        if (valor == null || valor.isEmpty()) {
+            FacesContext.getCurrentInstance().addMessage("form:" + nombreCampo,
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Campo " + nombreError + " requerido",
+                    "Por favor, ingrese el " + nombreError.toLowerCase() + "de la amenidad."));
+            return false;
+        }
+        return true;
+    }
+    
+    private boolean validarCampos() {
+        if (amenidadSeleccionada.getIdAmenidad() != null) {
+        }
+        return validarCampo(amenidadSeleccionada.getNombreAmenidad(), "nombreAmenidad", "nombre") ;
     }
     
     public void redireccionar(String ruta) {

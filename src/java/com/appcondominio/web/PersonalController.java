@@ -5,6 +5,7 @@ import com.appcondominio.service.ServicioPersonal;
 import com.appcondominio.service.ServicioUsuario;
 import com.appcondominio.service.UsuarioTO;
 import java.io.Serializable;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,16 +22,19 @@ import org.primefaces.PrimeFaces;
 public class PersonalController implements Serializable{
 
     private PersonalTO personalSeleccionado;
+    private UsuarioTO usuarioSeleccionado;
     private String dialogHeader;
     private boolean activo;
     private boolean selectOneMenuDisabled = false;
     private List<PersonalTO> filteredPersonal;
     private List<PersonalTO> personal = new ArrayList<>();
+    
     @ManagedProperty("#{usuarioService}")
     private ServicioUsuario servicioUsuario;
 
     @ManagedProperty("#{personalService}")
     private ServicioPersonal servicioPersonal;
+    
 
     public PersonalController() {
     }
@@ -66,10 +70,16 @@ public class PersonalController implements Serializable{
 
     public void openNew() {
         this.personalSeleccionado = new PersonalTO();
-        //this.personalSeleccionado.setEstado("Activo");
-        //disableSelectOneMenu();
+        this.personalSeleccionado.setEstado("Activo");
+        disableSelectOneMenu();
         dialogHeader = "Registrar nuevo Empleado";
-
+    }
+    
+    public void openNewUsuario() {
+        this.usuarioSeleccionado = new UsuarioTO();
+        this.usuarioSeleccionado.setEstado("Activo");
+        disableSelectOneMenu();
+        dialogHeader = "Registrar nuevo usuario para el empleado";
     }
 
     public void openEdit() {
@@ -127,6 +137,16 @@ public class PersonalController implements Serializable{
         this.filteredPersonal = filteredPersonal;
     }
 
+    public UsuarioTO getUsuarioSeleccionado() {
+        return usuarioSeleccionado;
+    }
+
+    public void setUsuarioSeleccionado(UsuarioTO usuarioSeleccionado) {
+        this.usuarioSeleccionado = usuarioSeleccionado;
+    }
+    
+    
+
     public void filtrarPersonal() {
         filteredPersonal.clear();
         for (PersonalTO personal : personal) {
@@ -137,49 +157,148 @@ public class PersonalController implements Serializable{
     }
 
     public void guardarPersonal() {
-        if (!correoValido(personalSeleccionado.getCorreoElectronico())) {
+        if(personalSeleccionado.getCedula()== null){
+            FacesContext.getCurrentInstance().addMessage("form:cedula", 
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ingrese el número de cédula", 
+                    "Por favor, ingrese el número de cédula"));
+            return;
+        }
+        
+        if (validarCampos()) {
+            if (!correoValido(personalSeleccionado.getCorreoElectronico())) {
             FacesContext.getCurrentInstance().addMessage("form:correoElectronico", 
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, "Formato de correo electrónico inválido", 
                     "Por favor, ingrese un correo electrónico válido. Ejemplo: juan@gmail.com"));
             return;
         }
-        if (!servicioPersonal.buscarCedulaPersonal(this.personalSeleccionado.getCedula())) {
-            // Si es false inserta
-                servicioPersonal.insertarPersonal(personalSeleccionado);
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Empleado agregado"));
+            if (!servicioPersonal.buscarCedulaPersonal(this.personalSeleccionado.getCedula())) {
+                // Si es false inserta
+                    servicioPersonal.insertarPersonal(personalSeleccionado);
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Empleado agregado"));
 
-            }else {
-                servicioPersonal.actualizarPersonal(personalSeleccionado);
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Empleado Actualizado"));
+                }else {
+                    servicioPersonal.actualizarPersonal(personalSeleccionado);
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Empleado Actualizado"));
             }
-        this.init();
-        PrimeFaces.current().executeScript("PF('nuevoPersonalDialog').hide()");
-        PrimeFaces.current().ajax().update("form:messages", "form:dt-empleados");
+        
+            this.init();
+            PrimeFaces.current().executeScript("PF('nuevoPersonalDialog').hide()");
+            PrimeFaces.current().ajax().update("form:messages", "form:dt-empleados");
+        }
     }
+    
+    public void guardarUsuarioPredeterminado() {
+        if (servicioUsuario.buscarCedulaUsuario(this.personalSeleccionado.getCedula())) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Error", "El empleado ya tiene un usuario"));
+        } else{
+            if (servicioUsuario.buscarUsuario(this.personalSeleccionado.getCorreoElectronico())) {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Usuario ya existe"));
+            } else {
+                // Generar una contraseña aleatoria que cumpla con los requisitos
+                String contrasena = generarContrasenaAleatoria(personalSeleccionado.getNombre());
+                this.usuarioSeleccionado = new UsuarioTO();
+                usuarioSeleccionado.setContrasena(contrasena);
+                usuarioSeleccionado.setIdRol(3);
+                usuarioSeleccionado.setEstado("Activo");
+                usuarioSeleccionado.setCedulaEmpleado(personalSeleccionado.getCedula());
+                usuarioSeleccionado.setUsuario(personalSeleccionado.getCorreoElectronico());
+
+                servicioUsuario.insertarUsuarioPersonal(usuarioSeleccionado);
+
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Usuario agregado"));
+            }
+        }
+    this.init();
+    PrimeFaces.current().executeScript("PF('nuevoUsuarioDialog').hide()");
+    PrimeFaces.current().ajax().update("form:messages", "form:dt-empleados");
+}
+
+private String generarContrasenaAleatoria(String nombre) {
+    SecureRandom random = new SecureRandom();
+    String caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+    StringBuilder contrasena = new StringBuilder();
+    
+    // Agregar una mayúscula
+    contrasena.append(caracteres.charAt(random.nextInt(26)));
+    
+    // Agregar una minúscula
+    contrasena.append(caracteres.charAt(random.nextInt(26) + 26));
+    
+    // Agregar un número
+    contrasena.append(caracteres.charAt(random.nextInt(10) + 52));
+    
+    // Obtener los últimos dos dígitos de la cédula
+    String ultimosDigitosCedula = String.valueOf(personalSeleccionado.getCedula()).substring(Math.max(0, String.valueOf(personalSeleccionado.getCedula()).length() - 2));
+    contrasena.append(ultimosDigitosCedula);
+    
+    // Agregar un carácter especial
+    contrasena.append(caracteres.charAt(random.nextInt(8) + 62));
+    
+    // Agregar el nombre del empleado (si tiene al menos 3 caracteres)
+    if (nombre.length() >= 3) {
+        contrasena.append(nombre.substring(0, 3).toLowerCase());
+    } else {
+        contrasena.append(nombre.toLowerCase());
+    }
+    
+    // Mezclar la contraseña para hacerla aleatoria
+    char[] contrasenaArray = contrasena.toString().toCharArray();
+    for (int i = 0; i < contrasena.length(); i++) {
+        int index = random.nextInt(contrasena.length());
+        char temp = contrasenaArray[i];
+        contrasenaArray[i] = contrasenaArray[index];
+        contrasenaArray[index] = temp;
+    }
+    
+    return new String(contrasenaArray);
+}
 
     public void guardarUsuario() {
-        if (servicioUsuario.buscarUsuario(this.personalSeleccionado.getCorreoElectronico())) {
+        if (servicioUsuario.buscarCedulaUsuario(this.personalSeleccionado.getCedula())) {
             FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Error", "Usuario ya existe"));
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Error", "El empleado ya tiene un usuario"));
+        } else{
+            if (servicioUsuario.buscarUsuario(this.personalSeleccionado.getCorreoElectronico())) {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Error", "Usuario ya existe"));
 
-        } else {
-            UsuarioTO usuario = new UsuarioTO();
+            } else {
+                usuarioSeleccionado.setIdRol(3);
+                this.usuarioSeleccionado.setCedulaEmpleado(this.personalSeleccionado.getCedula());
+                servicioUsuario.insertarUsuarioPersonal(usuarioSeleccionado);
 
-            usuario.setUsuario(personalSeleccionado.getCorreoElectronico());
-            usuario.setContrasena(String.valueOf(personalSeleccionado.getCedula()));
-            usuario.setCedulaEmpleado(personalSeleccionado.getCedula());
-            usuario.setEstado(personalSeleccionado.getEstado());
-            usuario.setIdRol(1);
-            servicioUsuario.insertarUsuarioPersonal(usuario);
-
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Usuario agregado"));
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Usuario agregado"));
+            }
         }
         this.init();
-        PrimeFaces.current().executeScript("PF('nuevoPersonalDialog').hide()");
+        PrimeFaces.current().executeScript("PF('nuevoUsuarioDialog').hide()");
         PrimeFaces.current().ajax().update("form:messages", "form:dt-empleados");
+    }
+    
+    private boolean validarCampo(String valor, String nombreCampo, String nombreError) {
+        if (valor == null || valor.isEmpty()) {
+            FacesContext.getCurrentInstance().addMessage("form:" + nombreCampo,
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Campo " + nombreCampo + " requerido",
+                    "Por favor, ingrese el " + nombreError.toLowerCase()));
+            return false;
+        }
+        return true;
+    }
+    
+    private boolean validarCampos() {
+        if (personalSeleccionado.getCedula() != null) {
+        }
+        return validarCampo(personalSeleccionado.getNombre(), "nombre", "nombre")
+        && validarCampo(personalSeleccionado.getApellido1(), "primerApellido", "primer apellido")
+        && validarCampo(personalSeleccionado.getApellido2(), "segundoApellido", "segundo apellido")
+        && validarCampo(Integer.toString(personalSeleccionado.getTelefono()), "telefono", "teléfono")
+        && validarCampo(personalSeleccionado.getCorreoElectronico(), "correoElectronico", "correo electrónico");
     }
 
     private boolean correoValido(String email) {

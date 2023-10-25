@@ -123,6 +123,41 @@ public class ServicioUsuario extends Servicios implements Serializable {
         }
         return usuarios;
     }
+    
+    public boolean buscarCedulaUsuario(Integer buscar) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        boolean busqueda = true;
+
+        try {
+
+            ps = super.getConexion().prepareStatement("SELECT cedulaEmpleado FROM usuario WHERE cedulaEmpleado = ?");
+            ps.setInt(1, buscar);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                busqueda = true;
+
+            } else {
+                busqueda = false;
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (ps != null && ps.isClosed()) {
+                    ps.close();
+                }
+                if (rs != null && !rs.isClosed()) {
+                    rs.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return busqueda;
+    }
 
     public boolean buscarUsuario(String buscar) {
         PreparedStatement ps = null;

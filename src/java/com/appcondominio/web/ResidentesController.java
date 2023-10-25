@@ -166,40 +166,71 @@ public class ResidentesController implements Serializable{
     
     
     public void guardarResidenteYUsuario() {
-        if (!correoValido(residenteSeleccionado.getCorreoElectronico())) {
-            FacesContext.getCurrentInstance().addMessage("form:correoElectronico", 
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Formato de correo electrónico inválido", 
-                    "Por favor, ingrese un correo electrónico válido. Ejemplo: juan@gmail.com"));
+        
+        if(residenteSeleccionado.getCedula()== null){
+            FacesContext.getCurrentInstance().addMessage("form:cedula", 
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ingrese el número de cédula", 
+                    "Por favor, ingrese el número de cédula"));
             return;
         }
+        if (validarCampos()) {
+            if (!correoValido(residenteSeleccionado.getCorreoElectronico())) {
+                FacesContext.getCurrentInstance().addMessage("form:correoElectronico", 
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Formato de correo electrónico inválido", 
+                        "Por favor, ingrese un correo electrónico válido. Ejemplo: juan@gmail.com"));
+                return;
+            }
 
-        if (!servicioResidente.buscarCedulaResidente(this.residenteSeleccionado.getCedula())) { 
-            // Si es false inserta
-                servicioResidente.insertarResidente(residenteSeleccionado);
-                UsuarioTO usuario = new UsuarioTO();
-                usuario.setCedulaResidente(residenteSeleccionado.getCedula());
-                usuario.setUsuario(residenteSeleccionado.getCorreoElectronico());
-                usuario.setContrasena(String.valueOf(residenteSeleccionado.getCedula()));
-                usuario.setEstado(residenteSeleccionado.getEstado());
-                usuario.setIdRol(1);
-                servicioUsuario.insertarUsuarioResidente(usuario);
-                
-                FacesContext.getCurrentInstance().addMessage(null, 
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Residente y usuario agregado"));
-        } else {
+            if (!servicioResidente.buscarCedulaResidente(this.residenteSeleccionado.getCedula())) { 
+                // Si es false inserta
+                    servicioResidente.insertarResidente(residenteSeleccionado);
+                    UsuarioTO usuario = new UsuarioTO();
+                    usuario.setCedulaResidente(residenteSeleccionado.getCedula());
+                    usuario.setUsuario(residenteSeleccionado.getCorreoElectronico());
+                    usuario.setContrasena(String.valueOf(residenteSeleccionado.getCedula()));
+                    usuario.setEstado(residenteSeleccionado.getEstado());
+                    usuario.setIdRol(1);
+                    servicioUsuario.insertarUsuarioResidente(usuario);
 
-                servicioResidente.actualizarResidente(residenteSeleccionado);
-                FacesContext.getCurrentInstance().addMessage(null, 
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Residente Actualizado"));
+                    FacesContext.getCurrentInstance().addMessage(null, 
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Residente y usuario agregado"));
+            } else {
+
+                    servicioResidente.actualizarResidente(residenteSeleccionado);
+                    FacesContext.getCurrentInstance().addMessage(null, 
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Residente Actualizado"));
+            }
+            this.init();
+
+            PrimeFaces.current().executeScript("PF('nuevoResidenteDialog').hide()");
+            PrimeFaces.current().ajax().update("form:messages", "form:dt-residentes");
         }
-        this.init();
-        PrimeFaces.current().executeScript("PF('nuevoResidenteDialog').hide()");
-        PrimeFaces.current().ajax().update("form:messages", "form:dt-residentes");
     }
 
-        private boolean correoValido(String email) {
-            String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+    private boolean correoValido(String email) {
+        String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
         return email.matches(regex);
+    }
+    
+    private boolean validarCampo(String valor, String nombreCampo, String nombreError) {
+        if (valor == null || valor.isEmpty()) {
+            FacesContext.getCurrentInstance().addMessage("form:" + nombreCampo,
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Campo " + nombreCampo + " requerido",
+                    "Por favor, ingrese el " + nombreError.toLowerCase()));
+            return false;
+        }
+        return true;
+    }
+    
+    private boolean validarCampos() {
+        if (residenteSeleccionado.getCedula() != null) {
+        }
+        return validarCampo(residenteSeleccionado.getNombre(), "nombre", "nombre")
+        && validarCampo(residenteSeleccionado.getPrimerApellido(), "primerApellido", "primer apellido")
+        && validarCampo(residenteSeleccionado.getSegundoApellido(), "segundoApellido", "segundo apellido")
+        && validarCampo(Integer.toString(residenteSeleccionado.getTelefono()), "telefono", "teléfono")
+        && validarCampo(Integer.toString(residenteSeleccionado.getNumeroCasa()), "numeroCasa", "número de la casa")
+        && validarCampo(residenteSeleccionado.getCorreoElectronico(), "correoElectronico", "correo electrónico");
     }
 
 }

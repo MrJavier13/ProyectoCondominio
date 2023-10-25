@@ -82,18 +82,6 @@
                 border-bottom: 5px solid white;
             }
         </style>
-        <script type="text/javascript">
-        function resetFormFields() {
-            document.getElementById('form:cedula').value = 1;
-            document.getElementById('form:nombre').value = ' ';
-            document.getElementById('form:primerApellido').value = ' ';
-            document.getElementById('form:segundoApellido').value = ' ';
-            document.getElementById('form:telefono').value = 1;
-            document.getElementById('form:numeroCasa').value = 1;
-            document.getElementById('form:correoElectronico').value = ' ';
-            document.getElementById('form:placaVehiculo').value = ' ';
-         }
-        </script>
     </h:head>
     <h:body style=" background: linear-gradient(to bottom, #ffffff, #1e4fa5);">
 
@@ -105,7 +93,9 @@
                 <a class="topbar-logo">Gestión de residentes</a>
                 <ul class="topbar-menu">
                     <p:commandLink value="Inicio" actionListener="#{residentesController.principal}" ajax="false" styleClass="custom-commandlink" />
+                    <p:divider layout="vertical" />
                     <p:commandLink value="Usuarios" actionListener="#{residentesController.usuarios}" ajax="false" styleClass="custom-commandlink" />
+                    <p:divider layout="vertical" />
                     <p:commandLink value="Cerrar Sesión" actionListener="#{loginController.cerrarSesion}" ajax="false" styleClass="custom-commandlink" />
                 </ul>
             </div>
@@ -121,7 +111,7 @@
                             <div class="filter-container">
                                 <span>Mostrar:</span>
                                 <p:selectBooleanButton value="#{residentesController.activo}" 
-                                                       onLabel="Activo" offLabel="Inactivo">
+                                                       onLabel="Inactivo" offLabel="Activo">
                                     <p:ajax update="dt-residentes" listener="#{residentesController.filtrarResidentes}" />
                                 </p:selectBooleanButton>
                             </div>
@@ -185,7 +175,7 @@
                 </p:toolbar>
 
                  <p:dialog header="#{residentesController.dialogHeader}" showEffect="fade" modal="true"
-                          widgetVar="nuevoResidenteDialog" responsive="true" onHide="resetFormFields();" visible="#{residentesController.residenteSeleccionado ne null}">
+                          widgetVar="nuevoResidenteDialog" responsive="true" visible="#{residentesController.residenteSeleccionado ne null}">
 
                     <p:outputPanel id="administrar-residente-content" class="ui-fluid">
                         <p:outputPanel rendered="#{not empty residentesController.residenteSeleccionado}">
@@ -194,7 +184,7 @@
                                 <p:outputLabel  style="font-size: 18px; font-weight: bold;">Cédula</p:outputLabel>
                                 </div>
                                 
-                                <p:inputText id="cedula" value="#{residentesController.residenteSeleccionado.cedula}" required="true" requiredMessage="Por favor, ingrese su número de cédula">
+                                <p:inputText id="cedula" value="#{residentesController.residenteSeleccionado.cedula}" >
                                 <p:keyFilter mask="num" />
                                 </p:inputText>
                                 <p:tooltip for="cedula" value="Digite su número de cédula. Solo se permite números" position="right"/>
@@ -206,7 +196,7 @@
                                 <p:outputLabel style="font-size: 18px; font-weight: bold;">Nombre</p:outputLabel>
                                 </div>
                                 
-                                <p:inputText id="nombre" value="#{residentesController.residenteSeleccionado.nombre}" required="true" requiredMessage="Por favor, ingrese el nombre"/>
+                                <p:inputText id="nombre" value="#{residentesController.residenteSeleccionado.nombre}"/>
                                 <p:tooltip for="nombre" value="Digite el nombre del residente." position="right"/>
                                 <p:message id="nombreMessage" for="nombre" />
                             </div>
@@ -215,7 +205,7 @@
                                 <p:outputLabel  style="font-size: 18px; font-weight: bold;">Primer Apellido</p:outputLabel>
                                 </div>
                                 
-                                <p:inputText id="primerApellido" value="#{residentesController.residenteSeleccionado.primerApellido}" required="true" requiredMessage="Por favor, ingrese el primer apellido"/>
+                                <p:inputText id="primerApellido" value="#{residentesController.residenteSeleccionado.primerApellido}"/>
                                 <p:tooltip for="primerApellido" value="Digite el primer apellido." position="right"/>
                                 <p:message id="primerApellidoMessage" for="primerApellido" />
                             </div>
@@ -224,11 +214,9 @@
                                 <p:outputLabel  style="font-size: 18px; font-weight: bold;">Segundo Apellido</p:outputLabel>
                                 </div>
                                 
-                                <p:inputText id="segundoApellido" value="#{residentesController.residenteSeleccionado.segundoApellido}" required="true" requiredMessage="Por favor, ingrese el segundo apellido"/>
+                                <p:inputText id="segundoApellido" value="#{residentesController.residenteSeleccionado.segundoApellido}"/>
                                 <p:tooltip for="segundoApellido" value="Digite el segundo apellido." position="right"/>
                                 <p:message id="segundoApellidoMessage" for="segundoApellido" />
-                               
-                                
                             </div>
 
                             <div class="p-field">
@@ -236,7 +224,7 @@
                                 <p:outputLabel  style="font-size: 18px; font-weight: bold;">Teléfono</p:outputLabel>
                                 </div>
                                 
-                                <p:inputText id="telefono" value="#{residentesController.residenteSeleccionado.telefono}" styleClass="input-field" required="true" requiredMessage="Por favor, ingrese el número de teléfono">
+                                <p:inputText id="telefono" value="#{residentesController.residenteSeleccionado.telefono}" styleClass="input-field" >
                                 <p:keyFilter mask="num" />
                                 </p:inputText>
                                 <p:tooltip for="telefono" value="Digite el número de teléfono. Solo se permite números" position="right"/>
@@ -248,7 +236,7 @@
                                 <p:outputLabel  style="font-size: 18px; font-weight: bold;">Número de la Casa</p:outputLabel>
                                 </div>
                                  
-                                <p:inputText id="numeroCasa" value="#{residentesController.residenteSeleccionado.numeroCasa}" styleClass="input-field" required="true" requiredMessage="Por favor, ingrese el número de casa">
+                                <p:inputText id="numeroCasa" value="#{residentesController.residenteSeleccionado.numeroCasa}" styleClass="input-field" >
                                     <p:keyFilter mask="num" />
                                 </p:inputText>
                                 <p:tooltip for="numeroCasa" value="Digite el número de casa. Solo se permite números" position="right"/>
@@ -260,7 +248,7 @@
                                     <p:outputLabel  style="font-size: 18px; font-weight: bold;">Correo Electrónico</p:outputLabel>
                                 </div>
                                 <div class="input-container">
-                                    <p:inputText id="correoElectronico" value="#{residentesController.residenteSeleccionado.correoElectronico}" styleClass="input-field" required="true" requiredMessage="Por favor, ingrese el correo electrónico">
+                                    <p:inputText id="correoElectronico" value="#{residentesController.residenteSeleccionado.correoElectronico}" styleClass="input-field" >
                                         
                                          <p:ajax event="blur" update="correoElectronicoMessage"/>
                                     </p:inputText>
@@ -275,7 +263,7 @@
                                 <p:outputLabel style="font-size: 18px; font-weight: bold;">Placa del Vehículo</p:outputLabel>
                                 </div>
                                 
-                                <p:inputText id="placaVehiculo" value="#{residentesController.residenteSeleccionado.placaVehiculo}" styleClass="input-field" required="true" requiredMessage="Por favor, ingrese la placa del vehículo"/>
+                                <p:inputText id="placaVehiculo" value="#{residentesController.residenteSeleccionado.placaVehiculo}" styleClass="input-field" />
                                 <p:tooltip for="placaVehiculo" value="Digite el placa del vehículo, si tiene." position="right"/>
                                 <p:message id="placaVehiculoMessage" styleClass="tooltipDialog" for="placaVehiculo" />
                             </div>
@@ -297,8 +285,7 @@
                         <p:commandButton value="Guadar" icon="pi pi-check" actionListener="#{residentesController.guardarResidenteYUsuario}" 
                                          update="administrar-residente-content" process="administrar-residente-content @this" />
                         <p:commandButton value="Cancelar" icon="pi pi-times"
-                                         class="ui-button-secondary" onclick="resetFormFields(); PF('nuevoResidenteDialog').hide(); return false;">
-                             <p:ajax update="form:administrar-residente-content" />
+                                         class="ui-button-secondary" onclick=" PF('nuevoResidenteDialog').hide(); ">
                         </p:commandButton>
                     </f:facet>
 
@@ -309,4 +296,3 @@
         </h:form>
     </h:body>
 </html>
-

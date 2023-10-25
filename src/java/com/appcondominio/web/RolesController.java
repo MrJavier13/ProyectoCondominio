@@ -70,23 +70,38 @@ public class RolesController implements Serializable{
     }**/
     
     public void guardarRol() {
+        if (validarCampos()) {
+            if (servicioRol.buscarIdRol(this.rolSeleccionado.getIdRol()) == null) { 
 
-    if (servicioRol.buscarIdRol(this.rolSeleccionado.getIdRol()) == null) { 
+                servicioRol.insertarRol(rolSeleccionado);
+                FacesContext.getCurrentInstance().addMessage(null, 
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Rol agregado"));
 
-        servicioRol.insertarRol(rolSeleccionado);
-        FacesContext.getCurrentInstance().addMessage(null, 
-            new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Rol agregado"));
-            
-    } else {
-        servicioRol.actualizarRol(rolSeleccionado);
-        FacesContext.getCurrentInstance().addMessage(null, 
-            new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Rol Actualizado"));
+            } else {
+                servicioRol.actualizarRol(rolSeleccionado);
+                FacesContext.getCurrentInstance().addMessage(null, 
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Rol Actualizado"));
+            }
+            this.init();
+            PrimeFaces.current().executeScript("PF('nuevoRolDialog').hide()");
+            PrimeFaces.current().ajax().update("form:growl", "form:dt-roles");
+        }
     }
-    this.init();
-    PrimeFaces.current().executeScript("PF('nuevoRolDialog').hide()");
-    PrimeFaces.current().ajax().update("form:growl", "form:dt-roles");
-}
-
+    private boolean validarCampo(String valor, String nombreCampo, String nombreError) {
+        if (valor == null || valor.isEmpty()) {
+            FacesContext.getCurrentInstance().addMessage("form:" + nombreCampo,
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Campo " + nombreError + " requerido",
+                    "Por favor, ingrese el " + nombreError.toLowerCase() + "de la amenidad."));
+            return false;
+        }
+        return true;
+    }
+    
+    private boolean validarCampos() {
+        if (rolSeleccionado.getIdRol() != null) {
+        }
+        return validarCampo(rolSeleccionado.getNombreRol(), "nombreRol", "nombre de rol") ;
+    }
 
 
     
