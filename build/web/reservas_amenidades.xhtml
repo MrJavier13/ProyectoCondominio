@@ -121,12 +121,15 @@
                     <p:column headerText="Identificador" sortBy="#{reservaAmenidad.idReservaAmenidad}"  filterMatchMode="contains">
                         <h:outputText value="#{reservaAmenidad.idReservaAmenidad}"/>
                     </p:column>
-                    <p:column headerText="Amenidad reservada" sortBy="#{reservaAmenidad.idAmenidad}"  filterMatchMode="contains">
-                        <h:outputText value="#{reservaAmenidad.idAmenidad}"/>
-                    </p:column>
-                    <p:column headerText="Residente" sortBy="#{reservaAmenidad.cedulaResidente}"  filterMatchMode="contains">
-                        <h:outputText value="#{reservaAmenidad.cedulaResidente}"/>
-                    </p:column>
+                    <p:column headerText="Amenidad reservada" sortBy="#{reservaAmenidad.nombreAmenidad}"  filterMatchMode="contains">
+                        <h:outputText value="#{reservaAmenidad.nombreAmenidad} #{reservaAmenidad.descripcionAmenidad}"/>
+    </p:column>
+                    <p:column headerText="Residente" sortBy="#{reservaAmenidad.nombre}"  filterMatchMode="contains">
+        <h:outputText value="#{reservaAmenidad.nombre} #{reservaAmenidad.primerApellido} #{reservaAmenidad.segundoApellido}"/>
+    </p:column>
+                    <p:column headerText="Número de casa" sortBy="#{reservaAmenidad.numeroCasa}"  filterMatchMode="contains">
+                        <h:outputText value="#{reservaAmenidad.numeroCasa}"/>
+    </p:column>
                     <p:column headerText="Fecha de inicio" sortBy="#{reservaAmenidad.fechaInicio}"  filterMatchMode="contains">
                         <h:outputText value="#{reservaAmenidad.fechaInicio}"/>
                     </p:column>
@@ -134,9 +137,7 @@
                         <h:outputText value="#{reservaAmenidad.fechaFin}"/>
                     </p:column>
                     
-                    <p:column headerText="Estado" sortBy="#{reservaAmenidad.estado}" exportable="false">
-                        <h:outputText value="#{reservaAmenidad.estado}"/>
-                    </p:column>
+                    
                
                     <p:column>
                         <p:panelGrid columns="1" layout="grid" style="border:0px none; text-align: center">
