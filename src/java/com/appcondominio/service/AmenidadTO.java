@@ -9,7 +9,7 @@ import java.io.Serializable;
  */
 public class AmenidadTO implements Serializable{
     
-    private Integer idAmenidad;
+    private int idAmenidad;
     private String nombreAmenidad;
     private String descripcion;
     private String estado;

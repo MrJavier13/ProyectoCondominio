@@ -143,12 +143,12 @@ public class ServicioReservaAmenidad extends Servicios implements Serializable{
         PreparedStatement ps = null;
 
         try {
-            ps = super.getConexion().prepareStatement("UPDATE reserva_Amenidad SET idAmenidad=?, fechaInicio=?, fechaFin=?, cedulaResidente=? estado=? WHERE idReservaAmenidad =?");
-            ps.setInt(1, reservaAmenidad.getIdAmenidad());
-            ps.setTimestamp(2, reservaAmenidad.getFechaInicio());
-            ps.setTimestamp(3, reservaAmenidad.getFechaFin());
-            ps.setInt(4, reservaAmenidad.getCedulaResidente());
-            ps.setString(5, reservaAmenidad.getEstado());
+            ps = super.getConexion().prepareStatement("UPDATE reserva_Amenidad SET fechaInicio=?, fechaFin=?, cedulaResidente=?, estado=? WHERE idReservaAmenidad =?");
+            ps.setTimestamp(1, reservaAmenidad.getFechaInicio());
+            ps.setTimestamp(2, reservaAmenidad.getFechaFin());
+            ps.setInt(3, reservaAmenidad.getCedulaResidente());
+            ps.setString(4, reservaAmenidad.getEstado());
+            ps.setInt(5, reservaAmenidad.getIdAmenidad());
             ps.execute();
 
         } catch (Exception ex) {

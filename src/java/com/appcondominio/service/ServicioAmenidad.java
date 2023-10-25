@@ -68,7 +68,7 @@ public class ServicioAmenidad extends Servicios implements Serializable{
         return listaRetornar;
     }
     
-    public boolean buscarIdAmenidad(Integer buscar) {
+    public boolean buscarIdAmenidad(int buscar) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         boolean busqueda = true;
