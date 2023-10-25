@@ -36,7 +36,7 @@ public class ServicioRegistroIS extends Servicios implements Serializable{
         try {
 
             //super.conectar();
-            ps = conn.prepareStatement("SELECT idRegistro, cedulaInvitadoTemporal, cedulaInvitadoPermanente, nombreCompletoInvitadoTemp, nombreEmpresa, placaVehicular, detalle, fechaIngreso, fechaSalida, cedulaGuardaSeguridad FROM registro_Ingreso_Salida");
+            ps = conn.prepareStatement("SELECT reg.idRegistro, reg.cedulaInvitadoTemporal, reg.cedulaInvitadoPermanente, reg.nombreCompletoInvitado, reg.nombreEmpresa, reg.placaVehiculo, reg.detalle, reg.fechaIngreso, reg.fechaSalida, e.nombreEmpleado, e.primerApellido, e.segundoApellido FROM registro_Ingreso_Salida reg JOIN Empleado e ON reg.cedulaGuardaSeguridad = e.cedulaEmpleado");
             rs = ps.executeQuery();
 
 
@@ -45,19 +45,21 @@ public class ServicioRegistroIS extends Servicios implements Serializable{
                 int idRegistro = rs.getInt("idRegistro");
                 int cedulaInvitadoTemporal = rs.getInt("cedulaInvitadoTemporal");
                 int cedulaInvitadoPermanente = rs.getInt("cedulaInvitadoPermanente");
-                String nombreCompletoInvitado = rs.getString("nombreCompletoInvitadoTemp");
+                String nombreCompletoInvitado = rs.getString("nombreCompletoInvitado");
                 String nombreEmpresa = rs.getString("nombreEmpresa");
-                String placaVehicular = rs.getString("placaVehicular");
+                String placaVehicular = rs.getString("placaVehiculo");
                 String detalle = rs.getString("detalle");
                 Timestamp  fechaIngreso = rs.getTimestamp("fechaIngreso");
                 Timestamp  fechaSalida = rs.getTimestamp("fechaSalida");
-                int cedulaGuardaSeguridad = rs.getInt("cedulaGuardaSeguridad");
+                String nombreGuardaSeguridad = rs.getString("nombreEmpleado");
+                String primerApellidoGuarda = rs.getString("primerApellido");
+                String segundoApellidoGuarda = rs.getString("segundoApellido");
                 
                 
 
-                RegistroIngresosSalidasTO registroIngresosSalidas = new RegistroIngresosSalidasTO();
+                RegistroIngresosSalidasTO registroIngresosSalidas = new RegistroIngresosSalidasTO(idRegistro, cedulaInvitadoTemporal, cedulaInvitadoPermanente, nombreCompletoInvitado, nombreEmpresa, placaVehicular, detalle, fechaIngreso, fechaSalida, nombreGuardaSeguridad, primerApellidoGuarda, segundoApellidoGuarda);
                 
-                registroIngresosSalidas.setIdRegistro(idRegistro);
+               /* registroIngresosSalidas.setIdRegistro(idRegistro);
                 registroIngresosSalidas.setCedulaInvitadoTemporal(cedulaInvitadoTemporal);
                 registroIngresosSalidas.setCedulaInvitadoPermanente(cedulaInvitadoPermanente);
                 registroIngresosSalidas.setNombreCompletoInvitado(nombreCompletoInvitado);
@@ -66,7 +68,9 @@ public class ServicioRegistroIS extends Servicios implements Serializable{
                 registroIngresosSalidas.setDetalle(detalle);
                 registroIngresosSalidas.setFechaIngreso(fechaIngreso);
                 registroIngresosSalidas.setFechaSalida(fechaSalida);
-                registroIngresosSalidas.setCedulaGuardaSeguridad(cedulaGuardaSeguridad);
+                registroIngresosSalidas.setNombreGuardaSeguridad(nombreGuardaSeguridad);
+                registroIngresosSalidas.setPrimerApellidoGuarda(primerApellidoGuarda);
+                registroIngresosSalidas.setSegundoApellidoGuarda(segundoApellidoGuarda);**/
 
                 listaRetornar.add(registroIngresosSalidas);
 

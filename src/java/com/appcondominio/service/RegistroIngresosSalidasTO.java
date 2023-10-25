@@ -26,11 +26,14 @@ public class RegistroIngresosSalidasTO implements Serializable{
     private Timestamp  fechaIngreso;
     private Timestamp  fechaSalida;
     private int cedulaGuardaSeguridad;
+    private String nombreGuardaSeguridad;
+    private String primerApellidoGuarda;
+    private String segundoApellidoGuarda;
 
     public RegistroIngresosSalidasTO() {
     }
 
-    public RegistroIngresosSalidasTO(int idRegistro, int cedulaInvitadoTemporal, int cedulaInvitadoPermanente, String nombreCompletoInvitado, String nombreEmpresa, String placaVehicular, String detalle, Timestamp fechaIngreso, Timestamp fechaSalida, int cedulaGuardaSeguridad) {
+    public RegistroIngresosSalidasTO(int idRegistro, int cedulaInvitadoTemporal, int cedulaInvitadoPermanente, String nombreCompletoInvitado, String nombreEmpresa, String placaVehicular, String detalle, Timestamp fechaIngreso, Timestamp fechaSalida, String nombreGuardaSeguridad, String primerApellidoGuarda, String segundoApellidoGuarda) {
         this.idRegistro = idRegistro;
         this.cedulaInvitadoTemporal = cedulaInvitadoTemporal;
         this.cedulaInvitadoPermanente = cedulaInvitadoPermanente;
@@ -40,7 +43,10 @@ public class RegistroIngresosSalidasTO implements Serializable{
         this.detalle = detalle;
         this.fechaIngreso = fechaIngreso;
         this.fechaSalida = fechaSalida;
-        this.cedulaGuardaSeguridad = cedulaGuardaSeguridad;
+        this.nombreGuardaSeguridad = nombreGuardaSeguridad;
+        this.primerApellidoGuarda = primerApellidoGuarda;
+        this.segundoApellidoGuarda = segundoApellidoGuarda;
+        
     }
 
     
@@ -123,6 +129,34 @@ public class RegistroIngresosSalidasTO implements Serializable{
     public void setCedulaGuardaSeguridad(int cedulaGuardaSeguridad) {
         this.cedulaGuardaSeguridad = cedulaGuardaSeguridad;
     }
+
+    public String getNombreGuardaSeguridad() {
+        return nombreGuardaSeguridad;
+    }
+
+    public void setNombreGuardaSeguridad(String nombreGuardaSeguridad) {
+        this.nombreGuardaSeguridad = nombreGuardaSeguridad;
+    }
+
+    public String getPrimerApellidoGuarda() {
+        return primerApellidoGuarda;
+    }
+
+    public void setPrimerApellidoGuarda(String primerApellidoGuarda) {
+        this.primerApellidoGuarda = primerApellidoGuarda;
+    }
+
+    public String getSegundoApellidoGuarda() {
+        return segundoApellidoGuarda;
+    }
+
+    public void setSegundoApellidoGuarda(String segundoApellidoGuarda) {
+        this.segundoApellidoGuarda = segundoApellidoGuarda;
+    }
+    
+    
+    
+    
 
 
 }
