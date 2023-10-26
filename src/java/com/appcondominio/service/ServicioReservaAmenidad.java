@@ -138,32 +138,30 @@ public class ServicioReservaAmenidad extends Servicios implements Serializable{
     }
     public void actualizarReserva(ReservaAmenidadTO reservaAmenidad) {
 
-        PreparedStatement ps = null;
+    PreparedStatement ps = null;
+    try {
+        ps = super.getConexion().prepareStatement("UPDATE Reserva_Amenidad SET fechaInicio=?, fechaFin=?, estado=? WHERE idReservaAmenidad=?");
+        
+      
+        ps.setTimestamp(1, reservaAmenidad.getFechaInicio());
+        ps.setTimestamp(2, reservaAmenidad.getFechaFin());
+       
+        ps.setString(3, reservaAmenidad.getEstado());
+        ps.setInt(4, reservaAmenidad.getIdReservaAmenidad()); // No se modifica el campo autoincremento
+        ps.executeUpdate();
 
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    } finally {
         try {
-            ps = super.getConexion().prepareStatement("UPDATE reserva_Amenidad SET fechaInicio=?, fechaFin=?, cedulaResidente=?, estado=? WHERE idReservaAmenidad =?");
-            ps.setTimestamp(1, reservaAmenidad.getFechaInicio());
-            ps.setTimestamp(2, reservaAmenidad.getFechaFin());
-            ps.setInt(3, reservaAmenidad.getCedulaResidente());
-            ps.setString(4, reservaAmenidad.getEstado());
-            ps.setInt(5, reservaAmenidad.getIdAmenidad());
-            ps.execute();
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        } finally {
-            try {
-                if (ps != null && ps.isClosed()) {
-                    ps.close();
-                }
-
-            } catch (SQLException ex) {
-                ex.printStackTrace();
+            if (ps != null && !ps.isClosed()) {
+                ps.close();
             }
-
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
-
     }
+}
     
    /* public List<ReservaAmenidadTO> mostrarReservasConNombres() {
     Connection conn = super.getConexion();
