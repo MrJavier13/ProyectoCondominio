@@ -140,9 +140,9 @@
                         <h:outputText value="#{residente.placaVehiculo}"/>
                     </p:column>
                     -->
-                    <p:column headerText="Estado" sortBy="#{residente.estado}"   filterMatchMode="contains" sortable="false">
+                    <!--<p:column headerText="Estado" sortBy="#{residente.estado}"   filterMatchMode="contains" sortable="false">
                         <h:outputText value="#{residente.estado}"/>
-                    </p:column>
+                    </p:column>-->
 
                     <p:column>
                         <p:panelGrid columns="1" layout="grid" style="border:0px none; text-align: center">
@@ -264,7 +264,7 @@
                                 </div>
                                 
                                 <p:inputText id="placaVehiculo" value="#{residentesController.residenteSeleccionado.placaVehiculo}" styleClass="input-field" />
-                                <p:tooltip for="placaVehiculo" value="Digite el placa del vehículo, si tiene." position="right"/>
+                                <p:tooltip for="placaVehiculo" value="Digite el placa del vehículo, si posee." position="right"/>
                                 <p:message id="placaVehiculoMessage" styleClass="tooltipDialog" for="placaVehiculo" />
                             </div>
                         
@@ -282,7 +282,7 @@
                     </p:outputPanel>
 
                     <f:facet name="footer">
-                        <p:commandButton value="Guadar" icon="pi pi-check" actionListener="#{residentesController.guardarResidenteYUsuario}" 
+                        <p:commandButton value="Guardar" icon="pi pi-check" actionListener="#{residentesController.guardarResidenteYUsuario}" 
                                          update="administrar-residente-content" process="administrar-residente-content @this" />
                         <p:commandButton value="Cancelar" icon="pi pi-times"
                                          class="ui-button-secondary" onclick=" PF('nuevoResidenteDialog').hide(); ">

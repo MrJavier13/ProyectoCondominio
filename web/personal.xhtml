@@ -127,9 +127,9 @@
                     <p:column headerText="Nombre Completo" sortBy="#{personal.nombre}"  filterMatchMode="contains">
                         <h:outputText value="#{personal.nombre} #{personal.apellido1} #{personal.apellido2}"/>
                     </p:column>                    
-                    <p:column headerText="Estado" sortBy="#{personal.estado}"   filterMatchMode="contains" sortable="false">
+                    <!-- <p:column headerText="Estado" sortBy="#{personal.estado}"   filterMatchMode="contains" sortable="false">
                         <h:outputText value="#{personal.estado}"/>
-                    </p:column>
+                    </p:column>  -->
 
                     <p:column>
                         <p:panelGrid columns="2" layout="grid" style="border:0px none; text-align: center">
@@ -246,11 +246,11 @@
                                 </div>
                                 
                                 <p:inputText id="placaVehiculo" value="#{personalController.personalSeleccionado.placaVehiculo}" styleClass="input-field"/>
-                                <p:tooltip for="placaVehiculo" value="Digite el placa del vehículo, si tiene." position="right"/>
+                                <p:tooltip for="placaVehiculo" value="Digite la placa del vehículo, si posee." position="right"/>
                                 <p:message id="placaVehiculoMessage" styleClass="tooltipDialog" for="placaVehiculo" />
                             </div>
                         
-                            <div class="p-field">
+                            <!--<div class="p-field">
                                 <div class="disenho">
                                 <p:outputLabel for="estado" style="font-size: 18px; font-weight: bold;">Estado</p:outputLabel>
                                 </div>
@@ -258,13 +258,13 @@
                                     <f:selectItem itemLabel="Activo" itemValue="Activo"/>
                                     <f:selectItem itemLabel="Inactivo" itemValue="Inactivo"/>
                                 </p:selectOneMenu>
-                            </div>
+                            </div>-->
 
                         </p:outputPanel>    
                     </p:outputPanel>
 
                     <f:facet name="footer">
-                        <p:commandButton value="Guadar" icon="pi pi-check" actionListener="#{personalController.guardarPersonal}" 
+                        <p:commandButton value="Guardar" icon="pi pi-check" actionListener="#{personalController.guardarPersonal}" 
                                          update="administrar-personal-content" process="administrar-personal-content @this" />
                         <p:commandButton value="Cancelar" icon="pi pi-times" 
                                          class="ui-button-secondary" onclick="PF('nuevoPersonalDialog').hide();">
