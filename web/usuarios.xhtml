@@ -112,12 +112,12 @@
                         <h:outputText value="#{usuario.cedulaResidente != 0 ? usuario.cedulaResidente : ''} #{usuario.cedulaEmpleado != 0 ? usuario.cedulaEmpleado : ''}"/>
                     </p:column>
                     <p:column headerText="Rol" sortBy="#{usuario.idRol}" filterMatchMode="contains">
-                        <h:outputText value="#{usuario.idRol}"/>
+                        <h:outputText value="#{usuario.idRol}"/> 
                     </p:column>
                     
-                    <p:column headerText="Estado" sortBy="#{usuario.estado}" filterMatchMode="contains" sortable="false">
+                    <!--<p:column headerText="Estado" sortBy="#{usuario.estado}" filterMatchMode="contains" sortable="false">
                         <h:outputText value="#{usuario.estado}"/>
-                    </p:column>
+                    </p:column> -->
                     
                     
                     <p:column>
