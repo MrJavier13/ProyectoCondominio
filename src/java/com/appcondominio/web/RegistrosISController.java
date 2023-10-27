@@ -13,16 +13,20 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+
 
 @ManagedBean(name = "registrosISController")
 @ViewScoped
 public class RegistrosISController implements Serializable{
     private List<RegistroIngresosSalidasTO> registroIS = new ArrayList<>();
-    private Date fechaInicio;
-    private Date fechaFin;
+    
+    private Date fechaInicial;
+    private Date fechaFinal;
 
     @ManagedProperty("#{registroISService}")
     private ServicioRegistroIS servicioRegistroIS;
@@ -35,17 +39,33 @@ public class RegistrosISController implements Serializable{
         this.registroIS = servicioRegistroIS.mostrarRegistro();
     }
 
-    public void buscarPorFecha() {
+    public void buscarRegistrosPorFechas() {
+    if (fechaInicial == null || fechaFinal == null || fechaInicial.after(fechaFinal)) {
+        // Mensaje de error si las fechas son nulas o la fecha inicial es posterior a la fecha final.
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Las fechas son nulas o la fecha inicial es posterior a la final");
+        FacesContext.getCurrentInstance().addMessage(null, message);
+    } else {
+        // Realiza la conversión de java.util.Date a java.sql.Date
+        java.sql.Date fechaInicialSQL = new java.sql.Date(fechaInicial.getTime());
+        java.sql.Date fechaFinalSQL = new java.sql.Date(fechaFinal.getTime());
+
+        // Llama al servicio para buscar registros entre las fechas.
+        registroIS = servicioRegistroIS.buscarRegistrosPorFechas(fechaInicialSQL, fechaFinalSQL);
+    }
+}
+
+    
+    /*public void buscarPorFecha() {
     Calendar cal = Calendar.getInstance();
 
-    cal.setTime(fechaInicio);
+    cal.setTime(fechaInicial);
     cal.set(Calendar.HOUR_OF_DAY, 0);
     cal.set(Calendar.MINUTE, 0);
     cal.set(Calendar.SECOND, 0);
     cal.set(Calendar.MILLISECOND, 0);
     java.sql.Timestamp inicio = new java.sql.Timestamp(cal.getTimeInMillis());
 
-    cal.setTime(fechaFin);
+    cal.setTime(fechaFinal);
     cal.set(Calendar.HOUR_OF_DAY, 23);
     cal.set(Calendar.MINUTE, 59);
     cal.set(Calendar.SECOND, 59);
@@ -53,7 +73,7 @@ public class RegistrosISController implements Serializable{
     java.sql.Timestamp fin = new java.sql.Timestamp(cal.getTimeInMillis());
 
     this.registroIS = servicioRegistroIS.mostrarRegistroPorFecha(inicio, fin);
-}
+}**/
 
     public List<RegistroIngresosSalidasTO> getRegistroIS() {
         return registroIS;
@@ -71,19 +91,19 @@ public class RegistrosISController implements Serializable{
         this.servicioRegistroIS = servicioRegistroIS;
     }
 
-    public Date getFechaInicio() {
-        return fechaInicio;
+    public Date getFechaInicial() {
+        return fechaInicial;
     }
 
-    public void setFechaInicio(Date fechaInicio) {
-        this.fechaInicio = fechaInicio;
+    public void setFechaInicial(Date fechaInicial) {
+        this.fechaInicial = fechaInicial;
     }
 
-    public Date getFechaFin() {
-        return fechaFin;
+    public Date getFechaFinal() {
+        return fechaFinal;
     }
 
-    public void setFechaFin(Date fechaFin) {
-        this.fechaFin = fechaFin;
+    public void setFechaFinal(Date fechaFinal) {
+        this.fechaFinal = fechaFinal;
     }
 }

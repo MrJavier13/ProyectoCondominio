@@ -84,11 +84,11 @@
             </div>
             
             <div class="card crud-demo">
-                <p:growl id="messages" showDetail="true"/>
- 
-                <p:calendar id="fechaInicio" value="#{registrosISController.fechaInicio}" showOn="button" />
-                <p:calendar id="fechaFin" value="#{registrosISController.fechaFin}" showOn="button" />
-                <p:commandButton value="Buscar registro por fecha" action="#{registrosISController.buscarPorFecha}" update="dt-products" />
+                <h:panelGrid columns="3">
+        <p:calendar id="fechaInicial" value="#{registrosISController.fechaInicial}" pattern="dd/MM/yyyy" required="true" label="Fecha Inicial" showOn="button" />
+        <p:calendar id="fechaFinal" value="#{registrosISController.fechaFinal}" pattern="dd/MM/yyyy" required="true" label="Fecha Final" showOn="button" />
+        <p:commandButton value="Buscar por fecha" action="#{registrosISController.buscarRegistrosPorFechas}" update="dt-products growl" />
+    </h:panelGrid>
                 
                 <p:dataTable id="dt-products" widgetVar="dtProducts" var="registroIS" value="#{registrosISController.registroIS}"
                              reflow="true" styleClass="products-table"
@@ -99,7 +99,6 @@
                             <span style="font-weight: bold">Registro de Ingresos y Salidas</span>                     
                         </div>
                     </f:facet>
-
                     <p:column headerText="Identificador" sortBy="#{registroIS.idRegistro}"  filterMatchMode="contains">
                         <h:outputText value="#{registroIS.idRegistro}"/>
                     </p:column>
@@ -129,11 +128,7 @@
                     </p:column>
                     <div class= "disenho">
                     </div>
-
-
                 </p:dataTable>
-
-
             </div>
         </h:form>
     </h:body>
