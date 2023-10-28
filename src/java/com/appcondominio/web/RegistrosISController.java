@@ -36,7 +36,7 @@ public class RegistrosISController implements Serializable{
 
     @PostConstruct
     public void init() {
-        this.registroIS = servicioRegistroIS.mostrarRegistro();
+        this.registroIS = new ArrayList<>();
     }
 
     public void buscarRegistrosPorFechas() {
