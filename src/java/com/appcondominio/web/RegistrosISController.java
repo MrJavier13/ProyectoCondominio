@@ -55,25 +55,7 @@ public class RegistrosISController implements Serializable{
 }
 
     
-    /*public void buscarPorFecha() {
-    Calendar cal = Calendar.getInstance();
-
-    cal.setTime(fechaInicial);
-    cal.set(Calendar.HOUR_OF_DAY, 0);
-    cal.set(Calendar.MINUTE, 0);
-    cal.set(Calendar.SECOND, 0);
-    cal.set(Calendar.MILLISECOND, 0);
-    java.sql.Timestamp inicio = new java.sql.Timestamp(cal.getTimeInMillis());
-
-    cal.setTime(fechaFinal);
-    cal.set(Calendar.HOUR_OF_DAY, 23);
-    cal.set(Calendar.MINUTE, 59);
-    cal.set(Calendar.SECOND, 59);
-    cal.set(Calendar.MILLISECOND, 999);
-    java.sql.Timestamp fin = new java.sql.Timestamp(cal.getTimeInMillis());
-
-    this.registroIS = servicioRegistroIS.mostrarRegistroPorFecha(inicio, fin);
-}**/
+    
 
     public List<RegistroIngresosSalidasTO> getRegistroIS() {
         return registroIS;
