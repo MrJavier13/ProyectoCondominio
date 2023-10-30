@@ -8,6 +8,7 @@ package com.appcondominio.web;
 import com.appcondominio.service.RegistroIngresosSalidasTO;
 import com.appcondominio.service.ServicioRegistroIS;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -39,20 +40,34 @@ public class RegistrosISController implements Serializable{
         this.registroIS = new ArrayList<>();
     }
 
-    public void buscarRegistrosPorFechas() {
-    if (fechaInicial == null || fechaFinal == null || fechaInicial.after(fechaFinal)) {
-        // Mensaje de error si las fechas son nulas o la fecha inicial es posterior a la fecha final.
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Las fechas son nulas o la fecha inicial es posterior a la final");
-        FacesContext.getCurrentInstance().addMessage(null, message);
-    } else {
-        // Realiza la conversión de java.util.Date a java.sql.Date
-        java.sql.Date fechaInicialSQL = new java.sql.Date(fechaInicial.getTime());
-        java.sql.Date fechaFinalSQL = new java.sql.Date(fechaFinal.getTime());
+    public void mostrarRegistrosPorFechas() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        if (fechaInicial != null && fechaFinal != null && !fechaInicial.after(fechaFinal)) {
+            // Ajusta las fechas para incluir todas las horas del día
+            Calendar calInicio = Calendar.getInstance();
+            calInicio.setTime(fechaInicial);
+            calInicio.set(Calendar.HOUR_OF_DAY, 0);
+            calInicio.set(Calendar.MINUTE, 0);
+            calInicio.set(Calendar.SECOND, 0);
+            calInicio.set(Calendar.MILLISECOND, 0);
+            Timestamp timestampInicio = new Timestamp(calInicio.getTimeInMillis());
 
-        // Llama al servicio para buscar registros entre las fechas.
-        registroIS = servicioRegistroIS.buscarRegistrosPorFechas(fechaInicialSQL, fechaFinalSQL);
+            Calendar calFin = Calendar.getInstance();
+            calFin.setTime(fechaFinal);
+            calFin.set(Calendar.HOUR_OF_DAY, 23);
+            calFin.set(Calendar.MINUTE, 59);
+            calFin.set(Calendar.SECOND, 59);
+            calFin.set(Calendar.MILLISECOND, 999);
+            Timestamp timestampFin = new Timestamp(calFin.getTimeInMillis());
+
+        // Llama al método del servicio para buscar registros por fechas
+        registroIS = servicioRegistroIS.buscarRegistrosPorFechas(timestampInicio, timestampFin);
+    } else {
+            // Muestra un mensaje de error
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Las fechas ingresadas no son válidas.");
+            context.addMessage(null, message);
+        }
     }
-}
 
     
     

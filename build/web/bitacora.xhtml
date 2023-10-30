@@ -87,7 +87,7 @@
                 <h:panelGrid columns="3">
         <p:calendar id="fechaInicial" value="#{registrosISController.fechaInicial}" pattern="dd/MM/yyyy" required="true" label="Fecha Inicial" showOn="button" />
         <p:calendar id="fechaFinal" value="#{registrosISController.fechaFinal}" pattern="dd/MM/yyyy" required="true" label="Fecha Final" showOn="button" />
-        <p:commandButton value="Buscar por fecha" action="#{registrosISController.buscarRegistrosPorFechas}" update="dt-products growl" />
+        <p:commandButton value="Buscar por fecha" action="#{registrosISController.mostrarRegistrosPorFechas}" update="dt-products growl" />
     </h:panelGrid>
                 
                 <p:dataTable id="dt-products" widgetVar="dtProducts" var="registroIS" value="#{registrosISController.registroIS}"
@@ -103,7 +103,7 @@
                         <h:outputText value="#{registroIS.idRegistro}"/>
                     </p:column>
                     <p:column headerText="Cédula del Invitado" filterMatchMode="contains">
-                        <h:outputText value="#{registroIS.cedulaInvitadoTemporal} #{registroIS.cedulaInvitadoPermanente}" />
+                        <h:outputText value="#{registroIS.cedulaAMostrar}" />
                     </p:column>
                     <p:column headerText="Nombre Completo Invitado" sortBy="#{registroIS.nombreCompletoInvitado}" filterMatchMode="contains">
                         <h:outputText value="#{registroIS.nombreCompletoInvitado}"/>
