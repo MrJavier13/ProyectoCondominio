@@ -6,7 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 
@@ -64,6 +66,42 @@ public class ServicioRol extends Servicios implements Serializable{
         }
 
         return listaRetornar;
+    }
+    
+    public Map<Integer, String> obtenerMapaRoles() {
+        Connection conn = super.getConexion();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        // Mapa para almacenar roles
+        Map<Integer, String> mapaRoles = new HashMap<>();
+
+        try {
+            ps = conn.prepareStatement("SELECT idRol, nombreRol FROM Rol");
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int idRol = rs.getInt("idRol");
+                String nombreRol = rs.getString("nombreRol");
+                // Agregar el rol al mapa
+                mapaRoles.put(idRol, nombreRol);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (ps != null && ps.isClosed()) {
+                    ps.close();
+                }
+                if (rs != null && !rs.isClosed()) {
+                    rs.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
+        }
+
+        return mapaRoles;
     }
     
     public Integer buscarIdRol(Integer buscar) {

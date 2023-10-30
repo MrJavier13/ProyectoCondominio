@@ -2,12 +2,14 @@ package com.appcondominio.web;
 
 import com.appcondominio.service.PersonalTO;
 import com.appcondominio.service.ServicioPersonal;
+import com.appcondominio.service.ServicioRol;
 import com.appcondominio.service.ServicioUsuario;
 import com.appcondominio.service.UsuarioTO;
 import java.io.Serializable;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -26,8 +28,8 @@ public class PersonalController implements Serializable{
     private String dialogHeader;
     private boolean activo;
     private boolean selectOneMenuDisabled = false;
-    private List<PersonalTO> filteredPersonal;
     private List<PersonalTO> personal = new ArrayList<>();
+    private Map<Integer, String> mapaRoles;
     
     @ManagedProperty("#{usuarioService}")
     private ServicioUsuario servicioUsuario;
@@ -35,18 +37,39 @@ public class PersonalController implements Serializable{
     @ManagedProperty("#{personalService}")
     private ServicioPersonal servicioPersonal;
     
+    @ManagedProperty("#{rolService}")
+    private ServicioRol servicioRol;
+    
 
     public PersonalController() {
     }
 
     @PostConstruct
     public void init() {
-        this.personal = servicioPersonal.mostrarPersonal();
-        this.filteredPersonal = this.personal.stream()
-                .filter(personal -> "Activo".equals(personal.getEstado()))
-                .collect(Collectors.toList());
+        this.personal = servicioPersonal.mostrarPersonal().stream()
+            .filter(res -> "Activo".equals(res.getEstado()))
+            .collect(Collectors.toList());
         this.activo = true;
+        this.mapaRoles = servicioRol.obtenerMapaRoles();
     }
+
+    public Map<Integer, String> getMapaRoles() {
+        return mapaRoles;
+    }
+
+    public void setMapaRoles(Map<Integer, String> mapaRoles) {
+        this.mapaRoles = mapaRoles;
+    }
+
+    public ServicioRol getServicioRol() {
+        return servicioRol;
+    }
+
+    public void setServicioRol(ServicioRol servicioRol) {
+        this.servicioRol = servicioRol;
+    }
+    
+    
 
     public String getDialogHeader() {
         return dialogHeader;
@@ -129,13 +152,6 @@ public class PersonalController implements Serializable{
         this.servicioUsuario = servicioUsuario;
     }
 
-    public List<PersonalTO> getFilteredPersonal() {
-        return filteredPersonal;
-    }
-
-    public void setFilteredPersonal(List<PersonalTO> filteredPersonal) {
-        this.filteredPersonal = filteredPersonal;
-    }
 
     public UsuarioTO getUsuarioSeleccionado() {
         return usuarioSeleccionado;
@@ -145,16 +161,14 @@ public class PersonalController implements Serializable{
         this.usuarioSeleccionado = usuarioSeleccionado;
     }
     
-    
-
-    public void filtrarPersonal() {
-        filteredPersonal.clear();
-        for (PersonalTO personal : personal) {
-            if ((activo && "Activo".equals(personal.getEstado())) || (!activo && "Inactivo".equals(personal.getEstado()))) {
-                filteredPersonal.add(personal);
-            }
-        }
+    public void filtrarResidentes() {
+        personal.clear();
+        List<PersonalTO> tempList = servicioPersonal.mostrarPersonal().stream()
+                .filter(res -> (activo && "Activo".equals(res.getEstado())) || (!activo && "Inactivo".equals(res.getEstado())))
+                .collect(Collectors.toList());
+        personal.addAll(tempList);
     }
+
 
     public void guardarPersonal() {
         if(personalSeleccionado.getCedula()== null){
@@ -222,31 +236,24 @@ private String generarContrasenaAleatoria(String nombre) {
     SecureRandom random = new SecureRandom();
     String caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
     StringBuilder contrasena = new StringBuilder();
-    
-    // Agregar una mayúscula
     contrasena.append(caracteres.charAt(random.nextInt(26)));
-    
-    // Agregar una minúscula
+
     contrasena.append(caracteres.charAt(random.nextInt(26) + 26));
-    
-    // Agregar un número
+
     contrasena.append(caracteres.charAt(random.nextInt(10) + 52));
     
-    // Obtener los últimos dos dígitos de la cédula
+
     String ultimosDigitosCedula = String.valueOf(personalSeleccionado.getCedula()).substring(Math.max(0, String.valueOf(personalSeleccionado.getCedula()).length() - 2));
     contrasena.append(ultimosDigitosCedula);
-    
-    // Agregar un carácter especial
+
     contrasena.append(caracteres.charAt(random.nextInt(8) + 62));
-    
-    // Agregar el nombre del empleado (si tiene al menos 3 caracteres)
+
     if (nombre.length() >= 3) {
         contrasena.append(nombre.substring(0, 3).toLowerCase());
     } else {
         contrasena.append(nombre.toLowerCase());
     }
-    
-    // Mezclar la contraseña para hacerla aleatoria
+
     char[] contrasenaArray = contrasena.toString().toCharArray();
     for (int i = 0; i < contrasena.length(); i++) {
         int index = random.nextInt(contrasena.length());
@@ -268,7 +275,6 @@ private String generarContrasenaAleatoria(String nombre) {
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "Error", "Usuario ya existe"));
 
             } else {
-                usuarioSeleccionado.setIdRol(3);
                 this.usuarioSeleccionado.setCedulaEmpleado(this.personalSeleccionado.getCedula());
                 servicioUsuario.insertarUsuarioPersonal(usuarioSeleccionado);
 

@@ -18,7 +18,7 @@ public class UsuarioTO implements Serializable{
     private String contrasena;
     private Integer cedulaResidente;
     private Integer cedulaEmpleado;
-    private int idRol;
+    private Integer idRol;
     private String estado;
     
     public UsuarioTO() {
