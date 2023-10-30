@@ -29,7 +29,6 @@ public class ResidentesController implements Serializable{
     private boolean activo;
     private boolean selectOneMenuDisabled = false;
     private List<ResidenteTO> residente = new ArrayList<>();
-    private List<ResidenteTO> filteredResidentes;
     private String dialogHeader;
     
     @ManagedProperty("#{residenteService}")
@@ -43,10 +42,9 @@ public class ResidentesController implements Serializable{
     
     @PostConstruct
     public void init() {
-        this.residente = servicioResidente.mostrarResidentes();
-        this.filteredResidentes = this.residente.stream()
-        .filter(residente -> "Activo".equals(residente.getEstado()))
-        .collect(Collectors.toList());
+        this.residente = servicioResidente.mostrarResidentes().stream()
+            .filter(res -> "Activo".equals(res.getEstado()))
+            .collect(Collectors.toList());
         this.activo = true;
     }
     
@@ -125,22 +123,13 @@ public class ResidentesController implements Serializable{
         this.servicioUsuario = servicioUsuario;
     }
 
-    public List<ResidenteTO> getFilteredResidentes() {
-        return filteredResidentes;
-    }
-
-    public void setFilteredResidentes(List<ResidenteTO> filteredResidentes) {
-        this.filteredResidentes = filteredResidentes;
-    }
-    
     
     public void filtrarResidentes() {
-        filteredResidentes.clear();
-        for (ResidenteTO residente : residente) {
-            if ((activo && "Activo".equals(residente.getEstado())) || (!activo && "Inactivo".equals(residente.getEstado()))) {
-                filteredResidentes.add(residente);
-            }
-        }
+        residente.clear();
+        List<ResidenteTO> tempList = servicioResidente.mostrarResidentes().stream()
+                .filter(res -> (activo && "Activo".equals(res.getEstado())) || (!activo && "Inactivo".equals(res.getEstado())))
+                .collect(Collectors.toList());
+        residente.addAll(tempList);
     }
         public void principal() {
 

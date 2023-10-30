@@ -102,18 +102,17 @@
 
             <div class="card crud-demo">
 
-                <p:dataTable id="dt-empleados" widgetVar="dtEmpleados" var="personal" value="#{personalController.filteredPersonal}"
+                <p:dataTable id="dt-empleados" widgetVar="dtEmpleados" var="personal" value="#{personalController.personal}"
                              reflow="true" styleClass="products-table"
                              paginator="true"
                              rows="10" rowSelectMode="add" paginatorPosition="bottom">
                     <f:facet name="header">
                         <div class="products-table-header">
-                            <span style="font-weight: bold">Personal</span> 
                             <div class="filter-container">
                                 <span>Mostrar:</span>
                                 <p:selectBooleanButton value="#{personalController.activo}" 
-                                                       onLabel="Activo" offLabel="Inactivo">
-                                    <p:ajax update="dt-empleados" listener="#{personalController.filtrarPersonal}" />
+                                                       onLabel="Inactivo" offLabel="Activo">
+                                    <p:ajax update="dt-empleados" listener="#{personalController.filtrarResidentes()}" />
                                 </p:selectBooleanButton>
                             </div>
                         </div>
@@ -311,6 +310,16 @@
                                     <f:selectItem itemLabel="Inactivo" itemValue="Inactivo"/>
                                 </p:selectOneMenu>
                             </div>
+                            
+                            <div class="p-field">
+                                <div class="disenho">
+                                    <p:outputLabel for="rolUsuario" style="font-size: 18px; font-weight: bold;">Rol</p:outputLabel>
+                                </div>
+                                    <p:selectOneMenu id="rolUsuario" value="#{personalController.usuarioSeleccionado.idRol}" style="width:12rem" >
+                                        <f:selectItem itemLabel="Seleccionar Rol" itemValue="" />
+                                        <f:selectItems value="#{personalController.mapaRoles.entrySet()}" var="entry" itemLabel="#{entry.value}" itemValue="#{entry.key}" />
+                                    </p:selectOneMenu>
+                                </div>
 
                         </p:outputPanel>    
                     </p:outputPanel>

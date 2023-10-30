@@ -49,6 +49,10 @@ public class RegistroIngresosSalidasTO implements Serializable{
         
     }
 
+    /*RegistroIngresosSalidasTO(int idRegistro, Integer cedulaAMostrar, String nombreCompletoInvitado, String nombreEmpresa, String placaVehicular, String detalle, Timestamp fechaIngreso, Timestamp fechaSalida, String nombreGuardaSeguridad, String primerApellidoGuarda, String segundoApellidoGuarda) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }**/
+
     
     public int getIdRegistro() {
         return idRegistro;

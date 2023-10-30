@@ -101,17 +101,16 @@
             </div>
             <div class="card crud-demo">
 
-                <p:dataTable id="dt-residentes" widgetVar="dtResidentes" var="residente" value="#{residentesController.filteredResidentes}"
+                <p:dataTable id="dt-residentes" widgetVar="dtResidentes" var="residente" value="#{residentesController.residente}"
                              reflow="true" styleClass="products-table"
                              paginator="true"
                              rows="10" rowSelectMode="add" paginatorPosition="bottom">
                     <f:facet name="header">
                         <div class="products-table-header">
-                            <span style="font-weight: bold">Residentes</span> 
                             <div class="filter-container">
                                 <span>Mostrar:</span>
                                 <p:selectBooleanButton value="#{residentesController.activo}" 
-                                                       onLabel="Activo" offLabel="Inactivo">
+                                                       onLabel="Inactivo" offLabel="Activo">
                                     <p:ajax update="dt-residentes" listener="#{residentesController.filtrarResidentes}" />
                                 </p:selectBooleanButton>
                             </div>
