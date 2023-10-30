@@ -78,3 +78,11 @@ build/web/WEB-INF/classes/com/appcondominio/web/ResidentesController.class
 nbproject/private/private.properties
 nbproject/private/private.properties
 nbproject/private/private.xml
+nbproject/project.properties
+nbproject/private/private.properties
+build/web/WEB-INF/classes/com/appcondominio/web/ResidentesController.class
+build/web/WEB-INF/classes/com/appcondominio/web/RegistrosISController.class
+build/web/WEB-INF/classes/com/appcondominio/web/PersonalController.class
+build/web/WEB-INF/classes/com/appcondominio/service/UsuarioTO.class
+build/web/WEB-INF/classes/com/appcondominio/service/ServicioRegistroIS.class
+build/web/WEB-INF/classes/com/appcondominio/service/RegistroIngresosSalidasTO.class

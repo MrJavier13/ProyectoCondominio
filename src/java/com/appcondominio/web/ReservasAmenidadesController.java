@@ -28,7 +28,6 @@ public class ReservasAmenidadesController implements Serializable{
     private boolean selectOneMenuDisabled = false;
     private List<ReservaAmenidadTO> reservaAmenidad = new ArrayList<>();
     private ReservaAmenidadTO nuevaReservaAmenidad = new ReservaAmenidadTO(); // Objeto para almacenar los datos de la nueva amenidad
-    private List<ReservaAmenidadTO> filteredReservasAmenidades;
     private String dialogHeader;
     private Date fechaInicial;
     private Date fechaFinal;
@@ -65,12 +64,17 @@ public class ReservasAmenidadesController implements Serializable{
     }
     
     public void filtrarReservasAmenidades() {
-        filteredReservasAmenidades.clear();
-        for (ReservaAmenidadTO reservaAmenidad : reservaAmenidad) {
-            if ((activo && "Activo".equals(reservaAmenidad.getEstado())) || (!activo && "Inactivo".equals(reservaAmenidad.getEstado()))) {
-                filteredReservasAmenidades.add(reservaAmenidad);
-            }
-        }
+        reservaAmenidad.clear();
+        Timestamp timestampInicio = new Timestamp(fechaInicial.getTime());
+        Timestamp timestampFin = new Timestamp(fechaFinal.getTime());
+
+        List<ReservaAmenidadTO> tempList = servicioReservaAmenidad.buscarReservasPorFechas(timestampInicio, timestampFin);
+
+        reservaAmenidad.addAll(tempList.stream()
+                .filter(res -> (activo && "Activo".equals(res.getEstado())) || (!activo && "Inactivo".equals(res.getEstado())))
+                .collect(Collectors.toList()));
+
+        PrimeFaces.current().ajax().update("form:dt-reservasAmenidades");
     }
     
     public void mostrarReservasPorFechas() {
@@ -95,6 +99,7 @@ public class ReservasAmenidadesController implements Serializable{
 
         // Llama al método del servicio para buscar registros por fechas
         reservaAmenidad = servicioReservaAmenidad.buscarReservasPorFechas(timestampInicio, timestampFin);
+        
         
     //    filtrarReservasAmenidades();
     } else {
@@ -183,13 +188,6 @@ public class ReservasAmenidadesController implements Serializable{
         this.activo = activo;
     }
 
-    public List<ReservaAmenidadTO> getFilteredReservasAmenidades() {
-        return filteredReservasAmenidades;
-    }
-
-    public void setFilteredReservasAmenidades(List<ReservaAmenidadTO> filteredReservasAmenidades) {
-        this.filteredReservasAmenidades = filteredReservasAmenidades;
-    }
 
     public String getDialogHeader() {
         return dialogHeader;
