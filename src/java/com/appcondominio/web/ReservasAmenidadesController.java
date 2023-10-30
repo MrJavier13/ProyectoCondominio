@@ -5,7 +5,10 @@ import com.appcondominio.service.AmenidadTO;
 import com.appcondominio.service.ReservaAmenidadTO;
 import com.appcondominio.service.ServicioReservaAmenidad;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
@@ -27,7 +30,8 @@ public class ReservasAmenidadesController implements Serializable{
     private ReservaAmenidadTO nuevaReservaAmenidad = new ReservaAmenidadTO(); // Objeto para almacenar los datos de la nueva amenidad
     private List<ReservaAmenidadTO> filteredReservasAmenidades;
     private String dialogHeader;
-
+    private Date fechaInicial;
+    private Date fechaFinal;
     
     @ManagedProperty("#{reservaAmenidadService}")
     private ServicioReservaAmenidad servicioReservaAmenidad;
@@ -37,11 +41,12 @@ public class ReservasAmenidadesController implements Serializable{
     
     @PostConstruct
     public void init() {
-        this.reservaAmenidad = servicioReservaAmenidad.mostrarReservas();
-        this.filteredReservasAmenidades = this.reservaAmenidad.stream()
+        this.reservaAmenidad = new ArrayList<>();
+        //filtrarReservasAmenidades();
+       /* this.filteredReservasAmenidades = this.reservaAmenidad.stream()
         .filter(reservaAmenidad -> "Activo".equals(reservaAmenidad.getEstado()))
         .collect(Collectors.toList());
-        this.activo = true;
+        this.activo = true;**/
     }
     
     /*public void openNew() {
@@ -65,6 +70,37 @@ public class ReservasAmenidadesController implements Serializable{
             if ((activo && "Activo".equals(reservaAmenidad.getEstado())) || (!activo && "Inactivo".equals(reservaAmenidad.getEstado()))) {
                 filteredReservasAmenidades.add(reservaAmenidad);
             }
+        }
+    }
+    
+    public void mostrarReservasPorFechas() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        if (fechaInicial != null && fechaFinal != null && !fechaInicial.after(fechaFinal)) {
+            // Ajusta las fechas para incluir todas las horas del día
+            Calendar calInicio = Calendar.getInstance();
+            calInicio.setTime(fechaInicial);
+            calInicio.set(Calendar.HOUR_OF_DAY, 0);
+            calInicio.set(Calendar.MINUTE, 0);
+            calInicio.set(Calendar.SECOND, 0);
+            calInicio.set(Calendar.MILLISECOND, 0);
+            Timestamp timestampInicio = new Timestamp(calInicio.getTimeInMillis());
+
+            Calendar calFin = Calendar.getInstance();
+            calFin.setTime(fechaFinal);
+            calFin.set(Calendar.HOUR_OF_DAY, 23);
+            calFin.set(Calendar.MINUTE, 59);
+            calFin.set(Calendar.SECOND, 59);
+            calFin.set(Calendar.MILLISECOND, 999);
+            Timestamp timestampFin = new Timestamp(calFin.getTimeInMillis());
+
+        // Llama al método del servicio para buscar registros por fechas
+        reservaAmenidad = servicioReservaAmenidad.buscarReservasPorFechas(timestampInicio, timestampFin);
+        
+    //    filtrarReservasAmenidades();
+    } else {
+            // Muestra un mensaje de error
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Las fechas ingresadas no son válidas.");
+            context.addMessage(null, message);
         }
     }
     
@@ -173,4 +209,22 @@ public class ReservasAmenidadesController implements Serializable{
     public void setReservaAmenidadSeleccionada(ReservaAmenidadTO reservaAmenidadSeleccionada) {
         this.reservaAmenidadSeleccionada = reservaAmenidadSeleccionada;
     }
+
+    public Date getFechaInicial() {
+        return fechaInicial;
+    }
+
+    public void setFechaInicial(Date fechaInicial) {
+        this.fechaInicial = fechaInicial;
+    }
+
+    public Date getFechaFinal() {
+        return fechaFinal;
+    }
+
+    public void setFechaFinal(Date fechaFinal) {
+        this.fechaFinal = fechaFinal;
+    }
+    
+    
 }

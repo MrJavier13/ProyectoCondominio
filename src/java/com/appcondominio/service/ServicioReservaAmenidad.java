@@ -19,7 +19,7 @@ import javax.faces.bean.ManagedBean;
 @ApplicationScoped
 public class ServicioReservaAmenidad extends Servicios implements Serializable{
     
-    public List<ReservaAmenidadTO> mostrarReservas() {
+    /*public List<ReservaAmenidadTO> mostrarReservas() {
     Connection conn = super.getConexion();
     PreparedStatement ps = null;
     ResultSet rs = null;
@@ -66,6 +66,55 @@ public class ServicioReservaAmenidad extends Servicios implements Serializable{
             ex.printStackTrace();
         }
 
+    }
+
+    return listaRetornar;
+}**/
+    
+   public List<ReservaAmenidadTO> buscarReservasPorFechas(Timestamp fechaInicial, Timestamp fechaFinal) {
+    Connection conn = super.getConexion();
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    List<ReservaAmenidadTO> listaRetornar = new ArrayList<ReservaAmenidadTO>();
+
+    try {
+        ps = conn.prepareStatement("SELECT r.idReservaAmenidad, a.nombreAmenidad, a.descripcion, r.fechaInicio, r.fechaFin, res.nombre, res.primerApellido, res.segundoApellido, res.numeroCasa, r.estado FROM reserva_Amenidad r JOIN Amenidad a ON r.idAmenidad = a.idAmenidad JOIN Residente res ON r.cedulaResidente = res.cedulaResidente WHERE r.fechaInicio BETWEEN ? AND ?");
+        ps.setTimestamp(1, fechaInicial);
+        ps.setTimestamp(2, fechaFinal);
+        rs = ps.executeQuery();
+
+        while (rs.next()) {
+            int idReservaAmenidad = rs.getInt("idReservaAmenidad");
+            String nombreAmenidad = rs.getString("nombreAmenidad");
+            String descripcionAmenidad = rs.getString ("descripcion");
+            Timestamp fechaInicio = rs.getTimestamp("fechaInicio");
+            Timestamp fechaFin = rs.getTimestamp("fechaFin");
+            String nombre = rs.getString("nombre");
+            String primerApellido = rs.getString("primerApellido");
+            String segundoApellido = rs.getString("segundoApellido");
+            int numeroCasa = rs.getInt("numeroCasa");
+            String estado =rs.getString("estado");
+            
+            
+
+            ReservaAmenidadTO reservaAmenidad = new ReservaAmenidadTO(idReservaAmenidad, nombreAmenidad, descripcionAmenidad, fechaInicio, fechaFin, nombre, primerApellido, segundoApellido, numeroCasa, estado);
+
+            listaRetornar.add(reservaAmenidad);
+        }
+
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    } finally {
+        try {
+            if (ps != null && !ps.isClosed()) {
+                ps.close();
+            }
+            if (rs != null && !rs.isClosed()) {
+                rs.close();
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
     return listaRetornar;

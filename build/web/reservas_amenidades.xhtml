@@ -10,8 +10,8 @@
         <style>
             .disenho
             {
-               line-height: 40px;
-                
+                line-height: 40px;
+
             }
             .input-container {
                 position: relative;
@@ -81,8 +81,8 @@
         </style>
         <script type="text/javascript">
             function resetFormFields() {
-            document.getElementById('form:nombreAmenidad').value = ' ';
-            document.getElementById('form:descripcion').value = ' ';
+                document.getElementById('form:nombreAmenidad').value = ' ';
+                document.getElementById('form:descripcion').value = ' ';
             }
         </script>
     </h:head>
@@ -90,7 +90,7 @@
 
         <h:form id="form">
             <p:growl id="growl" showDetail="true" />
-            
+
             <div class="topbar">
                 <a class="topbar-logo">Gestión de reservas de amenidades</a>
                 <ul class="topbar-menu">
@@ -99,10 +99,14 @@
                     <p:commandLink value="Cerrar Sesión"  actionListener="#{usuariosController.cerrarSesion}" ajax="false" styleClass="custom-commandlink" />
                 </ul>
             </div>
-      
+
             <div class="card crud-demo">
- 
-                <p:dataTable id="dt-reservasAmenidades" widgetVar="dtReservasAmenidades" var="reservaAmenidad" value="#{reservasAmenidadesController.filteredReservasAmenidades}"
+                <h:panelGrid columns="3">
+                    <p:calendar id="fechaInicial" value="#{reservasAmenidadesController.fechaInicial}" pattern="dd/MM/yyyy" required="true" label="Fecha Inicial" showOn="button" />
+                    <p:calendar id="fechaFinal" value="#{reservasAmenidadesController.fechaFinal}" pattern="dd/MM/yyyy" required="true" label="Fecha Final" showOn="button" />
+                    <p:commandButton value="Buscar por fecha" action="#{reservasAmenidadesController.mostrarReservasPorFechas}" update="dt-reservasAmenidades growl" />
+                </h:panelGrid>
+                <p:dataTable id="dt-reservasAmenidades" widgetVar="dtReservasAmenidades" var="reservaAmenidad" value="#{reservasAmenidadesController.reservaAmenidad}"
                              reflow="true" styleClass="products-table"
                              paginator="true"
                              rows="10" rowSelectMode="add" paginatorPosition="bottom">
@@ -123,22 +127,22 @@
                     </p:column>
                     <p:column headerText="Amenidad reservada" sortBy="#{reservaAmenidad.nombreAmenidad}"  filterMatchMode="contains">
                         <h:outputText value="#{reservaAmenidad.nombreAmenidad} #{reservaAmenidad.descripcionAmenidad}"/>
-    </p:column>
+                    </p:column>
                     <p:column headerText="Residente" sortBy="#{reservaAmenidad.nombre}"  filterMatchMode="contains">
-        <h:outputText value="#{reservaAmenidad.nombre} #{reservaAmenidad.primerApellido} #{reservaAmenidad.segundoApellido}"/>
-    </p:column>
+                        <h:outputText value="#{reservaAmenidad.nombre} #{reservaAmenidad.primerApellido} #{reservaAmenidad.segundoApellido}"/>
+                    </p:column>
                     <p:column headerText="Número de casa" sortBy="#{reservaAmenidad.numeroCasa}"  filterMatchMode="contains">
                         <h:outputText value="#{reservaAmenidad.numeroCasa}"/>
-    </p:column>
+                    </p:column>
                     <p:column headerText="Fecha de inicio" sortBy="#{reservaAmenidad.fechaInicio}"  filterMatchMode="contains">
                         <h:outputText value="#{reservaAmenidad.fechaInicio}"/>
                     </p:column>
                     <p:column headerText="Fecha final" sortBy="#{reservaAmenidad.fechaFin}"  filterMatchMode="contains">
                         <h:outputText value="#{reservaAmenidad.fechaFin}"/>
                     </p:column>
-                    
-                    
-               
+
+
+
                     <p:column>
                         <p:panelGrid columns="1" layout="grid" style="border:0px none; text-align: center">
 
@@ -147,25 +151,25 @@
                                              styleClass="edit-button rounded-button ui-button-success" process="@this">
                                 <f:setPropertyActionListener value="#{reservaAmenidad}" target="#{reservasAmenidadesController.reservaAmenidadSeleccionada}"/>
                             </p:commandButton>
-                   
+
                         </p:panelGrid>
                     </p:column>
 
                 </p:dataTable>
-         
+
                 <p:dialog header="#{reservasAmenidadesController.dialogHeader}" showEffect="fade" modal="true"
                           widgetVar="nuevaReservaDialog" responsive="true" onHide="resetFormFields();" visible="#{reservasAmenidadesController.reservaAmenidadSeleccionada ne null}">
 
                     <p:outputPanel id="administrar-reservaAmenidad-content" class="ui-fluid">
                         <p:outputPanel rendered="#{not empty reservasAmenidadesController.reservaAmenidadSeleccionada}">
-                            
-                            
-                            
 
-                           
+
+
+
+
                             <div class="p-field">
                                 <div class="disenho">
-                                <p:outputLabel for="estado" style="font-size: 18px; font-weight: bold;">Estado</p:outputLabel>
+                                    <p:outputLabel for="estado" style="font-size: 18px; font-weight: bold;">Estado</p:outputLabel>
                                 </div>
                                 <p:selectOneMenu id="estado" value="#{reservasAmenidadesController.reservaAmenidadSeleccionada.estado}" style="width:12rem" >
                                     <f:selectItem itemLabel="Activo" itemValue="Activo"/>
@@ -174,8 +178,8 @@
                             </div>
 
 
-                            </p:outputPanel> 
-                        </p:outputPanel>
+                        </p:outputPanel> 
+                    </p:outputPanel>
 
                     <f:facet name="footer">
                         <p:commandButton value="Guardar" icon="pi pi-check" actionListener="#{reservasAmenidadesController.guardarReserva}"
@@ -187,9 +191,9 @@
                     </f:facet>
 
                 </p:dialog>
-                
-                
-    
+
+
+
             </div>
         </h:form>
     </h:body>

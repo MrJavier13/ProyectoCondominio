@@ -17,8 +17,9 @@ import java.time.LocalDateTime;
 public class RegistroIngresosSalidasTO implements Serializable{
     
     private int idRegistro;
-    private int cedulaInvitadoTemporal;
-    private int cedulaInvitadoPermanente;
+    private Integer cedulaInvitadoTemporal;
+    private Integer cedulaInvitadoPermanente;
+    private Integer cedulaAMostrar;
     private String nombreCompletoInvitado;
     private String nombreEmpresa;
     private String placaVehicular;
@@ -33,10 +34,9 @@ public class RegistroIngresosSalidasTO implements Serializable{
     public RegistroIngresosSalidasTO() {
     }
 
-    public RegistroIngresosSalidasTO(int idRegistro, int cedulaInvitadoTemporal, int cedulaInvitadoPermanente, String nombreCompletoInvitado, String nombreEmpresa, String placaVehicular, String detalle, Timestamp fechaIngreso, Timestamp fechaSalida, String nombreGuardaSeguridad, String primerApellidoGuarda, String segundoApellidoGuarda) {
+    public RegistroIngresosSalidasTO(int idRegistro, Integer cedulaAMostrar, String nombreCompletoInvitado, String nombreEmpresa, String placaVehicular, String detalle, Timestamp fechaIngreso, Timestamp fechaSalida, String nombreGuardaSeguridad, String primerApellidoGuarda, String segundoApellidoGuarda) {
         this.idRegistro = idRegistro;
-        this.cedulaInvitadoTemporal = cedulaInvitadoTemporal;
-        this.cedulaInvitadoPermanente = cedulaInvitadoPermanente;
+        this.cedulaAMostrar = cedulaAMostrar;
         this.nombreCompletoInvitado = nombreCompletoInvitado;
         this.nombreEmpresa = nombreEmpresa;
         this.placaVehicular = placaVehicular;
@@ -58,21 +58,33 @@ public class RegistroIngresosSalidasTO implements Serializable{
         this.idRegistro = idRegistro;
     }
 
-    public int getCedulaInvitadoTemporal() {
+    public Integer getCedulaInvitadoTemporal() {
         return cedulaInvitadoTemporal;
     }
 
-    public void setCedulaInvitadoTemporal(int cedulaInvitadoTemporal) {
+    public void setCedulaInvitadoTemporal(Integer cedulaInvitadoTemporal) {
         this.cedulaInvitadoTemporal = cedulaInvitadoTemporal;
     }
 
-    public int getCedulaInvitadoPermanente() {
+    public Integer getCedulaInvitadoPermanente() {
         return cedulaInvitadoPermanente;
     }
 
-    public void setCedulaInvitadoPermanente(int cedulaInvitadoPermanente) {
+    public void setCedulaInvitadoPermanente(Integer cedulaInvitadoPermanente) {
         this.cedulaInvitadoPermanente = cedulaInvitadoPermanente;
     }
+
+    public Integer getCedulaAMostrar() {
+        return cedulaAMostrar;
+    }
+
+    public void setCedulaAMostrar(Integer cedulaAMostrar) {
+        this.cedulaAMostrar = cedulaAMostrar;
+    }
+
+    
+
+    
 
     public String getNombreCompletoInvitado() {
         return nombreCompletoInvitado;
