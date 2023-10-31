@@ -168,7 +168,7 @@
                             
                             <div class="p-field">
                                 <div class="disenho">
-                                <p:outputLabel for="nombreAmenidad" style="font-size: 18px; font-weight: bold;">Nombre de la amenidad</p:outputLabel>
+                                <p:outputLabel for="nombreAmenidad" style="font-size: 18px; font-weight: bold;">Nombre</p:outputLabel>
                                 </div>
                                 <p:inputText id="nombreAmenidad" value="#{amenidadesController.amenidadSeleccionada.nombreAmenidad}"/>
                                 <p:tooltip for="nombreAmenidad" value="Escriba el nombre de la amenidad." position="right"/>
@@ -187,7 +187,7 @@
                                 <div class="disenho">
                                 <p:outputLabel for="estado" style="font-size: 18px; font-weight: bold;">Estado</p:outputLabel>
                                 </div>
-                                <p:selectOneMenu id="estado" value="#{amenidadesController.amenidadSeleccionada.estado}" style="width:12rem" >
+                                <p:selectOneMenu id="estado" value="#{amenidadesController.amenidadSeleccionada.estado}" style="width:12rem" disabled="#{amenidadesController.selectOneMenuDisabled}" >
                                     <f:selectItem itemLabel="Activo" itemValue="Activo"/>
                                     <f:selectItem itemLabel="Inactivo" itemValue="Inactivo"/>
                                 </p:selectOneMenu>

@@ -26,6 +26,7 @@ public class RolesController implements Serializable{
     private RolTO nuevoRol = new RolTO(); // Objeto para almacenar los datos del rol
 //    private List<RolTO> filteredRoles;
     private String dialogHeader;
+    private boolean selectOneMenuDisabled = false;
 
     
     @ManagedProperty("#{rolService}")
@@ -50,6 +51,14 @@ public class RolesController implements Serializable{
        // enableSelectOneMenu(); 
         dialogHeader = "Editar rol";
        
+    }
+    
+    public boolean isSelectOneMenuDisabled() {
+        return selectOneMenuDisabled;
+    }
+
+    public void disableSelectOneMenu() {
+        selectOneMenuDisabled = true;
     }
    /* 
     public void filtrarAmenidades() {

@@ -43,6 +43,7 @@ public class AmenidadesController implements Serializable{
     
     public void openNew() {
        this.amenidadSeleccionada = new AmenidadTO();
+       this.amenidadSeleccionada.setEstado("Activo");
        disableSelectOneMenu();
        dialogHeader = "Registrar nueva amenidad";
        
