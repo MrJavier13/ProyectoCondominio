@@ -50,8 +50,6 @@
                 padding: 10px 20px;
                 transition: background-color 0.3s;
             }
-
-
             .topbar-logo {
                 font-size: 24px;
                 font-weight: bold;
@@ -140,20 +138,15 @@
                             </p:commandButton>
                             
                             <p:commandButton value="Crear Usuario" icon="pi pi-user"
-                                         update=":form" process="@this" oncomplete="PF('confirmationDialog').show()" >
+                                         update=":form" process="@this" oncomplete="PF('nuevoUsuarioDialog').show()" actionListener="#{personalController.openNewUsuario}">
                                 <f:setPropertyActionListener value="#{personal}" target="#{personalController.personalSeleccionado}"/>
+                                <p:resetInput target=":form:administrar-usuario-content"/>
                             </p:commandButton>
 
                         </p:panelGrid>
                     </p:column>
                 </p:dataTable>
                 
-                <p:confirmDialog header="Confirmación" message="¿Desea crear un usuario predeterminado?" 
-                    widgetVar="confirmationDialog">
-                    <p:commandButton value="Si" update=":form" process="@this" oncomplete="PF('confirmationDialog').hide();" actionListener="#{personalController.guardarUsuarioPredeterminado()}"/>
-                    <p:commandButton value="No" update=":form" process="@this" oncomplete="PF('confirmationDialog').hide(); PF('nuevoUsuarioDialog').show();" actionListener="#{personalController.openNewUsuario}"/>
-                    <p:commandButton value="Cancerlar" update=":form" process="@this" oncomplete="PF('confirmationDialog').hide();"/>
-                </p:confirmDialog>
 
                 <p:toolbar>
                     <p:toolbarGroup>
@@ -286,7 +279,7 @@
                                 <p:inputText id="usuario" value="#{personalController.usuarioSeleccionado.usuario}">
                                 </p:inputText>
                                 <p:tooltip for="usuario" value="Digite el usuario." position="right"/>
-                                <p:message id="usuarioMessage" for="usuario" />
+                                <p:message id="usuarioMessage" for="usuario" display="text"/>
                             </div>
 
                             <div class="p-field">
@@ -296,7 +289,7 @@
                                 
                                 <p:password id="contrasena" value="#{personalController.usuarioSeleccionado.contrasena}" />
                                 <p:tooltip for="contrasena" value="Digite la contraseña." position="right"/>
-                                <p:message id="contrasenaMessage" for="contrasena" />
+                                <p:message id="contrasenaMessage" for="contrasena" display="text"/>
                             </div>
                             
                             
@@ -319,14 +312,16 @@
                                         <f:selectItem itemLabel="Seleccionar Rol" itemValue="" />
                                         <f:selectItems value="#{personalController.mapaRoles.entrySet()}" var="entry" itemLabel="#{entry.value}" itemValue="#{entry.key}" />
                                     </p:selectOneMenu>
+                                    <p:message for="rolUsuario" />
                                 </div>
 
                         </p:outputPanel>    
                     </p:outputPanel>
 
                     <f:facet name="footer">
-                        <p:commandButton value="Guardar" icon="pi pi-check" actionListener="#{personalController.guardarUsuario}" 
-                                         update="administrar-personal-content" process="administrar-usuario-content @this" />
+
+                        <p:commandButton value="Guadar" icon="pi pi-check" actionListener="#{personalController.guardarUsuario}" 
+                                         update="administrar-usuario-content" process="administrar-usuario-content @this" />
                         <p:commandButton value="Cancelar" icon="pi pi-times" 
                                          class="ui-button-secondary" onclick="PF('nuevoUsuarioDialog').hide();">
                              <p:ajax update="form:administrar-usuario-content" />

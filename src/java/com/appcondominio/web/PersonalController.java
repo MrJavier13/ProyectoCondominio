@@ -178,7 +178,7 @@ public class PersonalController implements Serializable{
             return;
         }
         
-        if (validarCampos()) {
+        if (validarCamposPersonal()) {
             if (!correoValido(personalSeleccionado.getCorreoElectronico())) {
             FacesContext.getCurrentInstance().addMessage("form:correoElectronico", 
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, "Formato de correo electrónico inválido", 
@@ -202,89 +202,43 @@ public class PersonalController implements Serializable{
             PrimeFaces.current().ajax().update("form:messages", "form:dt-empleados");
         }
     }
-    
-    public void guardarUsuarioPredeterminado() {
-        if (servicioUsuario.buscarCedulaUsuario(this.personalSeleccionado.getCedula())) {
-            FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Error", "El empleado ya tiene un usuario"));
-        } else{
-            if (servicioUsuario.buscarUsuario(this.personalSeleccionado.getCorreoElectronico())) {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Usuario ya existe"));
-            } else {
-                // Generar una contraseña aleatoria que cumpla con los requisitos
-                String contrasena = generarContrasenaAleatoria(personalSeleccionado.getNombre());
-                this.usuarioSeleccionado = new UsuarioTO();
-                usuarioSeleccionado.setContrasena(contrasena);
-                usuarioSeleccionado.setIdRol(3);
-                usuarioSeleccionado.setEstado("Activo");
-                usuarioSeleccionado.setCedulaEmpleado(personalSeleccionado.getCedula());
-                usuarioSeleccionado.setUsuario(personalSeleccionado.getCorreoElectronico());
 
-                servicioUsuario.insertarUsuarioPersonal(usuarioSeleccionado);
 
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Usuario agregado"));
-            }
-        }
-    this.init();
-    PrimeFaces.current().executeScript("PF('nuevoUsuarioDialog').hide()");
-    PrimeFaces.current().ajax().update("form:messages", "form:dt-empleados");
-}
-
-private String generarContrasenaAleatoria(String nombre) {
-    SecureRandom random = new SecureRandom();
-    String caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
-    StringBuilder contrasena = new StringBuilder();
-    contrasena.append(caracteres.charAt(random.nextInt(26)));
-
-    contrasena.append(caracteres.charAt(random.nextInt(26) + 26));
-
-    contrasena.append(caracteres.charAt(random.nextInt(10) + 52));
-    
-
-    String ultimosDigitosCedula = String.valueOf(personalSeleccionado.getCedula()).substring(Math.max(0, String.valueOf(personalSeleccionado.getCedula()).length() - 2));
-    contrasena.append(ultimosDigitosCedula);
-
-    contrasena.append(caracteres.charAt(random.nextInt(8) + 62));
-
-    if (nombre.length() >= 3) {
-        contrasena.append(nombre.substring(0, 3).toLowerCase());
-    } else {
-        contrasena.append(nombre.toLowerCase());
-    }
-
-    char[] contrasenaArray = contrasena.toString().toCharArray();
-    for (int i = 0; i < contrasena.length(); i++) {
-        int index = random.nextInt(contrasena.length());
-        char temp = contrasenaArray[i];
-        contrasenaArray[i] = contrasenaArray[index];
-        contrasenaArray[index] = temp;
-    }
-    
-    return new String(contrasenaArray);
-}
 
     public void guardarUsuario() {
-        if (servicioUsuario.buscarCedulaUsuario(this.personalSeleccionado.getCedula())) {
-            FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Error", "El empleado ya tiene un usuario"));
-        } else{
-            if (servicioUsuario.buscarUsuario(this.personalSeleccionado.getCorreoElectronico())) {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Error", "Usuario ya existe"));
-
-            } else {
-                this.usuarioSeleccionado.setCedulaEmpleado(this.personalSeleccionado.getCedula());
-                servicioUsuario.insertarUsuarioPersonal(usuarioSeleccionado);
-
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Usuario agregado"));
+        if (validarCamposUsuario()) {
+            if (!validarContrasena(usuarioSeleccionado.getContrasena())) {
+                FacesContext.getCurrentInstance().addMessage("form:contrasena",
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Formato de contraseña inválido",
+                                "Debe contener una mayúscula, una minúscula, un número y un carácter especial y una longitud de 8 caracteres."));
+                return;
             }
+            if (usuarioSeleccionado.getIdRol() == null) {
+                FacesContext.getCurrentInstance().addMessage("form:rolUsuario", 
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ingrese el rol del usuario", 
+                        "Por favor, ingrese el rol del usuario"));
+                return;
+            }
+            if (servicioUsuario.buscarCedulaUsuario(this.personalSeleccionado.getCedula())) {
+                FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_INFO, "Error", "El empleado ya tiene un usuario"));
+            } else{
+                if (servicioUsuario.buscarUsuario(this.personalSeleccionado.getCorreoElectronico())) {
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_INFO, "Error", "Usuario ya existe"));
+
+                } else {
+                    this.usuarioSeleccionado.setCedulaEmpleado(this.personalSeleccionado.getCedula());
+                    servicioUsuario.insertarUsuarioPersonal(usuarioSeleccionado);
+
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Usuario agregado"));
+                }
+            }
+            this.init();
+            PrimeFaces.current().executeScript("PF('nuevoUsuarioDialog').hide()");
+            PrimeFaces.current().ajax().update("form:messages", "form:dt-empleados");
         }
-        this.init();
-        PrimeFaces.current().executeScript("PF('nuevoUsuarioDialog').hide()");
-        PrimeFaces.current().ajax().update("form:messages", "form:dt-empleados");
     }
     
     private boolean validarCampo(String valor, String nombreCampo, String nombreError) {
@@ -297,7 +251,7 @@ private String generarContrasenaAleatoria(String nombre) {
         return true;
     }
     
-    private boolean validarCampos() {
+    private boolean validarCamposPersonal() {
         if (personalSeleccionado.getCedula() != null) {
         }
         return validarCampo(personalSeleccionado.getNombre(), "nombre", "nombre")
@@ -306,10 +260,25 @@ private String generarContrasenaAleatoria(String nombre) {
         && validarCampo(Integer.toString(personalSeleccionado.getTelefono()), "telefono", "teléfono")
         && validarCampo(personalSeleccionado.getCorreoElectronico(), "correoElectronico", "correo electrónico");
     }
+    
+    private boolean validarCamposUsuario() {
+        
+        if (usuarioSeleccionado.getUsuario() == null || usuarioSeleccionado.getUsuario().isEmpty()) {
+        }
+        return validarCampo(usuarioSeleccionado.getUsuario(), "usuario", "usuario")
+        && validarCampo(usuarioSeleccionado.getContrasena(), "contrasena", "contraseña");
+
+    }
+    
 
     private boolean correoValido(String email) {
         String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
         return email.matches(regex);
     }
+    
+    private boolean validarContrasena(String contrasena) {
+    String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!-~])[A-Za-z\\d!-~]{8,}$";
+    return contrasena.matches(regex);
+}
 
 }

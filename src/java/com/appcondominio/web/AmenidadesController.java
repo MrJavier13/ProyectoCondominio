@@ -106,7 +106,7 @@ public class AmenidadesController implements Serializable{
     private boolean validarCampos() {
         if (amenidadSeleccionada.getIdAmenidad() != null) {
         }
-        return validarCampo(amenidadSeleccionada.getNombreAmenidad(), "nombreAmenidad", "nombre") ;
+        return validarCampo(amenidadSeleccionada.getNombreAmenidad(), "nombreAmenidad", "nombre ") ;
     }
     
     public void redireccionar(String ruta) {

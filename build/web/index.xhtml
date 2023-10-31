@@ -21,13 +21,12 @@
                 align-items: center;
                 height: 100vh;
             }
-
+            
         </style>
 
         <div class="Login">
             <h:form>
                 <h:outputStylesheet library="resources" name="estilos.css" />
-                <p:growl id="growl" showDetail="true" />
                 <p:messages id="messages" showDetail="true" closable="true">
                     <p:autoUpdate/>
                 </p:messages>
@@ -45,7 +44,7 @@
                             </f:facet>
                         </p:password>
 
-                    <p:commandButton value="Ingresar" actionListener="#{loginController.ingresar()}" update="growl, messages" styleClass="login-button"/>
+                    <p:commandButton value="Ingresar" actionListener="#{loginController.ingresar()}" update="messages" styleClass="login-button"/>
                 </div>
                 
                

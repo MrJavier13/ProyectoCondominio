@@ -77,8 +77,11 @@
                 <a class="topbar-logo">Gestión de usuarios</a>
                 <ul class="topbar-menu">
                     <p:commandLink value="Inicio" actionListener="#{usuariosController.principal}" ajax="false" styleClass="custom-commandlink" />
+                    <p:divider layout="vertical" />
                     <p:commandLink value="Residentes" actionListener="#{usuariosController.residentes}" ajax="false" styleClass="custom-commandlink" />
+                    <p:divider layout="vertical" />
                     <p:commandLink value="Personal" actionListener="#{usuariosController.personal}" ajax="false" styleClass="custom-commandlink" />
+                    <p:divider layout="vertical" />
                     <p:commandLink value="Cerrar Sesión"  actionListener="#{usuariosController.cerrarSesion}" ajax="false" styleClass="custom-commandlink" />
                 </ul>
             </div>

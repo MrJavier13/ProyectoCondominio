@@ -5,6 +5,7 @@ import com.appcondominio.service.ServicioResidente;
 import com.appcondominio.service.ServicioUsuario;
 import com.appcondominio.service.UsuarioTO;
 import java.io.Serializable;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -173,10 +174,11 @@ public class ResidentesController implements Serializable{
             if (!servicioResidente.buscarCedulaResidente(this.residenteSeleccionado.getCedula())) { 
                 // Si es false inserta
                     servicioResidente.insertarResidente(residenteSeleccionado);
+                    String contrasena = generarContrasenaAleatoria(residenteSeleccionado.getNombre());
                     UsuarioTO usuario = new UsuarioTO();
                     usuario.setCedulaResidente(residenteSeleccionado.getCedula());
                     usuario.setUsuario(residenteSeleccionado.getCorreoElectronico());
-                    usuario.setContrasena(String.valueOf(residenteSeleccionado.getCedula()));
+                    usuario.setContrasena(contrasena);
                     usuario.setEstado(residenteSeleccionado.getEstado());
                     usuario.setIdRol(1);
                     servicioUsuario.insertarUsuarioResidente(usuario);
@@ -195,6 +197,39 @@ public class ResidentesController implements Serializable{
             PrimeFaces.current().ajax().update("form:messages", "form:dt-residentes");
         }
     }
+    
+    private String generarContrasenaAleatoria(String nombre) {
+    SecureRandom random = new SecureRandom();
+    String caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+    StringBuilder contrasena = new StringBuilder();
+    contrasena.append(caracteres.charAt(random.nextInt(26)));
+
+    contrasena.append(caracteres.charAt(random.nextInt(26) + 26));
+
+    contrasena.append(caracteres.charAt(random.nextInt(10) + 52));
+    
+
+    String ultimosDigitosCedula = String.valueOf(residenteSeleccionado.getCedula()).substring(Math.max(0, String.valueOf(residenteSeleccionado.getCedula()).length() - 2));
+    contrasena.append(ultimosDigitosCedula);
+
+    contrasena.append(caracteres.charAt(random.nextInt(8) + 62));
+
+    if (nombre.length() >= 3) {
+        contrasena.append(nombre.substring(0, 3).toLowerCase());
+    } else {
+        contrasena.append(nombre.toLowerCase());
+    }
+
+    char[] contrasenaArray = contrasena.toString().toCharArray();
+    for (int i = 0; i < contrasena.length(); i++) {
+        int index = random.nextInt(contrasena.length());
+        char temp = contrasenaArray[i];
+        contrasenaArray[i] = contrasenaArray[index];
+        contrasenaArray[index] = temp;
+    }
+    
+    return new String(contrasenaArray);
+}
 
     private boolean correoValido(String email) {
         String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";

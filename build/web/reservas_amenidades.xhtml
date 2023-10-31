@@ -95,7 +95,9 @@
                 <a class="topbar-logo">Gestión de reservas de amenidades</a>
                 <ul class="topbar-menu">
                     <p:commandLink value="Inicio" actionListener="#{usuariosController.principal}" immediate="true" ajax="false" styleClass="custom-commandlink" />
+                    <p:divider layout="vertical" />
                     <p:commandLink value="Amenidades" actionListener="#{usuariosController.amenidades}" immediate="true" ajax="false" styleClass="custom-commandlink" />
+                    <p:divider layout="vertical" />
                     <p:commandLink value="Cerrar Sesión"  actionListener="#{usuariosController.cerrarSesion}" immediate="true" ajax="false" styleClass="custom-commandlink" />
                 </ul>
             </div>
@@ -162,10 +164,6 @@
 
                     <p:outputPanel id="administrar-reservaAmenidad-content" class="ui-fluid">
                         <p:outputPanel rendered="#{not empty reservasAmenidadesController.reservaAmenidadSeleccionada}">
-
-
-
-
 
                             <div class="p-field">
                                 <div class="disenho">

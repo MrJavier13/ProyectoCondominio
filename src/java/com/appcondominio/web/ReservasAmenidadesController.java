@@ -65,8 +65,21 @@ public class ReservasAmenidadesController implements Serializable{
     
     public void filtrarReservasAmenidades() {
         reservaAmenidad.clear();
-        Timestamp timestampInicio = new Timestamp(fechaInicial.getTime());
-        Timestamp timestampFin = new Timestamp(fechaFinal.getTime());
+        Calendar calInicio = Calendar.getInstance();
+            calInicio.setTime(fechaInicial);
+            calInicio.set(Calendar.HOUR_OF_DAY, 0);
+            calInicio.set(Calendar.MINUTE, 0);
+            calInicio.set(Calendar.SECOND, 0);
+            calInicio.set(Calendar.MILLISECOND, 0);
+            Timestamp timestampInicio = new Timestamp(calInicio.getTimeInMillis());
+
+            Calendar calFin = Calendar.getInstance();
+            calFin.setTime(fechaFinal);
+            calFin.set(Calendar.HOUR_OF_DAY, 23);
+            calFin.set(Calendar.MINUTE, 59);
+            calFin.set(Calendar.SECOND, 59);
+            calFin.set(Calendar.MILLISECOND, 999);
+            Timestamp timestampFin = new Timestamp(calFin.getTimeInMillis());
 
         List<ReservaAmenidadTO> tempList = servicioReservaAmenidad.buscarReservasPorFechas(timestampInicio, timestampFin);
 

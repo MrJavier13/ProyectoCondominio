@@ -79,12 +79,6 @@
                 border-bottom: 5px solid white;
             }
         </style>
-        <script type="text/javascript">
-            function resetFormFields() {
-            document.getElementById('form:nombreAmenidad').value = ' ';
-            document.getElementById('form:descripcion').value = ' ';
-            }
-        </script>
     </h:head>
     <h:body style=" background: linear-gradient(to bottom, #ffffff, #1e4fa5);">
 
@@ -95,7 +89,9 @@
                 <a class="topbar-logo">Gestión de amenidades</a>
                 <ul class="topbar-menu">
                     <p:commandLink value="Inicio" actionListener="#{usuariosController.principal}" ajax="false" styleClass="custom-commandlink" />
+                    <p:divider layout="vertical" />
                     <p:commandLink value="Reservas de amenidades" actionListener="#{usuariosController.reservaAmenidades}" ajax="false" styleClass="custom-commandlink" />
+                    <p:divider layout="vertical" />
                     <p:commandLink value="Cerrar Sesión"  actionListener="#{usuariosController.cerrarSesion}" ajax="false" styleClass="custom-commandlink" />
                 </ul>
             </div>
@@ -200,7 +196,7 @@
                     <f:facet name="footer">
                         <p:commandButton value="Guardar" icon="pi pi-check" actionListener="#{amenidadesController.guardarAmenidad}"
                                          update="administrar-amenidad-content" process="administrar-amenidad-content @this"/>
-                        <p:commandButton value="Cancelar" icon="pi pi-times" onclick="resetFormFields(); PF('nuevaAmenidadDialog').hide(); return false;"
+                        <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('nuevaAmenidadDialog').hide();"
                                          class="ui-button-secondary">
                             <p:ajax update="form:administrar-amenidad-content" />
                         </p:commandButton>
