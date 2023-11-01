@@ -124,6 +124,29 @@ public class ServicioUsuario extends Servicios implements Serializable {
         return usuarios;
     }
     
+    public int obtenerIdRolPorNombre(String nombreRol) {
+    int idRol = 0;
+    Connection conn = super.getConexion();
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+
+    try {
+        ps = conn.prepareStatement("SELECT idRol FROM Rol WHERE nombreRol = ?");
+        ps.setString(1, nombreRol);
+        rs = ps.executeQuery();
+
+        if (rs.next()) {
+            idRol = rs.getInt("idRol");
+        }
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    } finally {
+        // Cierra recursos (ps y rs) y la conexión
+    }
+
+    return idRol;
+}
+    
     public boolean buscarCedulaUsuario(Integer buscar) {
         PreparedStatement ps = null;
         ResultSet rs = null;

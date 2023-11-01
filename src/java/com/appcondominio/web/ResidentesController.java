@@ -156,47 +156,54 @@ public class ResidentesController implements Serializable{
     
     
     public void guardarResidenteYUsuario() {
-        
-        if(residenteSeleccionado.getCedula()== null){
-            FacesContext.getCurrentInstance().addMessage("form:cedula", 
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ingrese el número de cédula", 
-                    "Por favor, ingrese el número de cédula"));
+    if (residenteSeleccionado.getCedula() == null) {
+        FacesContext.getCurrentInstance().addMessage("form:cedula",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ingrese el número de cédula",
+                        "Por favor, ingrese el número de cédula"));
+        return;
+    }
+    if (validarCampos()) {
+        if (!correoValido(residenteSeleccionado.getCorreoElectronico())) {
+            FacesContext.getCurrentInstance().addMessage("form:correoElectronico",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Formato de correo electrónico inválido",
+                            "Por favor, ingrese un correo electrónico válido. Ejemplo: juan@gmail.com"));
             return;
         }
-        if (validarCampos()) {
-            if (!correoValido(residenteSeleccionado.getCorreoElectronico())) {
-                FacesContext.getCurrentInstance().addMessage("form:correoElectronico", 
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Formato de correo electrónico inválido", 
-                        "Por favor, ingrese un correo electrónico válido. Ejemplo: juan@gmail.com"));
-                return;
-            }
 
-            if (!servicioResidente.buscarCedulaResidente(this.residenteSeleccionado.getCedula())) { 
-                // Si es false inserta
-                    servicioResidente.insertarResidente(residenteSeleccionado);
-                    String contrasena = generarContrasenaAleatoria(residenteSeleccionado.getNombre());
-                    UsuarioTO usuario = new UsuarioTO();
-                    usuario.setCedulaResidente(residenteSeleccionado.getCedula());
-                    usuario.setUsuario(residenteSeleccionado.getCorreoElectronico());
-                    usuario.setContrasena(contrasena);
-                    usuario.setEstado(residenteSeleccionado.getEstado());
-                    usuario.setIdRol(1);
-                    servicioUsuario.insertarUsuarioResidente(usuario);
+        if (!servicioResidente.buscarCedulaResidente(this.residenteSeleccionado.getCedula())) {
+            // Si es false inserta
+            servicioResidente.insertarResidente(residenteSeleccionado);
 
-                    FacesContext.getCurrentInstance().addMessage(null, 
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Residente y usuario agregado"));
-            } else {
+            String contrasena = generarContrasenaAleatoria(residenteSeleccionado.getNombre());
 
-                    servicioResidente.actualizarResidente(residenteSeleccionado);
-                    FacesContext.getCurrentInstance().addMessage(null, 
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Residente Actualizado"));
-            }
-            this.init();
+            UsuarioTO usuario = new UsuarioTO();
+            usuario.setCedulaResidente(residenteSeleccionado.getCedula());
+            usuario.setUsuario(residenteSeleccionado.getCorreoElectronico());
+            usuario.setContrasena(contrasena);
+            usuario.setEstado(residenteSeleccionado.getEstado());
 
-            PrimeFaces.current().executeScript("PF('nuevoResidenteDialog').hide()");
-            PrimeFaces.current().ajax().update("form:messages", "form:dt-residentes");
+            // Obtener el ID del rol "Residente" por nombre
+            String nombreRolResidente = "Residente";
+            int idRolResidente = servicioUsuario.obtenerIdRolPorNombre(nombreRolResidente);
+
+            usuario.setIdRol(idRolResidente); // Establecer el ID del rol "Residente"
+
+            servicioUsuario.insertarUsuarioResidente(usuario);
+
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Residente y usuario agregado"));
+        } else {
+            servicioResidente.actualizarResidente(residenteSeleccionado);
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Residente Actualizado"));
         }
+        this.init();
+
+        PrimeFaces.current().executeScript("PF('nuevoResidenteDialog').hide()");
+        PrimeFaces.current().ajax().update("form:messages", "form:dt-residentes");
     }
+}
+
     
     private String generarContrasenaAleatoria(String nombre) {
     SecureRandom random = new SecureRandom();
