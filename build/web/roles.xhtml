@@ -1,4 +1,4 @@
-delro<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
@@ -77,11 +77,8 @@ delro<?xml version="1.0" encoding="UTF-8"?>
                 <a class="topbar-logo">Gestión de roles</a>
                 <ul class="topbar-menu">
                     <p:commandLink value="Inicio" actionListener="#{usuariosController.principal}" ajax="false" styleClass="custom-commandlink" />
-                    <p:divider layout="vertical" />
                     <p:commandLink value="Residentes" actionListener="#{usuariosController.residentes}" ajax="false" styleClass="custom-commandlink" />
-                    <p:divider layout="vertical" />
                     <p:commandLink value="Personal" actionListener="#{usuariosController.personal}" ajax="false" styleClass="custom-commandlink" />
-                    <p:divider layout="vertical" />
                     <p:commandLink value="Cerrar Sesión"  actionListener="#{usuariosController.cerrarSesion}" ajax="false" styleClass="custom-commandlink" />
                 </ul>
             </div>
@@ -140,7 +137,7 @@ delro<?xml version="1.0" encoding="UTF-8"?>
                             
                             <div class="p-field">
                                 <div class="disenho">
-                                <p:outputLabel for="nombreRol" style="font-size: 18px; font-weight: bold;">Nombre</p:outputLabel>
+                                <p:outputLabel for="nombreRol" style="font-size: 18px; font-weight: bold;">Nombre del Rol</p:outputLabel>
                                 </div>
                                 <p:inputText id="nombreRol" value="#{rolesController.rolSeleccionado.nombreRol}"/>
                                 <p:tooltip for="nombreRol" value="Escriba el nombre del rol." position="right"/>
