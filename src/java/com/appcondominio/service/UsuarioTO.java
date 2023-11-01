@@ -20,6 +20,8 @@ public class UsuarioTO implements Serializable{
     private Integer cedulaEmpleado;
     private Integer idRol;
     private String estado;
+    private String nombreCompleto;
+    private String nombreRol;
     
     public UsuarioTO() {
     }
@@ -85,13 +87,29 @@ public class UsuarioTO implements Serializable{
         this.estado = estado;
     }
 
-    public UsuarioTO(Integer idUsuario, String usuario, String contrasena, Integer cedulaResidente, Integer cedulaEmpleado, int idRol, String estado) {
+    public String getNombreCompleto() {
+        return nombreCompleto;
+    }
+
+    public void setNombreCompleto(String nombreCompleto) {
+        this.nombreCompleto = nombreCompleto;
+    }
+
+    public String getNombreRol() {
+        return nombreRol;
+    }
+
+    public void setNombreRol(String nombreRol) {
+        this.nombreRol = nombreRol;
+    }
+    
+    
+
+    public UsuarioTO(Integer idUsuario, String usuario, String nombreCompleto, String nombreRol, String estado) {
         this.idUsuario = idUsuario;
         this.usuario = usuario;
-        this.contrasena = contrasena;
-        this.cedulaResidente = cedulaResidente;
-        this.cedulaEmpleado = cedulaEmpleado;
-        this.idRol = idRol;
+        this.nombreCompleto = nombreCompleto;
+        this.nombreRol = nombreRol;
         this.estado = estado;
     }
 }

@@ -111,11 +111,11 @@
                     <p:column headerText="Usuario" sortBy="#{usuario.usuario}" filterMatchMode="contains">
                         <h:outputText value="#{usuario.usuario}"/>
                     </p:column>
-                    <p:column headerText="Cédula" sortBy="#{usuario.cedulaResidente} #{usuario.cedulaEmpleado}" filterMatchMode="contains">
-                        <h:outputText value="#{usuario.cedulaResidente != 0 ? usuario.cedulaResidente : ''} #{usuario.cedulaEmpleado != 0 ? usuario.cedulaEmpleado : ''}"/>
+                    <p:column headerText="Nombre" sortBy="#{usuario.nombreCompleto}" filterMatchMode="contains">
+                        <h:outputText value="#{usuario.nombreCompleto}"/>
                     </p:column>
-                    <p:column headerText="Rol" sortBy="#{usuario.idRol}" filterMatchMode="contains">
-                        <h:outputText value="#{usuario.idRol}"/> 
+                    <p:column headerText="Rol" sortBy="#{usuario.nombreRol}" filterMatchMode="contains">
+                        <h:outputText value="#{usuario.nombreRol}"/> 
                     </p:column>
                     
                     <!--<p:column headerText="Estado" sortBy="#{usuario.estado}" filterMatchMode="contains" sortable="false">
@@ -193,7 +193,7 @@
                     </p:outputPanel>
 
                     <f:facet name="footer">
-                        <p:commandButton value="Guadar" icon="pi pi-check" actionListener="#{usuariosController.actualizarUsuario()}" 
+                        <p:commandButton value="Guardar" icon="pi pi-check" actionListener="#{usuariosController.actualizarUsuario()}" 
                                          update="administrar-usuario-content" process="administrar-usuario-content @this" />
                         <p:commandButton value="Cancelar" icon="pi pi-times"
                                          class="ui-button-secondary" onclick="PF('nuevoUsuarioDialog').hide()">

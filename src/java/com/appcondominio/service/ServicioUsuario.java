@@ -25,56 +25,47 @@ import javax.faces.bean.ManagedBean;
 public class ServicioUsuario extends Servicios implements Serializable {
 
     public List<UsuarioTO> mostrarUsuarios() {
-        Connection conn = super.getConexion();
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        //Lista
-        List<UsuarioTO> listaRetornar = new ArrayList<UsuarioTO>();
+    Connection conn = super.getConexion();
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    List<UsuarioTO> listaRetornar = new ArrayList<UsuarioTO>();
 
-        try {
+    try {
+        ps = conn.prepareStatement("SELECT u.idUsuario, u.usuario, CASE WHEN u.cedulaEmpleado IS NOT NULL THEN e.nombreEmpleado + ' ' + e.primerApellido + ' ' + e.segundoApellido WHEN u.cedulaResidente IS NOT NULL THEN r.nombre + ' ' + r.primerApellido + ' ' + r.segundoApellido END AS nombreCompleto, ro.nombreRol, u.estado FROM Usuario u LEFT JOIN Rol ro ON u.idRol = ro.idRol LEFT JOIN Empleado e ON u.cedulaEmpleado = e.cedulaEmpleado LEFT JOIN Residente r ON u.cedulaResidente = r.cedulaResidente");
+        rs = ps.executeQuery();
 
-            //super.conectar();
-            ps = conn.prepareStatement("SELECT idUsuario, usuario, cedulaResidente, cedulaEmpleado, idRol, estado FROM usuario");
-            rs = ps.executeQuery();
+        while (rs.next()) {
+            Integer idUsuario = rs.getInt("idUsuario");
+            String nombreUsuario = rs.getString("usuario");
+            String nombreCompleto = rs.getString("nombreCompleto");
+            String nombreRol = rs.getString("nombreRol");
+            String estado = rs.getString("estado");
 
-            while (rs.next()) {
-
-                Integer idUsuario = rs.getInt("idUsuario");
-                String usuario = rs.getString("usuario");
-                Integer cedulaResidente = rs.getInt("cedulaResidente");
-                Integer cedulaEmpleado = rs.getInt("cedulaEmpleado");
-                Integer idRol = rs.getInt("idrol");
-                String estado = rs.getString("estado");
-
-                UsuarioTO usuarios = new UsuarioTO();
-                usuarios.setIdUsuario(idUsuario);
-                usuarios.setUsuario(usuario);
-                usuarios.setCedulaResidente(cedulaResidente);
-                usuarios.setCedulaEmpleado(cedulaEmpleado);
-                usuarios.setIdRol(idRol);
-                usuarios.setEstado(estado);
-                listaRetornar.add(usuarios);
-
-            }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        } finally {
-            try {
-                if (ps != null && ps.isClosed()) {
-                    ps.close();
-                }
-                if (rs != null && !rs.isClosed()) {
-                    rs.close();
-                }
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-
+            UsuarioTO usuario = new UsuarioTO();
+           usuario.setIdUsuario(idUsuario);
+            usuario.setUsuario(nombreUsuario);
+            usuario.setNombreCompleto(nombreCompleto);
+            usuario.setNombreRol(nombreRol);
+           usuario.setEstado(estado);
+            listaRetornar.add(usuario);
         }
-
-        return listaRetornar;
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    } finally {
+        try {
+            if (ps != null && ps.isClosed()) {
+                ps.close();
+            }
+            if (rs != null && !rs.isClosed()) {
+                rs.close();
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
+
+    return listaRetornar;
+}
 
     public UsuarioTO UsuarioContrasenna(String usuario, String contrasena) {
 
