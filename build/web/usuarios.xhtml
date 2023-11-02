@@ -164,10 +164,10 @@
 
                             <div class="p-field">
                                 <div class="disenho">
-                                <p:outputLabel style="font-size: 18px; font-weight: bold;">Cédula</p:outputLabel>
+                                <p:outputLabel style="font-size: 18px; font-weight: bold;">Cedula</p:outputLabel>
                                 </div>
                                 
-                                <p:inputText id="cedula" value="#{usuariosController.usuarioSeleccionado.cedulaAMostrar}" disabled="true" required="true"/>
+                                <p:inputText id="cedula" value="#{usuariosController.usuarioSeleccionado.cedulaEmpleado} #{usuariosController.usuarioSeleccionado.cedulaResidente}" disabled="true" required="true"/>
                                 <p:message id="cedulaMessage" for="cedula" />
                             </div>
                             <div class="p-field">
@@ -175,7 +175,7 @@
                                 <p:outputLabel  style="font-size: 18px; font-weight: bold;">Rol</p:outputLabel>
                                 </div>
                                 
-                                <p:inputText id="idRol" value="#{usuariosController.usuarioSeleccionado.nombreRol}" required="true" disabled="true"/>
+                                <p:inputText id="idRol" value="#{usuariosController.usuarioSeleccionado.idRol}" required="true" disabled="true"/>
                                 <p:message id="idRolMessage" for="idRol" />
                             </div>
                         

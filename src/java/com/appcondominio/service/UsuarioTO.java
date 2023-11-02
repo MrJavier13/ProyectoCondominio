@@ -18,7 +18,6 @@ public class UsuarioTO implements Serializable{
     private String contrasena;
     private Integer cedulaResidente;
     private Integer cedulaEmpleado;
-    private Integer cedulaAMostrar;
     private Integer idRol;
     private String estado;
     private String nombreCompleto;
@@ -103,26 +102,14 @@ public class UsuarioTO implements Serializable{
     public void setNombreRol(String nombreRol) {
         this.nombreRol = nombreRol;
     }
-
-    public Integer getCedulaAMostrar() {
-        return cedulaAMostrar;
-    }
-
-    public void setCedulaAMostrar(Integer cedulaAMostrar) {
-        this.cedulaAMostrar = cedulaAMostrar;
-    }
-    
-    
     
     
 
-    public UsuarioTO(Integer idUsuario, String usuario, Integer cedulaAMostrar, String nombreCompleto, String nombreRol, Integer idRol, String estado) {
+    public UsuarioTO(Integer idUsuario, String usuario, String nombreCompleto, String nombreRol, String estado) {
         this.idUsuario = idUsuario;
         this.usuario = usuario;
-        this.cedulaAMostrar = cedulaAMostrar;
         this.nombreCompleto = nombreCompleto;
         this.nombreRol = nombreRol;
-        this.idRol = idRol;
         this.estado = estado;
     }
 }

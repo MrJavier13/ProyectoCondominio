@@ -31,28 +31,21 @@ public class ServicioUsuario extends Servicios implements Serializable {
     List<UsuarioTO> listaRetornar = new ArrayList<UsuarioTO>();
 
     try {
-        ps = conn.prepareStatement("SELECT u.idUsuario, u.usuario, u.cedulaResidente, u.cedulaEmpleado, CASE WHEN u.cedulaEmpleado IS NOT NULL THEN e.nombreEmpleado + ' ' + e.primerApellido + ' ' + e.segundoApellido WHEN u.cedulaResidente IS NOT NULL THEN r.nombre + ' ' + r.primerApellido + ' ' + r.segundoApellido END AS nombreCompleto, ro.nombreRol, u.idRol, u.estado FROM Usuario u LEFT JOIN Rol ro ON u.idRol = ro.idRol LEFT JOIN Empleado e ON u.cedulaEmpleado = e.cedulaEmpleado LEFT JOIN Residente r ON u.cedulaResidente = r.cedulaResidente");
+        ps = conn.prepareStatement("SELECT u.idUsuario, u.usuario, CASE WHEN u.cedulaEmpleado IS NOT NULL THEN e.nombreEmpleado + ' ' + e.primerApellido + ' ' + e.segundoApellido WHEN u.cedulaResidente IS NOT NULL THEN r.nombre + ' ' + r.primerApellido + ' ' + r.segundoApellido END AS nombreCompleto, ro.nombreRol, u.estado FROM Usuario u LEFT JOIN Rol ro ON u.idRol = ro.idRol LEFT JOIN Empleado e ON u.cedulaEmpleado = e.cedulaEmpleado LEFT JOIN Residente r ON u.cedulaResidente = r.cedulaResidente");
         rs = ps.executeQuery();
 
         while (rs.next()) {
             Integer idUsuario = rs.getInt("idUsuario");
             String nombreUsuario = rs.getString("usuario");
-            Integer cedulaResidente = (Integer) rs.getObject("cedulaResidente");
-            Integer cedulaEmpleado = (Integer) rs.getObject("cedulaEmpleado");
             String nombreCompleto = rs.getString("nombreCompleto");
             String nombreRol = rs.getString("nombreRol");
-            Integer idRol = rs.getInt("idRol");
             String estado = rs.getString("estado");
 
-            Integer cedulaAMostrar = (cedulaResidente != null) ? cedulaResidente : cedulaEmpleado;
-           
             UsuarioTO usuario = new UsuarioTO();
            usuario.setIdUsuario(idUsuario);
             usuario.setUsuario(nombreUsuario);
-            usuario.setCedulaAMostrar(cedulaAMostrar);
             usuario.setNombreCompleto(nombreCompleto);
             usuario.setNombreRol(nombreRol);
-            usuario.setIdRol(idRol);
            usuario.setEstado(estado);
             listaRetornar.add(usuario);
         }

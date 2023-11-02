@@ -32,6 +32,7 @@ public class PersonalController implements Serializable {
     private Map<Integer, String> mapaRoles;
 
     private Boolean isCedulaEditable = true;
+    private Boolean isCreatingNewPersonal = true;
 
     @ManagedProperty("#{usuarioService}")
     private ServicioUsuario servicioUsuario;
@@ -94,6 +95,7 @@ public class PersonalController implements Serializable {
         this.personalSeleccionado = new PersonalTO();
         this.personalSeleccionado.setEstado("Activo");
         setIsCedulaEditable(true);
+        setIsCreatingNewPersonal(true);
         disableSelectOneMenu();
         dialogHeader = "Registrar nuevo Empleado";
     }
@@ -108,9 +110,10 @@ public class PersonalController implements Serializable {
     public void openEdit() {
         this.personalSeleccionado = new PersonalTO();
         setIsCedulaEditable(false);
+        setIsCreatingNewPersonal(false);
         enableSelectOneMenu();
         dialogHeader = "Editar Personal";
-        
+
     }
 
     public List<PersonalTO> getPersonal() {
@@ -161,13 +164,20 @@ public class PersonalController implements Serializable {
         this.usuarioSeleccionado = usuarioSeleccionado;
     }
 
-    // Getter y Setter para isCedulaEditable
     public Boolean getIsCedulaEditable() {
         return isCedulaEditable;
     }
 
     public void setIsCedulaEditable(Boolean isCedulaEditable) {
         this.isCedulaEditable = isCedulaEditable;
+    }
+
+    public Boolean getIsCreatingNewPersonal() {
+        return isCreatingNewPersonal;
+    }
+
+    public void setIsCreatingNewPersonal(Boolean isCreatingNewPersonal) {
+        this.isCreatingNewPersonal = isCreatingNewPersonal;
     }
 
     public void filtrarResidentes() {
@@ -179,36 +189,65 @@ public class PersonalController implements Serializable {
     }
 
     public void guardarPersonal() {
-        if (personalSeleccionado.getCedula() == null) {
-            FacesContext.getCurrentInstance().addMessage("form:cedula",
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ingrese el número de cédula",
-                            "Por favor, ingrese el número de cédula"));
-            return;
-        }
 
-        if (validarCamposPersonal()) {
-            if (!correoValido(personalSeleccionado.getCorreoElectronico())) {
-                FacesContext.getCurrentInstance().addMessage("form:correoElectronico",
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Formato de correo electrónico inválido",
-                                "Por favor, ingrese un correo electrónico válido. Ejemplo: juan@gmail.com"));
+        if (getIsCreatingNewPersonal() == true) {
+
+            if (personalSeleccionado.getCedula() == null) {
+                FacesContext.getCurrentInstance().addMessage("form:cedula",
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ingrese el número de cédula",
+                                "Por favor, ingrese el número de cédula"));
                 return;
             }
-            if (!servicioPersonal.buscarCedulaPersonal(this.personalSeleccionado.getCedula())) {
-                // Si es false inserta
-                servicioPersonal.insertarPersonal(personalSeleccionado);
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Empleado agregado"));
 
-            } else {
+            if (validarCamposPersonal()) {
+                if (!correoValido(personalSeleccionado.getCorreoElectronico())) {
+                    FacesContext.getCurrentInstance().addMessage("form:correoElectronico",
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Formato de correo electrónico inválido",
+                                    "Por favor, ingrese un correo electrónico válido. Ejemplo: juan@gmail.com"));
+                    return;
+                }
+                if (!servicioPersonal.buscarCedulaPersonal(this.personalSeleccionado.getCedula())) {
+                    // Si es false inserta
+                    servicioPersonal.insertarPersonal(personalSeleccionado);
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Empleado agregado"));
+
+                } else {
+
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "La cédula ingresada ya existe en el sistema"));
+                }
+
+                this.init();
+                PrimeFaces.current().executeScript("PF('nuevoPersonalDialog').hide()");
+                PrimeFaces.current().ajax().update("form:messages", "form:dt-empleados");
+            }
+        } else {
+
+            if (personalSeleccionado.getCedula() == null) {
+                FacesContext.getCurrentInstance().addMessage("form:cedula",
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ingrese el número de cédula",
+                                "Por favor, ingrese el número de cédula"));
+                return;
+            }
+
+            if (validarCamposPersonal()) {
+                if (!correoValido(personalSeleccionado.getCorreoElectronico())) {
+                    FacesContext.getCurrentInstance().addMessage("form:correoElectronico",
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Formato de correo electrónico inválido",
+                                    "Por favor, ingrese un correo electrónico válido. Ejemplo: juan@gmail.com"));
+                    return;
+                }
                 servicioPersonal.actualizarPersonal(personalSeleccionado);
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Empleado Actualizado"));
-            }
 
-            this.init();
-            PrimeFaces.current().executeScript("PF('nuevoPersonalDialog').hide()");
-            PrimeFaces.current().ajax().update("form:messages", "form:dt-empleados");
+                this.init();
+                PrimeFaces.current().executeScript("PF('nuevoPersonalDialog').hide()");
+                PrimeFaces.current().ajax().update("form:messages", "form:dt-empleados");
+            }
         }
+
     }
 
     public void guardarUsuario() {
