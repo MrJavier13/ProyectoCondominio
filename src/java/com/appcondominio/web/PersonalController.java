@@ -30,9 +30,8 @@ public class PersonalController implements Serializable {
     private boolean selectOneMenuDisabled = false;
     private List<PersonalTO> personal = new ArrayList<>();
     private Map<Integer, String> mapaRoles;
-
-    private Boolean isCedulaEditable = true;
-    private Boolean isCreatingNewPersonal = true;
+    private Boolean isCedulaEditable;
+    private Boolean isCreatingNewPersonal;
 
     @ManagedProperty("#{usuarioService}")
     private ServicioUsuario servicioUsuario;

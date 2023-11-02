@@ -31,8 +31,8 @@ public class ResidentesController implements Serializable {
     private boolean selectOneMenuDisabled = false;
     private List<ResidenteTO> residente = new ArrayList<>();
     private String dialogHeader;
-    private Boolean isCedulaEditable = true;
-    private Boolean isCreatingNewResidente = true;
+    private Boolean isCedulaEditable;
+    private Boolean isCreatingNewResidente;
 
     @ManagedProperty("#{residenteService}")
     private ServicioResidente servicioResidente;
