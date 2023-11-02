@@ -100,7 +100,7 @@ public class RolesController implements Serializable{
         if (valor == null || valor.isEmpty()) {
             FacesContext.getCurrentInstance().addMessage("form:" + nombreCampo,
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, "Campo " + nombreError + " requerido",
-                    "Por favor, ingrese el " + nombreError.toLowerCase()));
+                    "Por favor, ingrese el " + nombreError.toLowerCase() + "de la amenidad."));
             return false;
         }
         return true;
@@ -109,7 +109,7 @@ public class RolesController implements Serializable{
     private boolean validarCampos() {
         if (rolSeleccionado.getIdRol() != null) {
         }
-        return validarCampo(rolSeleccionado.getNombreRol(), "nombreRol", "nombre del rol") ;
+        return validarCampo(rolSeleccionado.getNombreRol(), "nombreRol", "nombre de rol") ;
     }
 
 

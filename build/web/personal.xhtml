@@ -116,8 +116,8 @@
                         </div>
                     </f:facet>
 
-                    <p:column headerText="Cédula" sortBy="#{personal.cedula}"  filterMatchMode="contains">
-                        <h:outputText value="#{personal.cedula}"/>
+                    <p:column headerText="Cédula" sortBy="#{personal.cedula}"  filterMatchMode="contains" >
+                        <h:outputText value="#{personal.cedula}" />
                     </p:column>
 
 
@@ -169,7 +169,7 @@
                                 <p:outputLabel  style="font-size: 18px; font-weight: bold;">Cédula</p:outputLabel>
                                 </div>
                                 
-                                <p:inputText id="cedula" value="#{personalController.personalSeleccionado.cedula}">
+                                <p:inputText id="cedula" value="#{personalController.personalSeleccionado.cedula}" disabled="#{not personalController.isCedulaEditable}" >
                                 <p:keyFilter mask="num" />
                                 </p:inputText>
                                 <p:tooltip for="cedula" value="Digite su número de cédula. Solo se permite números" position="right"/>

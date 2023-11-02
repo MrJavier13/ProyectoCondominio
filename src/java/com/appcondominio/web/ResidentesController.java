@@ -31,6 +31,7 @@ public class ResidentesController implements Serializable{
     private boolean selectOneMenuDisabled = false;
     private List<ResidenteTO> residente = new ArrayList<>();
     private String dialogHeader;
+    private Boolean isCedulaEditable = true; 
     
     @ManagedProperty("#{residenteService}")
     private ServicioResidente servicioResidente;
@@ -72,6 +73,7 @@ public class ResidentesController implements Serializable{
     public void openNew() {
        this.residenteSeleccionado = new ResidenteTO();
        this.residenteSeleccionado.setEstado("Activo");
+       setIsCedulaEditable(true);
        disableSelectOneMenu();
        dialogHeader = "Registrar nuevo residente";
        
@@ -79,6 +81,7 @@ public class ResidentesController implements Serializable{
     
     public void openEdit() {
         this.residenteSeleccionado = new ResidenteTO();
+        setIsCedulaEditable(false);
         enableSelectOneMenu(); 
         dialogHeader = "Editar residente";
        
@@ -122,6 +125,15 @@ public class ResidentesController implements Serializable{
 
     public void setServicioUsuario(ServicioUsuario servicioUsuario) {
         this.servicioUsuario = servicioUsuario;
+    }
+    
+     // Getter y Setter para isCedulaEditable
+    public Boolean getIsCedulaEditable() {
+        return isCedulaEditable;
+    }
+
+    public void setIsCedulaEditable(Boolean isCedulaEditable) {
+        this.isCedulaEditable = isCedulaEditable;
     }
 
     

@@ -183,7 +183,7 @@
                                 <p:outputLabel  style="font-size: 18px; font-weight: bold;">Cédula</p:outputLabel>
                                 </div>
                                 
-                                <p:inputText id="cedula" value="#{residentesController.residenteSeleccionado.cedula}" >
+                                <p:inputText id="cedula" value="#{residentesController.residenteSeleccionado.cedula}" disabled="#{not residentesController.isCedulaEditable}" >
                                 <p:keyFilter mask="num" />
                                 </p:inputText>
                                 <p:tooltip for="cedula" value="Digite su número de cédula. Solo se permite números" position="right"/>

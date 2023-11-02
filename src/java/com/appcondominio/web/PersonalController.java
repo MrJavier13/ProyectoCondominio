@@ -21,7 +21,7 @@ import org.primefaces.PrimeFaces;
 
 @ManagedBean(name = "personalController")
 @ViewScoped
-public class PersonalController implements Serializable{
+public class PersonalController implements Serializable {
 
     private PersonalTO personalSeleccionado;
     private UsuarioTO usuarioSeleccionado;
@@ -30,16 +30,17 @@ public class PersonalController implements Serializable{
     private boolean selectOneMenuDisabled = false;
     private List<PersonalTO> personal = new ArrayList<>();
     private Map<Integer, String> mapaRoles;
-    
+
+    private Boolean isCedulaEditable = true;
+
     @ManagedProperty("#{usuarioService}")
     private ServicioUsuario servicioUsuario;
 
     @ManagedProperty("#{personalService}")
     private ServicioPersonal servicioPersonal;
-    
+
     @ManagedProperty("#{rolService}")
     private ServicioRol servicioRol;
-    
 
     public PersonalController() {
     }
@@ -47,8 +48,8 @@ public class PersonalController implements Serializable{
     @PostConstruct
     public void init() {
         this.personal = servicioPersonal.mostrarPersonal().stream()
-            .filter(res -> "Activo".equals(res.getEstado()))
-            .collect(Collectors.toList());
+                .filter(res -> "Activo".equals(res.getEstado()))
+                .collect(Collectors.toList());
         this.activo = true;
         this.mapaRoles = servicioRol.obtenerMapaRoles();
     }
@@ -68,8 +69,6 @@ public class PersonalController implements Serializable{
     public void setServicioRol(ServicioRol servicioRol) {
         this.servicioRol = servicioRol;
     }
-    
-    
 
     public String getDialogHeader() {
         return dialogHeader;
@@ -94,10 +93,11 @@ public class PersonalController implements Serializable{
     public void openNew() {
         this.personalSeleccionado = new PersonalTO();
         this.personalSeleccionado.setEstado("Activo");
+        setIsCedulaEditable(true);
         disableSelectOneMenu();
         dialogHeader = "Registrar nuevo Empleado";
     }
-    
+
     public void openNewUsuario() {
         this.usuarioSeleccionado = new UsuarioTO();
         this.usuarioSeleccionado.setEstado("Activo");
@@ -107,9 +107,10 @@ public class PersonalController implements Serializable{
 
     public void openEdit() {
         this.personalSeleccionado = new PersonalTO();
+        setIsCedulaEditable(false);
         enableSelectOneMenu();
         dialogHeader = "Editar Personal";
-
+        
     }
 
     public List<PersonalTO> getPersonal() {
@@ -152,7 +153,6 @@ public class PersonalController implements Serializable{
         this.servicioUsuario = servicioUsuario;
     }
 
-
     public UsuarioTO getUsuarioSeleccionado() {
         return usuarioSeleccionado;
     }
@@ -160,7 +160,16 @@ public class PersonalController implements Serializable{
     public void setUsuarioSeleccionado(UsuarioTO usuarioSeleccionado) {
         this.usuarioSeleccionado = usuarioSeleccionado;
     }
-    
+
+    // Getter y Setter para isCedulaEditable
+    public Boolean getIsCedulaEditable() {
+        return isCedulaEditable;
+    }
+
+    public void setIsCedulaEditable(Boolean isCedulaEditable) {
+        this.isCedulaEditable = isCedulaEditable;
+    }
+
     public void filtrarResidentes() {
         personal.clear();
         List<PersonalTO> tempList = servicioPersonal.mostrarPersonal().stream()
@@ -169,41 +178,38 @@ public class PersonalController implements Serializable{
         personal.addAll(tempList);
     }
 
-
     public void guardarPersonal() {
-        if(personalSeleccionado.getCedula()== null){
-            FacesContext.getCurrentInstance().addMessage("form:cedula", 
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ingrese el número de cédula", 
-                    "Por favor, ingrese el número de cédula"));
+        if (personalSeleccionado.getCedula() == null) {
+            FacesContext.getCurrentInstance().addMessage("form:cedula",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ingrese el número de cédula",
+                            "Por favor, ingrese el número de cédula"));
             return;
         }
-        
+
         if (validarCamposPersonal()) {
             if (!correoValido(personalSeleccionado.getCorreoElectronico())) {
-            FacesContext.getCurrentInstance().addMessage("form:correoElectronico", 
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Formato de correo electrónico inválido", 
-                    "Por favor, ingrese un correo electrónico válido. Ejemplo: juan@gmail.com"));
-            return;
-        }
+                FacesContext.getCurrentInstance().addMessage("form:correoElectronico",
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Formato de correo electrónico inválido",
+                                "Por favor, ingrese un correo electrónico válido. Ejemplo: juan@gmail.com"));
+                return;
+            }
             if (!servicioPersonal.buscarCedulaPersonal(this.personalSeleccionado.getCedula())) {
                 // Si es false inserta
-                    servicioPersonal.insertarPersonal(personalSeleccionado);
-                    FacesContext.getCurrentInstance().addMessage(null,
-                            new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Empleado agregado"));
+                servicioPersonal.insertarPersonal(personalSeleccionado);
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Empleado agregado"));
 
-                }else {
-                    servicioPersonal.actualizarPersonal(personalSeleccionado);
-                    FacesContext.getCurrentInstance().addMessage(null,
-                            new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Empleado Actualizado"));
+            } else {
+                servicioPersonal.actualizarPersonal(personalSeleccionado);
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Empleado Actualizado"));
             }
-        
+
             this.init();
             PrimeFaces.current().executeScript("PF('nuevoPersonalDialog').hide()");
             PrimeFaces.current().ajax().update("form:messages", "form:dt-empleados");
         }
     }
-
-
 
     public void guardarUsuario() {
         if (validarCamposUsuario()) {
@@ -214,15 +220,15 @@ public class PersonalController implements Serializable{
                 return;
             }
             if (usuarioSeleccionado.getIdRol() == null) {
-                FacesContext.getCurrentInstance().addMessage("form:rolUsuario", 
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ingrese el rol del usuario", 
-                        "Por favor, ingrese el rol del usuario"));
+                FacesContext.getCurrentInstance().addMessage("form:rolUsuario",
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ingrese el rol del usuario",
+                                "Por favor, ingrese el rol del usuario"));
                 return;
             }
             if (servicioUsuario.buscarCedulaUsuario(this.personalSeleccionado.getCedula())) {
                 FacesContext.getCurrentInstance().addMessage(null,
-                            new FacesMessage(FacesMessage.SEVERITY_INFO, "Error", "El empleado ya tiene un usuario"));
-            } else{
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Error", "El empleado ya tiene un usuario"));
+            } else {
                 if (servicioUsuario.buscarUsuario(this.personalSeleccionado.getCorreoElectronico())) {
                     FacesContext.getCurrentInstance().addMessage(null,
                             new FacesMessage(FacesMessage.SEVERITY_INFO, "Error", "Usuario ya existe"));
@@ -240,45 +246,44 @@ public class PersonalController implements Serializable{
             PrimeFaces.current().ajax().update("form:messages", "form:dt-empleados");
         }
     }
-    
+
     private boolean validarCampo(String valor, String nombreCampo, String nombreError) {
         if (valor == null || valor.isEmpty()) {
             FacesContext.getCurrentInstance().addMessage("form:" + nombreCampo,
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Campo " + nombreCampo + " requerido",
-                    "Por favor, ingrese el " + nombreError.toLowerCase()));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Campo " + nombreCampo + " requerido",
+                            "Por favor, ingrese el " + nombreError.toLowerCase()));
             return false;
         }
         return true;
     }
-    
+
     private boolean validarCamposPersonal() {
         if (personalSeleccionado.getCedula() != null) {
         }
         return validarCampo(personalSeleccionado.getNombre(), "nombre", "nombre")
-        && validarCampo(personalSeleccionado.getApellido1(), "primerApellido", "primer apellido")
-        && validarCampo(personalSeleccionado.getApellido2(), "segundoApellido", "segundo apellido")
-        && validarCampo(Integer.toString(personalSeleccionado.getTelefono()), "telefono", "teléfono")
-        && validarCampo(personalSeleccionado.getCorreoElectronico(), "correoElectronico", "correo electrónico");
+                && validarCampo(personalSeleccionado.getApellido1(), "primerApellido", "primer apellido")
+                && validarCampo(personalSeleccionado.getApellido2(), "segundoApellido", "segundo apellido")
+                && validarCampo(Integer.toString(personalSeleccionado.getTelefono()), "telefono", "teléfono")
+                && validarCampo(personalSeleccionado.getCorreoElectronico(), "correoElectronico", "correo electrónico");
     }
-    
+
     private boolean validarCamposUsuario() {
-        
+
         if (usuarioSeleccionado.getUsuario() == null || usuarioSeleccionado.getUsuario().isEmpty()) {
         }
         return validarCampo(usuarioSeleccionado.getUsuario(), "usuario", "usuario")
-        && validarCampo(usuarioSeleccionado.getContrasena(), "contrasena", "contraseña");
+                && validarCampo(usuarioSeleccionado.getContrasena(), "contrasena", "contraseña");
 
     }
-    
 
     private boolean correoValido(String email) {
         String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
         return email.matches(regex);
     }
-    
+
     private boolean validarContrasena(String contrasena) {
-    String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!-~])[A-Za-z\\d!-~]{8,}$";
-    return contrasena.matches(regex);
-}
+        String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!-~])[A-Za-z\\d!-~]{8,}$";
+        return contrasena.matches(regex);
+    }
 
 }

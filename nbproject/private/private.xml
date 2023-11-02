@@ -3,11 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/merya/Documentos/NetBeansProjects/ProyectoCondominio/src/java/com/appcondominio/service/ServicioRegistroIS.java</file>
-            <file>file:/C:/Users/merya/Documentos/NetBeansProjects/ProyectoCondominio/src/java/com/appcondominio/web/RegistrosISController.java</file>
-            <file>file:/C:/Users/merya/Documentos/NetBeansProjects/ProyectoCondominio/web/bitacora.xhtml</file>
-            <file>file:/C:/Users/merya/Documentos/NetBeansProjects/ProyectoCondominio/src/java/com/appcondominio/service/RegistroIngresosSalidasTO.java</file>
-            <file>file:/C:/Users/merya/Documentos/NetBeansProjects/ProyectoCondominio/src/java/com/appcondominio/service/ServicioReservaAmenidad.java</file>
+            <file>file:/C:/Users/XPC/Desktop/Nueva%20carpeta/ProyectoCondominio/src/java/com/appcondominio/web/PersonalController.java</file>
+            <file>file:/C:/Users/XPC/Desktop/Nueva%20carpeta/ProyectoCondominio/web/residentes.xhtml</file>
+            <file>file:/C:/Users/XPC/Desktop/Nueva%20carpeta/ProyectoCondominio/src/java/com/appcondominio/web/ResidentesController.java</file>
+            <file>file:/C:/Users/XPC/Desktop/Nueva%20carpeta/ProyectoCondominio/src/java/com/appcondominio/service/ServicioPersonal.java</file>
+            <file>file:/C:/Users/XPC/Desktop/Nueva%20carpeta/ProyectoCondominio/web/personal.xhtml</file>
         </group>
     </open-files>
 </project-private>
