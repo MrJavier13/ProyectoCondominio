@@ -100,7 +100,7 @@ public class RolesController implements Serializable{
         if (valor == null || valor.isEmpty()) {
             FacesContext.getCurrentInstance().addMessage("form:" + nombreCampo,
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, "Campo " + nombreError + " requerido",
-                    "Por favor, ingrese el " + nombreError.toLowerCase() + "de la amenidad."));
+                    "Por favor, ingrese el " + nombreError.toLowerCase()));
             return false;
         }
         return true;
