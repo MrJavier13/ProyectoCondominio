@@ -88,8 +88,8 @@
             
             <div class="card crud-demo">
                 <h:panelGrid columns="3">
-        <p:calendar id="fechaInicial" value="#{registrosISController.fechaInicial}" pattern="dd/MM/yyyy" required="true" label="Fecha Inicial" showOn="button" />
-        <p:calendar id="fechaFinal" value="#{registrosISController.fechaFinal}" pattern="dd/MM/yyyy" required="true" label="Fecha Final" showOn="button" />
+                    <p:calendar id="fechaInicial" value="#{registrosISController.fechaInicial}" pattern="dd/MM/yyyy" required="true" label="Fecha Inicial" showOn="button" />
+                    <p:calendar id="fechaFinal" value="#{registrosISController.fechaFinal}" pattern="dd/MM/yyyy" required="true" label="Fecha Final" showOn="button" />
         <p:commandButton value="Buscar por fecha" action="#{registrosISController.mostrarRegistrosPorFechas}" update="dt-products growl" />
     </h:panelGrid>
                 

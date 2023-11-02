@@ -103,4 +103,6 @@ public class RegistrosISController implements Serializable{
     public void setFechaFinal(Date fechaFinal) {
         this.fechaFinal = fechaFinal;
     }
+
+    
 }
