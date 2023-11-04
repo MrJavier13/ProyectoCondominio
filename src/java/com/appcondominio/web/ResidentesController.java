@@ -218,7 +218,7 @@ public class ResidentesController implements Serializable {
                             new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Residente y usuario agregado"));
                 } else {
                     FacesContext.getCurrentInstance().addMessage(null,
-                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "La cédula ingresada ya existe en el sistema"));
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "La cédula ingresada ya existe."));
 
                 }
             } else {
