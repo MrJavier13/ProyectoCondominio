@@ -10,8 +10,8 @@
         <style>
             .disenho
             {
-               line-height: 40px;
-                
+                line-height: 40px;
+
             }
             body {
                 margin: 0;
@@ -20,11 +20,11 @@
             .filter-container {
                 display: flex;
                 align-items: center;
-                justify-content: flex-end; 
-                margin-right: 10px; 
+                justify-content: flex-end;
+                margin-right: 10px;
             }
             .filter-container span {
-                margin-right: 5px; 
+                margin-right: 5px;
             }
             .topbar {
                 background-color: #1e4fa5;
@@ -72,7 +72,7 @@
 
         <h:form id="form">
             <p:growl id="growl" showDetail="true" />
-            
+
             <div class="topbar">
                 <a class="topbar-logo">Registro de Ingresos y Salidas</a>
                 <ul class="topbar-menu">
@@ -85,14 +85,20 @@
                     <p:commandLink value="Cerrar Sesión"  actionListener="#{usuariosController.cerrarSesion}" immediate="true" ajax="false" styleClass="custom-commandlink" />
                 </ul>
             </div>
-            
+
             <div class="card crud-demo">
-                <h:panelGrid columns="3">
-                    <p:calendar id="fechaInicial" value="#{registrosISController.fechaInicial}" pattern="dd/MM/yyyy" required="true" label="Fecha Inicial" showOn="button" />
-                    <p:calendar id="fechaFinal" value="#{registrosISController.fechaFinal}" pattern="dd/MM/yyyy" required="true" label="Fecha Final" showOn="button" />
-        <p:commandButton value="Buscar por fecha" action="#{registrosISController.mostrarRegistrosPorFechas}" update="dt-products growl" />
-    </h:panelGrid>
-                
+               <h:panelGrid columns="6">
+                    <p:calendar id="fechaInicial" value="#{registrosISController.fechaInicial}" pattern="dd/MM/yyyy" required="false" label="Fecha Inicial" showOn="button" />
+                    <p:calendar id="fechaFinal" value="#{registrosISController.fechaFinal}" pattern="dd/MM/yyyy" required="false" label="Fecha Final" showOn="button" />
+                    <p:commandButton value="Buscar por fecha" action="#{registrosISController.mostrarRegistrosPorFechas}" update="dt-products growl" />
+                    
+                    <p:inputText id="txtInvitado" value="#{registrosISController.busqueda}" required="false" label="Buscar Invitado" style="width: 12rem">
+                        <f:validateLength minimum="2"/>
+                    </p:inputText>
+                    <p:message for="txtInvitado"/>
+                    <p:commandButton value="Buscar nombre completo invitado" action="#{registrosISController.mostrarRegistroXInvitados}" update="dt-products growl" />
+                </h:panelGrid>                                                      
+
                 <p:dataTable id="dt-products" widgetVar="dtProducts" var="registroIS" value="#{registrosISController.registroIS}"
                              reflow="true" styleClass="products-table"
                              paginator="true"

@@ -20,14 +20,15 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
-
 @ManagedBean(name = "registrosISController")
 @ViewScoped
-public class RegistrosISController implements Serializable{
+public class RegistrosISController implements Serializable {
+
     private List<RegistroIngresosSalidasTO> registroIS = new ArrayList<>();
-    
+
     private Date fechaInicial;
     private Date fechaFinal;
+    private String busqueda;
 
     @ManagedProperty("#{registroISService}")
     private ServicioRegistroIS servicioRegistroIS;
@@ -60,17 +61,40 @@ public class RegistrosISController implements Serializable{
             calFin.set(Calendar.MILLISECOND, 999);
             Timestamp timestampFin = new Timestamp(calFin.getTimeInMillis());
 
-        // Llama al método del servicio para buscar registros por fechas
-        registroIS = servicioRegistroIS.buscarRegistrosPorFechas(timestampInicio, timestampFin);
-    } else {
+            // Llama al método del servicio para buscar registros por fechas
+            registroIS = servicioRegistroIS.buscarRegistrosPorFechas(timestampInicio, timestampFin);
+        } else {
             // Muestra un mensaje de error
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Las fechas ingresadas no son válidas.");
             context.addMessage(null, message);
         }
     }
 
-    
-    
+    public void mostrarRegistroXInvitados() {
+        int resultado = 0;
+        FacesContext context = FacesContext.getCurrentInstance();
+        if (busqueda.equals("")) {
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Escriba un nombre a buscar. Ejemplo: Juan Mora Mora");
+            context.addMessage(null, message);
+        } else {
+            resultado = servicioRegistroIS.buscarCedulaInvitado(busqueda);
+            if (resultado != 0) {
+                registroIS = servicioRegistroIS.buscarRegistrosPorInvitadosPer(resultado);
+            } else {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Persona no encontrada");
+                context.addMessage(null, message);
+            }
+        }
+
+    }
+
+    public String getBusqueda() {
+        return busqueda;
+    }
+
+    public void setBusqueda(String busqueda) {
+        this.busqueda = busqueda;
+    }
 
     public List<RegistroIngresosSalidasTO> getRegistroIS() {
         return registroIS;
@@ -104,5 +128,4 @@ public class RegistrosISController implements Serializable{
         this.fechaFinal = fechaFinal;
     }
 
-    
 }

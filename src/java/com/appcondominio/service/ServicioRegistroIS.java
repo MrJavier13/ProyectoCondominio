@@ -133,5 +133,90 @@ public class ServicioRegistroIS extends Servicios implements Serializable {
 
         return listaRetornar;
     }
+    
+    public int buscarCedulaInvitado(String buscar) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        int resultado = 0;
+
+        try {
+
+            ps = super.getConexion().prepareStatement("SELECT cedulaInvitadoPermanente FROM Invitado_Permanente WHERE nombreInvitadoPermanente + ' ' + primerApellidoPermanente + ' ' + segundoApellidoPermanente = ?");
+            ps.setString(1, buscar);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                resultado = rs.getInt("cedulaInvitadoPermanente");
+
+            } 
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (ps != null && ps.isClosed()) {
+                    ps.close();
+                }
+                if (rs != null && !rs.isClosed()) {
+                    rs.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
+        }
+
+        return resultado;
+    }
+    
+    public List<RegistroIngresosSalidasTO> buscarRegistrosPorInvitadosPer (int buscar) {
+        Connection conn = super.getConexion();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<RegistroIngresosSalidasTO> listaRetornar = new ArrayList<RegistroIngresosSalidasTO>();
+
+        try {
+            ps = conn.prepareStatement("SELECT reg.idRegistro, reg.cedulaInvitadoTemporal, reg.cedulaInvitadoPermanente, reg.nombreCompletoInvitado, reg.nombreEmpresa, reg.placaVehiculo, reg.detalle, reg.fechaIngreso, reg.fechaSalida, e.nombreEmpleado, e.primerApellido, e.segundoApellido FROM registro_Ingreso_Salida reg JOIN Empleado e ON reg.cedulaGuardaSeguridad = e.cedulaEmpleado WHERE reg.cedulaInvitadoPermanente = ?");
+            ps.setInt(1, buscar);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int idRegistro = rs.getInt("idRegistro");
+                Integer cedulaInvitadoTemporal = (Integer) rs.getObject("cedulaInvitadoTemporal");
+                Integer cedulaInvitadoPermanente = (Integer) rs.getObject("cedulaInvitadoPermanente");
+                String nombreCompletoInvitado = rs.getString("nombreCompletoInvitado");
+                String nombreEmpresa = rs.getString("nombreEmpresa");
+                String placaVehicular = rs.getString("placaVehiculo");
+                String detalle = rs.getString("detalle");
+                Timestamp fechaIngreso = rs.getTimestamp("fechaIngreso");
+                Timestamp fechaSalida = rs.getTimestamp("fechaSalida");
+                String nombreGuardaSeguridad = rs.getString("nombreEmpleado");
+                String primerApellidoGuarda = rs.getString("primerApellido");
+                String segundoApellidoGuarda = rs.getString("segundoApellido");
+
+                Integer cedulaAMostrar = (cedulaInvitadoTemporal != null) ? cedulaInvitadoTemporal : cedulaInvitadoPermanente;
+
+                RegistroIngresosSalidasTO registroIngresosSalidas = new RegistroIngresosSalidasTO(idRegistro, cedulaAMostrar, nombreCompletoInvitado, nombreEmpresa, placaVehicular, detalle, fechaIngreso, fechaSalida, nombreGuardaSeguridad, primerApellidoGuarda, segundoApellidoGuarda);
+
+                listaRetornar.add(registroIngresosSalidas);
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (ps != null && !ps.isClosed()) {
+                    ps.close();
+                }
+                if (rs != null && !rs.isClosed()) {
+                    rs.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        return listaRetornar;
+    }
 
 }
