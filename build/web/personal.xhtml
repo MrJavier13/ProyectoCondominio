@@ -27,8 +27,16 @@
             .filter-container {
                 display: flex;
                 align-items: center;
-                justify-content: flex-end; 
+                justify-content: space-between;
                 margin-right: 10px; 
+            }
+            .search-container {
+                display: flex;
+                align-items: center;
+            }
+            .toggle-container {
+                display: flex;
+                align-items: center;
             }
             .filter-container span {
                 margin-right: 5px; 
@@ -105,11 +113,14 @@
                              paginator="true"
                              rows="10" rowSelectMode="add" paginatorPosition="bottom">
                     <f:facet name="header">
-                        <div class="products-table-header">
-                            <div class="filter-container">
+                        <div class="filter-container">
+                            <div class="search-container">
+                                <p:inputText value="#{personalController.textoBusqueda}" placeholder="Buscar" />
+                                <p:commandButton value="Buscar" actionListener="#{personalController.filtrarResidentes}" update="dt-empleados" />
+                            </div>
+                            <div class="toggle-container">
                                 <span>Mostrar:</span>
-                                <p:selectBooleanButton value="#{personalController.activo}" 
-                                                       onLabel="Inactivo" offLabel="Activo">
+                                <p:selectBooleanButton value="#{personalController.activo}" onLabel="Inactivo" offLabel="Activo">
                                     <p:ajax update="dt-empleados" listener="#{personalController.filtrarResidentes()}" />
                                 </p:selectBooleanButton>
                             </div>

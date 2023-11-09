@@ -27,7 +27,7 @@
             .filter-container {
                 display: flex;
                 align-items: center;
-                justify-content: flex-end; 
+                justify-content: space-between;
                 margin-right: 10px; 
             }
             .filter-container span {
@@ -108,11 +108,17 @@
                     <f:facet name="header">
                         <div class="products-table-header">
                             <div class="filter-container">
-                                <span>Mostrar:</span>
-                                <p:selectBooleanButton value="#{residentesController.activo}" 
-                                                       onLabel="Inactivo" offLabel="Activo">
-                                    <p:ajax update="dt-residentes" listener="#{residentesController.filtrarResidentes}" />
-                                </p:selectBooleanButton>
+                                <div class="search-container">
+                                    <p:inputText value="#{residentesController.textoBusqueda}" placeholder="Buscar" />
+                                    <p:commandButton value="Buscar" actionListener="#{residentesController.filtrarResidentes()}" update="dt-residentes" />
+                                </div>
+                                <div class="toggle-container">
+                                    <span>Mostrar:</span>
+                                    <p:selectBooleanButton value="#{residentesController.activo}" 
+                                                           onLabel="Inactivo" offLabel="Activo">
+                                        <p:ajax update="dt-residentes" listener="#{residentesController.filtrarResidentes}" />
+                                    </p:selectBooleanButton>
+                                </div>
                             </div>
                         </div>
                     </f:facet>

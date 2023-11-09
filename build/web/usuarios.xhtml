@@ -20,7 +20,7 @@
             .filter-container {
                 display: flex;
                 align-items: center;
-                justify-content: flex-end; 
+                justify-content: space-between;
                 margin-right: 10px; 
             }
             .filter-container span {
@@ -48,6 +48,14 @@
                 margin: 0;
                 padding: 0;
                 display: flex;
+            }
+            .search-container {
+                display: flex;
+                align-items: center;
+            }
+            .toggle-container {
+                display: flex;
+                align-items: center;
             }
 
             .custom-commandlink {
@@ -95,12 +103,19 @@
                              rows="10" rowSelectMode="add" paginatorPosition="bottom">
                     <f:facet name="header">
                         <div class="usuarios-table-header">
+                            
                             <div class="filter-container">
-                                <span>Mostrar:</span>
-                                <p:selectBooleanButton value="#{usuariosController.activo}" 
-                                                       onLabel="Inactivo" offLabel="Activo">
-                                    <p:ajax update="dt-usuarios" listener="#{usuariosController.filtrarUsuarios}" />
-                                </p:selectBooleanButton>
+                                <div class="search-container">
+                                    <p:inputText value="#{usuariosController.textoBusqueda}" placeholder="Buscar" />
+                                    <p:commandButton value="Buscar" actionListener="#{usuariosController.filtrarUsuarios()}" update="dt-usuarios" />
+                                </div>
+                                <div class="toggle-container">
+                                    <span>Mostrar:</span>
+                                    <p:selectBooleanButton value="#{usuariosController.activo}" 
+                                                           onLabel="Inactivo" offLabel="Activo">
+                                        <p:ajax update="dt-usuarios" listener="#{usuariosController.filtrarUsuarios}" />
+                                    </p:selectBooleanButton>
+                                </div>
                             </div>
                         </div>
                     </f:facet>

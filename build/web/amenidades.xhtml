@@ -32,8 +32,16 @@
             .filter-container {
                 display: flex;
                 align-items: center;
-                justify-content: flex-end; 
+                justify-content: space-between;
                 margin-right: 10px; 
+            }
+            .search-container {
+                display: flex;
+                align-items: center;
+            }
+            .toggle-container {
+                display: flex;
+                align-items: center;
             }
             .filter-container span {
                 margin-right: 5px; 
@@ -105,11 +113,14 @@
                              paginator="true"
                              rows="10" rowSelectMode="add" paginatorPosition="bottom">
                     <f:facet name="header">
-                        <div class="amenidades-table-header">
-                            <div class="filter-container">
+                        <div class="filter-container">
+                            <div class="search-container">
+                                <p:inputText value="#{amenidadesController.textoBusqueda}" placeholder="Buscar" />
+                                <p:commandButton value="Buscar" actionListener="#{amenidadesController.filtrarAmenidades()}" update="dt-amenidades" />
+                            </div>
+                            <div class="toggle-container">
                                 <span>Mostrar:</span>
-                                <p:selectBooleanButton value="#{amenidadesController.activo}" 
-                                                       onLabel="Inactivos" offLabel="Activos">
+                                <p:selectBooleanButton value="#{amenidadesController.activo}" onLabel="Inactivo" offLabel="Activo">
                                     <p:ajax update="dt-amenidades" listener="#{amenidadesController.filtrarAmenidades}" />
                                 </p:selectBooleanButton>
                             </div>
