@@ -32,6 +32,7 @@ public class PersonalController implements Serializable {
     private Map<Integer, String> mapaRoles;
     private Boolean isCedulaEditable;
     private Boolean isCreatingNewPersonal;
+    private String textoBusqueda;
 
     @ManagedProperty("#{usuarioService}")
     private ServicioUsuario servicioUsuario;
@@ -81,6 +82,16 @@ public class PersonalController implements Serializable {
     public boolean isSelectOneMenuDisabled() {
         return selectOneMenuDisabled;
     }
+
+    public String getTextoBusqueda() {
+        return textoBusqueda;
+    }
+
+    public void setTextoBusqueda(String textoBusqueda) {
+        this.textoBusqueda = textoBusqueda;
+    }
+    
+    
 
     public void disableSelectOneMenu() {
         selectOneMenuDisabled = true;
@@ -182,8 +193,22 @@ public class PersonalController implements Serializable {
     public void filtrarResidentes() {
         personal.clear();
         List<PersonalTO> tempList = servicioPersonal.mostrarPersonal().stream()
-                .filter(res -> (activo && "Activo".equals(res.getEstado())) || (!activo && "Inactivo".equals(res.getEstado())))
-                .collect(Collectors.toList());
+            .filter(res -> (activo && "Activo".equals(res.getEstado())) || (!activo && "Inactivo".equals(res.getEstado())))
+            .filter(res -> {
+                if (textoBusqueda != null && !textoBusqueda.trim().isEmpty()) {
+                    String filterValue = textoBusqueda.toLowerCase().trim();
+                    String cedula = String.valueOf(res.getCedula()).toLowerCase();
+                    String nombreCompleto = String.format("%s %s %s",
+                            String.valueOf(res.getNombre()).toLowerCase(),
+                            String.valueOf(res.getApellido1()).toLowerCase(),
+                            String.valueOf(res.getApellido2()).toLowerCase());
+
+                    return cedula.contains(filterValue) || nombreCompleto.contains(filterValue);
+                } else {
+                    return true; // No hay texto de búsqueda, mostrar todos los registros
+                }
+            })
+            .collect(Collectors.toList());
         personal.addAll(tempList);
     }
 

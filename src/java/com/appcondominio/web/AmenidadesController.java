@@ -24,6 +24,7 @@ public class AmenidadesController implements Serializable{
     private AmenidadTO nuevaAmenidad = new AmenidadTO(); // Objeto para almacenar los datos de la nueva amenidad
     private List<AmenidadTO> filteredAmenidades;
     private String dialogHeader;
+    private String textoBusqueda;
 
     
     @ManagedProperty("#{amenidadService}")
@@ -58,11 +59,21 @@ public class AmenidadesController implements Serializable{
     
     public void filtrarAmenidades() {
         filteredAmenidades.clear();
-        for (AmenidadTO amenidad : amenidad) {
-            if ((activo && "Activo".equals(amenidad.getEstado())) || (!activo && "Inactivo".equals(amenidad.getEstado()))) {
-                filteredAmenidades.add(amenidad);
-            }
-        }
+        List<AmenidadTO> tempList = servicioAmenidad.mostrarAmenidades().stream()
+                .filter(amenidad -> (activo && "Activo".equals(amenidad.getEstado())) || (!activo && "Inactivo".equals(amenidad.getEstado())))
+                .filter(amenidad -> {
+                    if (textoBusqueda != null && !textoBusqueda.trim().isEmpty()) {
+                        String filterValue = textoBusqueda.toLowerCase().trim();
+                        String nombre = amenidad.getNombreAmenidad().toLowerCase(); // Asegúrate de tener el método adecuado para obtener el nombre de la amenidad
+
+                        return nombre.contains(filterValue);
+                    } else {
+                        return true; // No hay texto de búsqueda, mostrar todas las amenidades
+                    }
+                })
+                .collect(Collectors.toList());
+
+        filteredAmenidades.addAll(tempList);
     }
     
     public void disableSelectOneMenu() {
@@ -139,6 +150,15 @@ public class AmenidadesController implements Serializable{
         return nuevaAmenidad;
     }
 
+    public String getTextoBusqueda() {
+        return textoBusqueda;
+    }
+
+    public void setTextoBusqueda(String textoBusqueda) {
+        this.textoBusqueda = textoBusqueda;
+    }
+
+    
     public boolean isSelectOneMenuDisabled() {
         return selectOneMenuDisabled;
     }

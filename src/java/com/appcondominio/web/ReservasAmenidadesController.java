@@ -31,6 +31,7 @@ public class ReservasAmenidadesController implements Serializable{
     private String dialogHeader;
     private Date fechaInicial;
     private Date fechaFinal;
+    private String textoBusqueda;
     
     @ManagedProperty("#{reservaAmenidadService}")
     private ServicioReservaAmenidad servicioReservaAmenidad;
@@ -66,25 +67,38 @@ public class ReservasAmenidadesController implements Serializable{
     public void filtrarReservasAmenidades() {
         reservaAmenidad.clear();
         Calendar calInicio = Calendar.getInstance();
-            calInicio.setTime(fechaInicial);
-            calInicio.set(Calendar.HOUR_OF_DAY, 0);
-            calInicio.set(Calendar.MINUTE, 0);
-            calInicio.set(Calendar.SECOND, 0);
-            calInicio.set(Calendar.MILLISECOND, 0);
-            Timestamp timestampInicio = new Timestamp(calInicio.getTimeInMillis());
+        calInicio.setTime(fechaInicial);
+        calInicio.set(Calendar.HOUR_OF_DAY, 0);
+        calInicio.set(Calendar.MINUTE, 0);
+        calInicio.set(Calendar.SECOND, 0);
+        calInicio.set(Calendar.MILLISECOND, 0);
+        Timestamp timestampInicio = new Timestamp(calInicio.getTimeInMillis());
 
-            Calendar calFin = Calendar.getInstance();
-            calFin.setTime(fechaFinal);
-            calFin.set(Calendar.HOUR_OF_DAY, 23);
-            calFin.set(Calendar.MINUTE, 59);
-            calFin.set(Calendar.SECOND, 59);
-            calFin.set(Calendar.MILLISECOND, 999);
-            Timestamp timestampFin = new Timestamp(calFin.getTimeInMillis());
+        Calendar calFin = Calendar.getInstance();
+        calFin.setTime(fechaFinal);
+        calFin.set(Calendar.HOUR_OF_DAY, 23);
+        calFin.set(Calendar.MINUTE, 59);
+        calFin.set(Calendar.SECOND, 59);
+        calFin.set(Calendar.MILLISECOND, 999);
+        Timestamp timestampFin = new Timestamp(calFin.getTimeInMillis());
 
         List<ReservaAmenidadTO> tempList = servicioReservaAmenidad.buscarReservasPorFechas(timestampInicio, timestampFin);
 
         reservaAmenidad.addAll(tempList.stream()
                 .filter(res -> (activo && "Activo".equals(res.getEstado())) || (!activo && "Inactivo".equals(res.getEstado())))
+                .filter(res -> {
+                    if (textoBusqueda != null && !textoBusqueda.trim().isEmpty()) {
+                        String filterValue = textoBusqueda.toLowerCase().trim();
+                        String nombreResidente = String.format("%s %s %s",
+                                String.valueOf(res.getNombre()).toLowerCase(),
+                                String.valueOf(res.getPrimerApellido()).toLowerCase(),
+                                String.valueOf(res.getSegundoApellido()).toLowerCase());
+                        String nombreAmenidad = res.getNombreAmenidad().toLowerCase();
+
+                        return nombreResidente.contains(filterValue) || nombreAmenidad.contains(filterValue);
+                    }
+                    return true; // No hay texto de búsqueda, mostrar todos los registros
+                })
                 .collect(Collectors.toList()));
 
         PrimeFaces.current().ajax().update("form:dt-reservasAmenidades");
@@ -129,6 +143,16 @@ public class ReservasAmenidadesController implements Serializable{
     public void enableSelectOneMenu() {
         selectOneMenuDisabled = false;
     }
+
+        public String getTextoBusqueda() {
+        return textoBusqueda;
+    }
+
+    public void setTextoBusqueda(String textoBusqueda) {
+        this.textoBusqueda = textoBusqueda;
+    }
+    
+    
     
     public void guardarReserva() {
 

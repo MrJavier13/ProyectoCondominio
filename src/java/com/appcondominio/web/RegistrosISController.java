@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -35,6 +36,8 @@ public class RegistrosISController implements Serializable {
     private Date fechaIngreso;
     private Date fechaSalida;
     private String dialogHeader;
+    private String textoBusqueda;
+
 
     @ManagedProperty("#{registroISService}")
     private ServicioRegistroIS servicioRegistroIS;
@@ -89,23 +92,48 @@ public class RegistrosISController implements Serializable {
             context.addMessage(null, message);
         }
     }
-
-    public void mostrarRegistroXInvitados() {
-        int resultado = 0;
+    
+    public void filtrarRegistrosIS() {
         FacesContext context = FacesContext.getCurrentInstance();
-        if (busqueda.equals("")) {
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Escriba un nombre a buscar. Ejemplo: Juan Mora Mora");
-            context.addMessage(null, message);
-        } else {
-            resultado = servicioRegistroIS.buscarCedulaInvitado(busqueda);
-            if (resultado != 0) {
-                registroIS = servicioRegistroIS.buscarRegistrosPorInvitadosPer(resultado);
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Persona no encontrada");
-                context.addMessage(null, message);
-            }
-        }
+        registroIS.clear();
 
+        if (fechaInicial != null && fechaFinal != null && !fechaInicial.after(fechaFinal)) {
+            // Ajusta las fechas para incluir todas las horas del día
+            Calendar calInicio = Calendar.getInstance();
+            calInicio.setTime(fechaInicial);
+            calInicio.set(Calendar.HOUR_OF_DAY, 0);
+            calInicio.set(Calendar.MINUTE, 0);
+            calInicio.set(Calendar.SECOND, 0);
+            calInicio.set(Calendar.MILLISECOND, 0);
+            Timestamp timestampInicio = new Timestamp(calInicio.getTimeInMillis());
+
+            Calendar calFin = Calendar.getInstance();
+            calFin.setTime(fechaFinal);
+            calFin.set(Calendar.HOUR_OF_DAY, 23);
+            calFin.set(Calendar.MINUTE, 59);
+            calFin.set(Calendar.SECOND, 59);
+            calFin.set(Calendar.MILLISECOND, 999);
+            Timestamp timestampFin = new Timestamp(calFin.getTimeInMillis());
+
+            // Llama al método del servicio para buscar registros por fechas
+            List<RegistroIngresosSalidasTO> registrosPorFechas = servicioRegistroIS.buscarRegistrosPorFechas(timestampInicio, timestampFin);
+
+            // Filtra los registros por el texto de búsqueda
+            if (textoBusqueda != null && !textoBusqueda.trim().isEmpty()) {
+                String filterValue = textoBusqueda.toLowerCase().trim();
+                registrosPorFechas = registrosPorFechas.stream()
+                    .filter(registro -> 
+                        String.valueOf(registro.getCedulaAMostrar()).toLowerCase().contains(filterValue) ||
+                        registro.getNombreCompletoInvitado().toLowerCase().contains(filterValue)
+                    )
+                    .collect(Collectors.toList());
+            } 
+            registroIS.addAll(registrosPorFechas);
+        } else {
+            // Muestra un mensaje de error si las fechas no son válidas
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Las fechas ingresadas no son válidas.");
+            context.addMessage(null, message);
+        }
     }
     
     public void guardarRegistro() {
@@ -158,6 +186,18 @@ public void redireccionar(String ruta) {
 
         }
     }
+
+    
+
+    public String getTextoBusqueda() {
+        return textoBusqueda;
+    }
+
+    public void setTextoBusqueda(String textoBusqueda) {
+        this.textoBusqueda = textoBusqueda;
+    }
+    
+    
 
     public String getBusqueda() {
         return busqueda;

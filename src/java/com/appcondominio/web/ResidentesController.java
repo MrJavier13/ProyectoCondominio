@@ -33,6 +33,7 @@ public class ResidentesController implements Serializable {
     private String dialogHeader;
     private Boolean isCedulaEditable;
     private Boolean isCreatingNewResidente;
+    private String textoBusqueda;
 
     @ManagedProperty("#{residenteService}")
     private ServicioResidente servicioResidente;
@@ -50,6 +51,16 @@ public class ResidentesController implements Serializable {
                 .collect(Collectors.toList());
         this.activo = true;
     }
+
+    public String getTextoBusqueda() {
+        return textoBusqueda;
+    }
+
+    public void setTextoBusqueda(String textoBusqueda) {
+        this.textoBusqueda = textoBusqueda;
+    }
+    
+    
 
     public String getDialogHeader() {
         return dialogHeader;
@@ -151,6 +162,20 @@ public class ResidentesController implements Serializable {
         residente.clear();
         List<ResidenteTO> tempList = servicioResidente.mostrarResidentes().stream()
                 .filter(res -> (activo && "Activo".equals(res.getEstado())) || (!activo && "Inactivo".equals(res.getEstado())))
+                .filter(res -> {
+                if (textoBusqueda != null && !textoBusqueda.trim().isEmpty()) {
+                    String filterValue = textoBusqueda.toLowerCase().trim();
+                    String cedula = String.valueOf(res.getCedula()).toLowerCase();
+                    String nombreCompleto = String.format("%s %s %s",
+                            String.valueOf(res.getNombre()).toLowerCase(),
+                            String.valueOf(res.getPrimerApellido()).toLowerCase(),
+                            String.valueOf(res.getSegundoApellido()).toLowerCase());
+
+                    return cedula.contains(filterValue) || nombreCompleto.contains(filterValue);
+                } else {
+                    return true; // No hay texto de búsqueda, mostrar todos los registros
+                }
+            })
                 .collect(Collectors.toList());
         residente.addAll(tempList);
     }

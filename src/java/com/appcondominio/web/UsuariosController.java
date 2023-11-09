@@ -32,6 +32,7 @@ public class UsuariosController implements Serializable{
     private UsuarioTO usuarioSeleccionado;
     private List<UsuarioTO> filteredUsuarios;
     private boolean activo;
+    private String textoBusqueda;
     
     @ManagedProperty("#{usuarioService}")
     private ServicioUsuario servicioUsuario;
@@ -47,6 +48,16 @@ public class UsuariosController implements Serializable{
             .collect(Collectors.toList());
         this.activo = true;
     }
+
+    public String getTextoBusqueda() {
+        return textoBusqueda;
+    }
+
+    public void setTextoBusqueda(String textoBusqueda) {
+        this.textoBusqueda = textoBusqueda;
+    }
+    
+    
 
     public List<UsuarioTO> getUsuario() {
         return usuario;
@@ -114,6 +125,23 @@ public class UsuariosController implements Serializable{
                 filteredUsuarios.add(usuario);
             }
         }
+        
+        filteredUsuarios.clear();
+        List<UsuarioTO> tempList = servicioUsuario.mostrarUsuarios().stream()
+                .filter(usuario -> (activo && "Activo".equals(usuario.getEstado())) || (!activo && "Inactivo".equals(usuario.getEstado())))
+                .filter(usuario -> {
+                    if (textoBusqueda != null && !textoBusqueda.trim().isEmpty()) {
+                        String filterValue = textoBusqueda.toLowerCase().trim();
+                        String nombre = usuario.getNombreCompleto().toLowerCase(); // Asegúrate de tener el método adecuado para obtener el nombre de la amenidad
+
+                        return nombre.contains(filterValue);
+                    } else {
+                        return true; // No hay texto de búsqueda, mostrar todas las amenidades
+                    }
+                })
+                .collect(Collectors.toList());
+
+        filteredUsuarios.addAll(tempList);
     }
     
     public void openEdit() {
