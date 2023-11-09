@@ -90,14 +90,14 @@
                 <h:panelGrid columns="6">
                     <p:calendar id="fechaInicial" value="#{registrosISController.fechaInicial}" pattern="dd/MM/yyyy" required="false" label="Fecha Inicial" showOn="button" />
                     <p:calendar id="fechaFinal" value="#{registrosISController.fechaFinal}" pattern="dd/MM/yyyy" required="false" label="Fecha Final" showOn="button" />
-                    <p:commandButton value="Buscar por fecha" action="#{registrosISController.mostrarRegistrosPorFechas}" update="dt-products growl" />
+                    <p:commandButton value="Buscar por fecha" action="#{registrosISController.mostrarRegistrosPorFechas}" update="dt-registros growl" />
 
                     <p:inputText value="#{registrosISController.textoBusqueda}" style="float:right;" placeholder="Buscar" />
-                    <p:commandButton id="busqueda" value="Buscar cédula o nombre del invitado" style="float:right;" actionListener="#{registrosISController.filtrarRegistrosIS}" update="dt-products" />
+                    <p:commandButton id="busqueda" value="Buscar cédula o nombre del invitado" style="float:right;" actionListener="#{registrosISController.filtrarRegistrosIS}" update="dt-registros" />
                     <p:tooltip for="busqueda" value="Debe existir una búsqueda por fechas para buscar." position="right"/>
                 </h:panelGrid>                                                  
 
-                <p:dataTable id="dt-products" widgetVar="dtProducts" var="registroIS" value="#{registrosISController.registroIS}"
+                <p:dataTable id="dt-registros" widgetVar="dtPegistros" var="registroIS" value="#{registrosISController.registroIS}"
                              reflow="true" styleClass="products-table"
                              paginator="true"
                              rows="10" rowSelectMode="add" paginatorPosition="bottom">
