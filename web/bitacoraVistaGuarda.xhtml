@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Registro de Ingresos y Salidas</title>
+
+        <style>
+            .disenho
+            {
+                line-height: 40px;
+
+            }
+            body {
+                margin: 0;
+                font-family: Verdana, sans-serif;
+            }
+            .filter-container {
+                display: flex;
+                align-items: center;
+                justify-content: flex-end; 
+                margin-right: 10px; 
+            }
+            .filter-container span {
+                margin-right: 5px; 
+            }
+            .topbar {
+                background-color: #1e4fa5;
+                color: white;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 20px;
+                transition: background-color 0.3s;
+            }
+
+
+            .topbar-logo {
+                font-size: 24px;
+                font-weight: bold;
+                text-decoration: none;
+                color: #e6e6e6;
+            }
+            .topbar-menu {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                display: flex;
+            }
+
+            .custom-commandlink {
+                position: relative;
+                color: white;
+                text-decoration: none;
+                font-size: 14px;
+                margin: 0 15px;
+                font-size: 20px;
+            }
+            .custom-commandlink:hover::after{
+                content: "";
+                position: absolute;
+                left: 0;
+                bottom: -13px;
+                width: 100%;
+                border-bottom: 5px solid white;
+            }
+        </style>
+    </h:head>
+    <h:body style=" background: linear-gradient(to bottom, #ffffff, #1e4fa5);">
+
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" />
+
+            <div class="topbar">
+                <a class="topbar-logo">Registro de Ingresos y Salidas</a>
+                <ul class="topbar-menu">
+                    <p:commandLink value="Inicio" actionListener="#{usuariosController.principal}" immediate="true" ajax="false" styleClass="custom-commandlink" />
+                    <p:divider layout="vertical" />
+                    <p:commandLink value="Residentes" actionListener="#{usuariosController.residentes}" immediate="true" ajax="false" styleClass="custom-commandlink" />
+                    <p:divider layout="vertical" />
+                    <p:commandLink value="Personal" actionListener="#{usuariosController.personal}" immediate="true" ajax="false" styleClass="custom-commandlink" />
+                    <p:divider layout="vertical" />
+                    <p:commandLink value="Cerrar Sesión"  actionListener="#{usuariosController.cerrarSesion}" immediate="true" ajax="false" styleClass="custom-commandlink" />
+                </ul>
+            </div>
+
+            <div class="card crud-demo">
+                <h:panelGrid columns="3">
+                    <p:calendar id="fechaInicial" value="#{registrosISController.fechaInicial}" pattern="dd/MM/yyyy" required="true" label="Fecha Inicial" showOn="button" />
+                    <p:calendar id="fechaFinal" value="#{registrosISController.fechaFinal}" pattern="dd/MM/yyyy" required="true" label="Fecha Final" showOn="button" />
+                    <p:commandButton value="Buscar por fecha" action="#{registrosISController.mostrarRegistrosPorFechas}" update="dt-registros growl" />
+
+                    
+                </h:panelGrid>
+
+                <p:dataTable id="dt-registros" widgetVar="dtRegistros" var="registroIS" value="#{registrosISController.registroIS}"
+                             reflow="true" styleClass="registros-table"
+                             paginator="true"
+                             rows="10" rowSelectMode="add" paginatorPosition="bottom">
+                    <f:facet name="header">
+                        <div class="registros-table-header">
+                            <span style="font-weight: bold">Registro de Ingresos y Salidas</span>                     
+                        </div>
+                    </f:facet>
+                    <p:column headerText="Identificador" sortBy="#{registroIS.idRegistro}"  filterMatchMode="contains">
+                        <h:outputText value="#{registroIS.idRegistro}"/>
+                    </p:column>
+                    <p:column headerText="Cédula del Invitado" filterMatchMode="contains">
+                        <h:outputText value="#{registroIS.cedulaAMostrar}" />
+                    </p:column>
+                    <p:column headerText="Nombre Completo Invitado" sortBy="#{registroIS.nombreCompletoInvitado}" filterMatchMode="contains">
+                        <h:outputText value="#{registroIS.nombreCompletoInvitado}"/>
+                    </p:column>
+                    <p:column headerText="Nombre Empresa" sortBy="#{registroIS.nombreEmpresa}" filterMatchMode="contains">
+                        <h:outputText value="#{registroIS.nombreEmpresa}"/>
+                    </p:column>
+                    <p:column headerText="Placa Vehicular" sortBy="#{registroIS.placaVehicular}" filterMatchMode="contains">
+                        <h:outputText value="#{registroIS.placaVehicular}"/>
+                    </p:column>
+                    <p:column headerText="Detalle" sortBy="#{registroIS.detalle}"   filterMatchMode="contains">
+                        <h:outputText value="#{registroIS.detalle}"/>
+                    </p:column>
+                    <p:column headerText="Fecha Ingreso" sortBy="#{registroIS.fechaIngreso}"   filterMatchMode="contains">
+                        <h:outputText value="#{registroIS.fechaIngreso}"/>
+                    </p:column>
+                    <p:column headerText="Fecha Salida" sortBy="#{registroIS.fechaSalida}"   filterMatchMode="contains">
+                        <h:outputText value="#{registroIS.fechaSalida}"/>
+                    </p:column>
+                    <p:column headerText="Nombre Guarda Seguridad" sortBy="#{registroIS.nombreGuardaSeguridad}"   filterMatchMode="contains">
+                        <h:outputText value="#{registroIS.nombreGuardaSeguridad} #{registroIS.primerApellidoGuarda} #{registroIS.segundoApellidoGuarda}"/>
+                    </p:column>
+                    <p:column>
+                        <p:panelGrid columns="1" layout="grid" style="border:0px none; text-align: center">
+
+                            <p:commandButton icon="pi pi-pencil" value="Editar" actionListener="#{registrosISController.openEdit}"
+                                             oncomplete="PF('nuevoRegistroISDialog').show()" update=":form"
+                                             styleClass="edit-button rounded-button ui-button-success" process="@this">
+                                <f:setPropertyActionListener value="#{registroIS}" target="#{registrosISController.registroISSeleccionado}"/>
+                            </p:commandButton>
+
+
+                        </p:panelGrid>
+                    </p:column>
+                    <div class= "disenho">
+                    </div>
+                </p:dataTable>
+
+                <p:toolbar>
+                    <p:toolbarGroup>
+                        <p:commandButton value="Agregar un nuevo registro" icon="pi pi-plus" 
+                                         actionListener="#{registrosISController.openNew}"
+                                         update=":form" oncomplete="PF('nuevoRegistroISDialog').show()"                                         
+                                         style="margin-right: .5rem" process="@this"> 
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <p:dialog header="#{registrosISController.dialogHeader}" showEffect="fade" modal="true"
+                          widgetVar="nuevoRegistroISDialog" responsive="true" onHide="resetFormFields();" visible="#{registrosISController.registroISSeleccionado ne null}">
+
+                    <p:outputPanel id="administrar-registroIS-content" class="ui-fluid">
+                        <p:outputPanel rendered="#{not empty registrosISController.registroISSeleccionado}">
+
+
+
+
+                            <div class="p-field">
+                                <div class="disenho">
+                                    <p:outputLabel for="cedulaInvitadoPermanente" style="font-size: 18px; font-weight: bold;">Cédula Invitado Permanente</p:outputLabel>
+                                </div>
+                                <p:inputText id="cedulaInvitadoPermanente" value="#{registrosISController.registroISSeleccionado.cedulaInvitadoPermanente}" />
+                                <p:tooltip for="cedulaInvitadoPermanente" value="Escriba la cédula del invitado permanente." position="right"/>
+                                <p:message id="cedulaInvitadoPermanenteMessage" for="cedulaInvitadoPermanente" />
+                            </div>
+
+                            <div class="p-field">
+                                <div class="disenho">
+                                    <p:outputLabel for="cedulaInvitadoTemporal" style="font-size: 18px; font-weight: bold;">Cédula Invitado Temporal</p:outputLabel>
+                                </div>
+                                <p:inputText id="cedulaInvitadoTemporal" value="#{registrosISController.registroISSeleccionado.cedulaInvitadoTemporal}" />
+                                <p:tooltip for="cedulaInvitadoTemporal" value="Escriba la cédula del invitado temporal." position="right"/>
+                                <p:message id="cedulaInvitadoTemporalMessage" for="cedulaInvitadoTemporal" />
+                            </div>
+
+                            <div class="p-field">
+                                <div class="disenho">
+                                    <p:outputLabel for="nombreCompletoInvitado" style="font-size: 18px; font-weight: bold;">Nombre Completo Invitado</p:outputLabel>
+                                </div>
+                                <p:inputText id="nombreCompletoInvitado" value="#{registrosISController.registroISSeleccionado.nombreCompletoInvitado}"/>
+                                <p:tooltip for="nombreCompletoInvitado" value="Escriba el nombre completo del invitado." position="right"/>
+                                <p:message id="nombreCompletoInvitadoMessage" for="nombreCompletoInvitado" />
+                            </div>
+
+                            <div class="p-field">
+                                <div class="disenho">
+                                    <p:outputLabel for="nombreEmpresa" style="font-size: 18px; font-weight: bold;">Nombre Empresa</p:outputLabel>
+                                </div>
+                                <p:inputText id="nombreEmpresa" value="#{registrosISController.registroISSeleccionado.nombreEmpresa}" />
+                                <p:tooltip for="nombreEmpresa" value="Escriba el nombre de la empresa." position="right"/>
+                                <p:message id="nombreEmpresaMessage" for="nombreEmpresa" />
+                            </div>
+
+                            <div class="p-field">
+                                <div class="disenho">
+                                    <p:outputLabel for="placaVehiculo" style="font-size: 18px; font-weight: bold;">Placa Vehicular</p:outputLabel>
+                                </div>
+                                <p:inputText id="placaVehiculo" value="#{registrosISController.registroISSeleccionado.placaVehicular}" />
+                                <p:tooltip for="placaVehiculo" value="Escriba la placa del vehículo." position="right"/>
+                                <p:message id="placaVehiculoMessage" for="placaVehiculo" />
+                            </div>
+
+                            <div class="p-field">
+                                <div class="disenho">
+                                    <p:outputLabel for="detalle" style="font-size: 18px; font-weight: bold;">Detalle</p:outputLabel>
+                                </div>
+                                <p:inputText id="detalle" value="#{registrosISController.registroISSeleccionado.detalle}" />
+                                <p:tooltip for="detalle" value="Escriba un detalle." position="right"/>
+                                <p:message id="detalleMessage" for="detalle" />
+                            </div>
+
+                            <div class="p-field">
+                                <div class="disenho">
+                                    <p:outputLabel for="fechaIngreso" style="font-size: 18px; font-weight: bold;">Fecha ingreso</p:outputLabel>
+                                </div>
+                                <p:calendar id="fechaIngreso" value="#{registrosISController.fechaIngreso}"
+                                            pattern="dd/MM/yyyy HH:mm:ss" showOn="button" />
+                                <p:tooltip for="fechaIngreso" value="Seleccione la fecha y hora de ingreso." position="right"/>
+                            </div>
+
+                            <div class="p-field">
+                                <div class="disenho">
+                                    <p:outputLabel for="fechaSalida" style="font-size: 18px; font-weight: bold;">Fecha salida</p:outputLabel>
+                                </div>
+                                <p:calendar id="fechaSalida" value="#{registrosISController.fechaSalida}"
+                                            pattern="dd/MM/yyyy HH:mm:ss" showOn="button" />
+                                <p:tooltip for= "fechaSalida" value="Seleccione la fecha y hora de salida." position="right"/>
+                            </div>
+
+
+
+
+                            <div class="p-field">
+                                <div class="disenho">
+                                    <p:outputLabel for="cedulaGuardaSeguridad" style="font-size: 18px; font-weight: bold;">Cédula Guarda Seguridad</p:outputLabel>
+                                </div>
+                                <p:inputText id="cedulaGuardaSeguridad" value="#{registrosISController.registroISSeleccionado.cedulaGuardaSeguridad}" />
+                                <p:tooltip for="cedulaGuardaSeguridad" value="Escriba la cédula del guarda de seguridad." position="right"/>
+                                <p:message id="cedulaGuardaSeguridadMessage" for="cedulaGuardaSeguridad" />
+                            </div>
+
+
+
+
+                        </p:outputPanel> 
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar" icon="pi pi-check" actionListener="#{registrosISController.guardarRegistro}" 
+                                         update="administrar-registroIS-content" process="administrar-registroIS-content @this"/>
+                        <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('nuevoRegistroISDialog').hide();"
+                                         class="ui-button-secondary">
+                            <p:ajax update="form:administrar-registroIS-content" />
+                        </p:commandButton>
+                    </f:facet>
+
+                </p:dialog>
+            </div>
+        </h:form>
+    </h:body>
+</html>

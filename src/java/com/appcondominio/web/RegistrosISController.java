@@ -19,16 +19,22 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
+import org.primefaces.PrimeFaces;
 
 @ManagedBean(name = "registrosISController")
 @ViewScoped
 public class RegistrosISController implements Serializable {
 
     private List<RegistroIngresosSalidasTO> registroIS = new ArrayList<>();
-
+    private RegistroIngresosSalidasTO registroISSeleccionado;
+    private RegistroIngresosSalidasTO nuevoRegistroIS = new RegistroIngresosSalidasTO();
     private Date fechaInicial;
     private Date fechaFinal;
     private String busqueda;
+    private Date fechaIngreso;
+    private Date fechaSalida;
+    private String dialogHeader;
 
     @ManagedProperty("#{registroISService}")
     private ServicioRegistroIS servicioRegistroIS;
@@ -39,6 +45,20 @@ public class RegistrosISController implements Serializable {
     @PostConstruct
     public void init() {
         this.registroIS = new ArrayList<>();
+    }
+    
+    public void openNew() {
+       this.registroISSeleccionado = new RegistroIngresosSalidasTO();
+     //  disableSelectOneMenu();
+       dialogHeader = "Crear nuevo registro";
+       
+    }
+    
+    public void openEdit() {
+        this.registroISSeleccionado = new RegistroIngresosSalidasTO();
+       
+        dialogHeader = "Editar registro";
+       
     }
 
     public void mostrarRegistrosPorFechas() {
@@ -87,6 +107,57 @@ public class RegistrosISController implements Serializable {
         }
 
     }
+    
+    public void guardarRegistro() {
+        if (validarCampos()) {
+            registroISSeleccionado.setFechaIngreso(new Timestamp(fechaIngreso.getTime()));
+                registroISSeleccionado.setFechaSalida(new Timestamp(fechaSalida.getTime()));
+            if (!servicioRegistroIS.buscarIdRegistro(this.registroISSeleccionado.getIdRegistro())) { 
+                
+                servicioRegistroIS.insertarRegistro(registroISSeleccionado);
+                FacesContext.getCurrentInstance().addMessage(null, 
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Registro agregado"));
+
+            } else {
+                
+                servicioRegistroIS.actualizarRegistro(registroISSeleccionado);
+                FacesContext.getCurrentInstance().addMessage(null, 
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Registro Actualizado"));
+            }
+            this.init();
+            PrimeFaces.current().executeScript("PF('nuevoRegistroISDialog').hide()");
+            PrimeFaces.current().ajax().update("form:growl", "form:dt-registros");
+        }
+    }
+
+    private boolean validarCampo(String valor, String nombreCampo, String nombreError) {
+        if (valor == null || valor.isEmpty()) {
+            FacesContext.getCurrentInstance().addMessage("form:" + nombreCampo,
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Campo " + nombreError + " requerido",
+                    "Por favor, ingrese el " + nombreError.toLowerCase() + "de la amenidad."));
+            return false;
+        }
+        return true;
+    }
+    
+    private boolean validarCampos() {
+        if (registroISSeleccionado.getIdRegistro() != null) {
+        }
+        return validarCampo(Integer.toString(registroISSeleccionado.getCedulaInvitadoPermanente()), "cedulaInvitadoPermanente", "cedula invitado permanente") 
+                && validarCampo(registroISSeleccionado.getNombreCompletoInvitado(), "nombreCompletoInvitado", "nombre completo invitado")
+          //  && validarCampo(registroISSeleccionado.getFechaIngreso().toString(), "fechaIngreso", "fecha de ingreso")
+            && validarCampo(Integer.toString(registroISSeleccionado.getCedulaGuardaSeguridad()), "cedulaGuardaSeguridad", "cedula de guarda de seguridad");
+    }
+    
+public void redireccionar(String ruta) {
+        HttpServletRequest request;
+        try {
+            request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+            FacesContext.getCurrentInstance().getExternalContext().redirect(request.getContextPath() + ruta);
+        } catch (Exception e) {
+
+        }
+    }
 
     public String getBusqueda() {
         return busqueda;
@@ -128,4 +199,45 @@ public class RegistrosISController implements Serializable {
         this.fechaFinal = fechaFinal;
     }
 
+    public RegistroIngresosSalidasTO getRegistroISSeleccionado() {
+        return registroISSeleccionado;
+    }
+
+    public void setRegistroISSeleccionado(RegistroIngresosSalidasTO registroISSeleccionado) {
+        this.registroISSeleccionado = registroISSeleccionado;
+    }
+
+    public RegistroIngresosSalidasTO getNuevoRegistroIS() {
+        return nuevoRegistroIS;
+    }
+
+    public void setNuevoRegistroIS(RegistroIngresosSalidasTO nuevoRegistroIS) {
+        this.nuevoRegistroIS = nuevoRegistroIS;
+    }
+
+    public Date getFechaIngreso() {
+        return fechaIngreso;
+    }
+
+    public void setFechaIngreso(Date fechaIngreso) {
+        this.fechaIngreso = fechaIngreso;
+    }
+
+    public Date getFechaSalida() {
+        return fechaSalida;
+    }
+
+    public void setFechaSalida(Date fechaSalida) {
+        this.fechaSalida = fechaSalida;
+    }
+
+    public String getDialogHeader() {
+        return dialogHeader;
+    }
+
+    public void setDialogHeader(String dialogHeader) {
+        this.dialogHeader = dialogHeader;
+    }
+
+    
 }

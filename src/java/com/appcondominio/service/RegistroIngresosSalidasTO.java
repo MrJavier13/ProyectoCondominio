@@ -26,16 +26,19 @@ public class RegistroIngresosSalidasTO implements Serializable{
     private String detalle;
     private Timestamp  fechaIngreso;
     private Timestamp  fechaSalida;
-    private int cedulaGuardaSeguridad;
+    private Integer cedulaGuardaSeguridad;
     private String nombreGuardaSeguridad;
     private String primerApellidoGuarda;
     private String segundoApellidoGuarda;
+    
 
     public RegistroIngresosSalidasTO() {
     }
 
-    public RegistroIngresosSalidasTO(int idRegistro, Integer cedulaAMostrar, String nombreCompletoInvitado, String nombreEmpresa, String placaVehicular, String detalle, Timestamp fechaIngreso, Timestamp fechaSalida, String nombreGuardaSeguridad, String primerApellidoGuarda, String segundoApellidoGuarda) {
+    public RegistroIngresosSalidasTO(Integer idRegistro, Integer cedulaInvitadoPermanente, Integer cedulaInvitadoTemporal, Integer cedulaAMostrar, String nombreCompletoInvitado, String nombreEmpresa, String placaVehicular, String detalle, Timestamp fechaIngreso, Timestamp fechaSalida, int cedulaGuardaSeguridad, String nombreGuardaSeguridad, String primerApellidoGuarda, String segundoApellidoGuarda) {
         this.idRegistro = idRegistro;
+        this.cedulaInvitadoPermanente = cedulaInvitadoPermanente;
+        this.cedulaInvitadoTemporal = cedulaInvitadoTemporal;
         this.cedulaAMostrar = cedulaAMostrar;
         this.nombreCompletoInvitado = nombreCompletoInvitado;
         this.nombreEmpresa = nombreEmpresa;
@@ -43,22 +46,21 @@ public class RegistroIngresosSalidasTO implements Serializable{
         this.detalle = detalle;
         this.fechaIngreso = fechaIngreso;
         this.fechaSalida = fechaSalida;
+        this.cedulaGuardaSeguridad = cedulaGuardaSeguridad;
         this.nombreGuardaSeguridad = nombreGuardaSeguridad;
         this.primerApellidoGuarda = primerApellidoGuarda;
         this.segundoApellidoGuarda = segundoApellidoGuarda;
         
     }
 
-    /*RegistroIngresosSalidasTO(int idRegistro, Integer cedulaAMostrar, String nombreCompletoInvitado, String nombreEmpresa, String placaVehicular, String detalle, Timestamp fechaIngreso, Timestamp fechaSalida, String nombreGuardaSeguridad, String primerApellidoGuarda, String segundoApellidoGuarda) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }**/
+   
 
     
-    public int getIdRegistro() {
+    public Integer getIdRegistro() {
         return idRegistro;
     }
 
-    public void setIdRegistro(int idRegistro) {
+    public void setIdRegistro(Integer idRegistro) {
         this.idRegistro = idRegistro;
     }
 
@@ -138,11 +140,11 @@ public class RegistroIngresosSalidasTO implements Serializable{
         this.fechaSalida = fechaSalida;
     }
 
-    public int getCedulaGuardaSeguridad() {
+    public Integer getCedulaGuardaSeguridad() {
         return cedulaGuardaSeguridad;
     }
 
-    public void setCedulaGuardaSeguridad(int cedulaGuardaSeguridad) {
+    public void setCedulaGuardaSeguridad(Integer cedulaGuardaSeguridad) {
         this.cedulaGuardaSeguridad = cedulaGuardaSeguridad;
     }
 
@@ -170,9 +172,6 @@ public class RegistroIngresosSalidasTO implements Serializable{
         this.segundoApellidoGuarda = segundoApellidoGuarda;
     }
     
-    
-    
-    
-
+ 
 
 }
