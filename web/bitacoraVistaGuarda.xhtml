@@ -76,21 +76,16 @@
             <div class="topbar">
                 <a class="topbar-logo">Registro de Ingresos y Salidas</a>
                 <ul class="topbar-menu">
-                    
-                    <p:divider layout="vertical" />
-                    <p:commandLink value="Cerrar sesión"  actionListener="#{usuariosController.cerrarSesion}" immediate="true" ajax="false" styleClass="custom-commandlink" />
+                     <p:divider layout="vertical" />
+                    <p:commandLink value="Cerrar Sesión"  actionListener="#{usuariosController.cerrarSesion}" immediate="true" ajax="false" styleClass="custom-commandlink" />
                 </ul>
             </div>
 
             <div class="card crud-demo">
-                <h:panelGrid columns="6">
+                <h:panelGrid columns="3">
                     <p:calendar id="fechaInicial" value="#{registrosISController.fechaInicial}" pattern="dd/MM/yyyy" required="true" label="Fecha Inicial" showOn="button" />
                     <p:calendar id="fechaFinal" value="#{registrosISController.fechaFinal}" pattern="dd/MM/yyyy" required="true" label="Fecha Final" showOn="button" />
                     <p:commandButton value="Buscar por fecha" action="#{registrosISController.mostrarRegistrosPorFechas}" update="dt-registros growl" />
-
-                    <p:inputText value="#{registrosISController.textoBusqueda}" style="float:right;" placeholder="Buscar" />
-                    <p:commandButton id="busqueda" value="Buscar cédula o nombre del invitado" style="float:right;" actionListener="#{registrosISController.filtrarRegistrosIS}" update="dt-registros" />
-                    <p:tooltip for="busqueda" value="Debe existir una búsqueda por fechas para buscar." position="right"/>
                 </h:panelGrid>
 
                 <p:dataTable id="dt-registros" widgetVar="dtRegistros" var="registroIS" value="#{registrosISController.registroIS}"
@@ -166,36 +161,35 @@
 
                             <div class="p-field">
                                 <div class="disenho">
-                                    <p:outputLabel for="cedulaInvitadoPermanente" style="font-size: 18px; font-weight: bold;">Cédula Invitado Permanente</p:outputLabel>
+                                    <p:outputLabel for="cedula" style="font-size: 18px; font-weight: bold;">Cédula</p:outputLabel>
                                 </div>
-                                <p:inputText id="cedulaInvitadoPermanente" value="#{registrosISController.registroISSeleccionado.cedulaInvitadoPermanente}" />
-                                <p:tooltip for="cedulaInvitadoPermanente" value="Escriba la cédula del invitado permanente." position="right"/>
-                                <p:message id="cedulaInvitadoPermanenteMessage" for="cedulaInvitadoPermanente" />
+                                <p:inputText id="cedula" value="#{registrosISController.registroISSeleccionado.cedulaAMostrar}"
+                                             disabled="#{registrosISController.invitadoPermanenteEncontrado}"/>
+                                <p:tooltip for="cedula" value="Escriba la cédula del invitado." position="right"/>
+                                <p:message id="cedulaMessage" for="cedula" />
                             </div>
 
+                            <p:commandButton value="Verificar Invitado Permanente" actionListener="#{registrosISController.verificarInvitadoPermanente}" 
+                                             update="cedula nombreCompleto nombreEmpresa placaVehiculo detalle fechaIngreso fechaSalida cedulaGuardaSeguridad" process="cedula @this" />
+                            
+                            
+                            
                             <div class="p-field">
                                 <div class="disenho">
-                                    <p:outputLabel for="cedulaInvitadoTemporal" style="font-size: 18px; font-weight: bold;">Cédula Invitado Temporal</p:outputLabel>
+                                    <p:outputLabel for="nombreCompleto" style="font-size: 18px; font-weight: bold;">Nombre Completo Invitado</p:outputLabel>
                                 </div>
-                                <p:inputText id="cedulaInvitadoTemporal" value="#{registrosISController.registroISSeleccionado.cedulaInvitadoTemporal}" />
-                                <p:tooltip for="cedulaInvitadoTemporal" value="Escriba la cédula del invitado temporal." position="right"/>
-                                <p:message id="cedulaInvitadoTemporalMessage" for="cedulaInvitadoTemporal" />
-                            </div>
-
-                            <div class="p-field">
-                                <div class="disenho">
-                                    <p:outputLabel for="nombreCompletoInvitado" style="font-size: 18px; font-weight: bold;">Nombre Completo Invitado</p:outputLabel>
-                                </div>
-                                <p:inputText id="nombreCompletoInvitado" value="#{registrosISController.registroISSeleccionado.nombreCompletoInvitado}"/>
-                                <p:tooltip for="nombreCompletoInvitado" value="Escriba el nombre completo del invitado." position="right"/>
-                                <p:message id="nombreCompletoInvitadoMessage" for="nombreCompletoInvitado" />
+                                <p:inputText id="nombreCompleto" value="#{registrosISController.registroISSeleccionado.nombreCompletoInvitado}" 
+                                             disabled="#{registrosISController.invitadoPermanenteEncontrado or not registrosISController.habilitarCampos}" />
+                                <p:tooltip for="nombreCompleto" value="Escriba el nombre completo del invitado." position="right"/>
+                                <p:message id="nombreCompletoMessage" for="nombreCompleto" />
                             </div>
 
                             <div class="p-field">
                                 <div class="disenho">
                                     <p:outputLabel for="nombreEmpresa" style="font-size: 18px; font-weight: bold;">Nombre Empresa</p:outputLabel>
                                 </div>
-                                <p:inputText id="nombreEmpresa" value="#{registrosISController.registroISSeleccionado.nombreEmpresa}" />
+                                <p:inputText id="nombreEmpresa" value="#{registrosISController.registroISSeleccionado.nombreEmpresa}" 
+                                             disabled="#{registrosISController.invitadoPermanenteEncontrado or not registrosISController.habilitarCampos}" />
                                 <p:tooltip for="nombreEmpresa" value="Escriba el nombre de la empresa." position="right"/>
                                 <p:message id="nombreEmpresaMessage" for="nombreEmpresa" />
                             </div>
@@ -204,7 +198,8 @@
                                 <div class="disenho">
                                     <p:outputLabel for="placaVehiculo" style="font-size: 18px; font-weight: bold;">Placa Vehicular</p:outputLabel>
                                 </div>
-                                <p:inputText id="placaVehiculo" value="#{registrosISController.registroISSeleccionado.placaVehicular}" />
+                                <p:inputText id="placaVehiculo" value="#{registrosISController.registroISSeleccionado.placaVehicular}" 
+                                             disabled="#{not registrosISController.habilitarFechasGuarda}" />
                                 <p:tooltip for="placaVehiculo" value="Escriba la placa del vehículo." position="right"/>
                                 <p:message id="placaVehiculoMessage" for="placaVehiculo" />
                             </div>
@@ -213,7 +208,8 @@
                                 <div class="disenho">
                                     <p:outputLabel for="detalle" style="font-size: 18px; font-weight: bold;">Detalle</p:outputLabel>
                                 </div>
-                                <p:inputText id="detalle" value="#{registrosISController.registroISSeleccionado.detalle}" />
+                                <p:inputText id="detalle" value="#{registrosISController.registroISSeleccionado.detalle}" 
+                                             disabled="#{registrosISController.invitadoPermanenteEncontrado or not registrosISController.habilitarCampos}" />
                                 <p:tooltip for="detalle" value="Escriba un detalle." position="right"/>
                                 <p:message id="detalleMessage" for="detalle" />
                             </div>
@@ -223,7 +219,7 @@
                                     <p:outputLabel for="fechaIngreso" style="font-size: 18px; font-weight: bold;">Fecha ingreso</p:outputLabel>
                                 </div>
                                 <p:calendar id="fechaIngreso" value="#{registrosISController.fechaIngreso}"
-                                            pattern="dd/MM/yyyy HH:mm:ss" showOn="button" />
+                                            pattern="dd/MM/yyyy HH:mm" showOn="button" disabled="#{not registrosISController.habilitarFechasGuarda}" />
                                 <p:tooltip for="fechaIngreso" value="Seleccione la fecha y hora de ingreso." position="right"/>
                             </div>
 
@@ -232,10 +228,9 @@
                                     <p:outputLabel for="fechaSalida" style="font-size: 18px; font-weight: bold;">Fecha salida</p:outputLabel>
                                 </div>
                                 <p:calendar id="fechaSalida" value="#{registrosISController.fechaSalida}"
-                                            pattern="dd/MM/yyyy HH:mm:ss" showOn="button" />
+                                            pattern="dd/MM/yyyy HH:mm" showOn="button" disabled="#{not registrosISController.habilitarFechasGuarda}"/>
                                 <p:tooltip for= "fechaSalida" value="Seleccione la fecha y hora de salida." position="right"/>
                             </div>
-
 
 
 
@@ -243,7 +238,8 @@
                                 <div class="disenho">
                                     <p:outputLabel for="cedulaGuardaSeguridad" style="font-size: 18px; font-weight: bold;">Cédula Guarda Seguridad</p:outputLabel>
                                 </div>
-                                <p:inputText id="cedulaGuardaSeguridad" value="#{registrosISController.registroISSeleccionado.cedulaGuardaSeguridad}" />
+                                <p:inputText id="cedulaGuardaSeguridad" value="#{registrosISController.registroISSeleccionado.cedulaGuardaSeguridad}" 
+                                             disabled="#{not registrosISController.habilitarFechasGuarda}" />
                                 <p:tooltip for="cedulaGuardaSeguridad" value="Escriba la cédula del guarda de seguridad." position="right"/>
                                 <p:message id="cedulaGuardaSeguridadMessage" for="cedulaGuardaSeguridad" />
                             </div>

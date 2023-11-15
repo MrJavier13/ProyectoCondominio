@@ -325,5 +325,42 @@ public class ServicioRegistroIS extends Servicios implements Serializable {
 
         return busqueda;
     }
+    
+    public RegistroIngresosSalidasTO obtenerInvitadoPermanentePorCedula(Integer cedula) {
+    Connection conn = super.getConexion();
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    RegistroIngresosSalidasTO invitadoPermanente = null;
+
+    try {
+        ps = conn.prepareStatement("SELECT CONCAT(nombreInvitadoPermanente, ' ', primerApellidoPermanente, ' ', segundoApellidoPermanente) AS nombreCompleto, placaVehiculo FROM Invitado_Permanente WHERE cedulaInvitadoPermanente = ?");
+        ps.setInt(1, cedula);
+        rs = ps.executeQuery();
+
+        if (rs.next()) {
+            invitadoPermanente = new RegistroIngresosSalidasTO();
+         //   invitadoPermanente.setCedulaAMostrar(rs.getInt("cedulaInvitadoPermanente"));
+            invitadoPermanente.setNombreCompletoInvitado(rs.getString("nombreCompleto"));
+            invitadoPermanente.setPlacaVehicular(rs.getString("placaVehiculo"));
+            
+            
+        }
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    } finally {
+        try {
+            if (ps != null && !ps.isClosed()) {
+                ps.close();
+            }
+            if (rs != null && !rs.isClosed()) {
+                rs.close();
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    return invitadoPermanente;
+}
 
 }
