@@ -17,88 +17,103 @@ import javax.servlet.http.HttpServletRequest;
 @ManagedBean(name = "loginController")
 @SessionScoped
 public class LoginController implements Serializable {
+
     private UsuarioTO usuario = new UsuarioTO();
     private String correo;
     private String contrasenna;
-    
-    
+
     public LoginController() {
     }
 
     public void ingresar() {
         ServicioUsuario servicioUsuario = new ServicioUsuario();
-        
+
         this.usuario = servicioUsuario.UsuarioContrasenna(correo, contrasenna);
-        
-        if(this.usuario != null){
-            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", this.usuario);
-            this.redireccionar("/faces/principal.xhtml");
+
+        if (this.usuario != null) {
+            if (this.usuario.getEstado().equals("Activo")) {
+                if (this.usuario.getIdRol() == 1) {
+                    //si el idRol es 1 es un admin y lleva a la pagina principal
+                    FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", this.usuario);
+                    this.redireccionar("/faces/principal.xhtml");
+                } else {
+                    if (this.usuario.getIdRol() == 2) {
+                        //si el idRol es 2 es un guarda y lleva a la bitacora para guardas como pantalla incial
+                        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", this.usuario);
+                        this.redireccionar("/faces/bitacoraVistaGuarda.xhtml");
+                    } else {
+                        //Abierto a un futuro rol
+                    }
+                }
+
+            } else {
+                FacesContext.getCurrentInstance().addMessage("sticky-key", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "La cuenta del usuario ingresado actualmente se encuentra inactiva"));
+            }
 
         } else {
             FacesContext.getCurrentInstance().addMessage("sticky-key", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Campos inválidos", "El usuario o contraseña no son correctos"));
         }
-        
 
     }
-    
-    public void verificarSesion(){
-        try{
-           UsuarioTO usuario = (UsuarioTO) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
-           if(usuario == null){
-               FacesContext.getCurrentInstance().getExternalContext().redirect("./faces/index.xhtml");
-           }
-        } catch(Exception e){
-            
+
+    public void verificarSesion() {
+        try {
+            UsuarioTO usuario = (UsuarioTO) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
+            if (usuario == null) {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("./faces/index.xhtml");
+            }
+        } catch (Exception e) {
+
         }
     }
-    
+
     public void cerrarSesion() {
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
         this.redireccionar("/faces/index.xhtml");
     }
-    
+
     public void registrar() {
 
         this.redireccionar("/faces/registrar.xhtml");
 
     }
-    
+
     public void usuarios() {
 
         this.redireccionar("/faces/usuarios.xhtml");
 
     }
-    
+
     public void amenidades() {
 
         this.redireccionar("/faces/amenidades.xhtml");
 
     }
-    
+
     public void residentes() {
 
         this.redireccionar("/faces/residentes.xhtml");
 
     }
-    
+
     public void personal() {
 
         this.redireccionar("/faces/personal.xhtml");
 
     }
-    
+
     public void roles() {
 
         this.redireccionar("/faces/roles.xhtml");
 
     }
-    
+
     public void bitacora() {
 
         this.redireccionar("/faces/bitacora.xhtml");
 
     }
-    
+
     public void redireccionar(String ruta) {
         HttpServletRequest request;
         try {
@@ -133,7 +148,4 @@ public class LoginController implements Serializable {
         this.contrasenna = contrasenna;
     }
 
-   
-    
-    
 }

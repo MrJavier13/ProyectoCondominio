@@ -108,9 +108,7 @@
                     <p:calendar id="fechaFinal" value="#{reservasAmenidadesController.fechaFinal}" pattern="dd/MM/yyyy" required="true" label="Fecha Final" showOn="button" />
                     <p:commandButton value="Buscar por fecha" action="#{reservasAmenidadesController.mostrarReservasPorFechas}" update="dt-reservasAmenidades growl" />
                 
-                    <p:inputText value="#{reservasAmenidadesController.textoBusqueda}" style="float:right;" placeholder="Buscar" />
-                    <p:commandButton id="busqueda" value="Buscar nombre amenidad o residente" style="float:right;" actionListener="#{reservasAmenidadesController.filtrarReservasAmenidades()}" update="dt-reservasAmenidades" />
-                    <p:tooltip for="busqueda" value="Debe existir una búsqueda por fechas para buscar." position="right"/>
+                    
                 
                 </h:panelGrid>
                 <p:dataTable id="dt-reservasAmenidades" widgetVar="dtReservasAmenidades" var="reservaAmenidad" value="#{reservasAmenidadesController.reservaAmenidad}"
