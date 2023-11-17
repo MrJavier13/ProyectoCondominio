@@ -16,6 +16,7 @@ import java.util.List;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -227,16 +228,29 @@ public class ServicioRegistroIS extends Servicios implements Serializable {
         PreparedStatement ps = null;
         try {
             ps = super.getConexion().prepareStatement("INSERT INTO Registro_Ingreso_Salida (cedulaInvitadoPermanente, cedulaInvitadoTemporal, nombreCompletoInvitado, nombreEmpresa, placaVehiculo, detalle, fechaIngreso, fechaSalida, cedulaGuardaSeguridad) VALUES (?,?,?,?,?,?,?,?,?)");
-            ps.setInt(1, registro.getCedulaInvitadoPermanente());
-            ps.setInt(2, registro.getCedulaInvitadoTemporal());
+            if (registro.getCedulaInvitadoPermanente() == 0) {
+                ps.setNull(1, Types.INTEGER);
+            } else {
+                ps.setInt(1, registro.getCedulaInvitadoPermanente());
+            }
+            if (registro.getCedulaInvitadoTemporal() == 0) {
+                ps.setNull(2, Types.INTEGER);
+            } else {
+                ps.setInt(2, registro.getCedulaInvitadoTemporal());
+            }
             ps.setString(3, registro.getNombreCompletoInvitado());
             ps.setString(4, registro.getNombreEmpresa());
             ps.setString(5, registro.getPlacaVehicular());
             ps.setString(6, registro.getDetalle());
             ps.setTimestamp(7, registro.getFechaIngreso());
-            ps.setTimestamp(8, registro.getFechaSalida());
+            if (registro.getFechaSalida() == null) {
+                ps.setNull(8, Types.TIMESTAMP);
+            } else {
+                ps.setTimestamp(8, registro.getFechaSalida());
+            }
+           
             ps.setInt(9, registro.getCedulaGuardaSeguridad());
-            
+
             ps.execute();
 
         } catch (Exception ex) {
@@ -254,20 +268,34 @@ public class ServicioRegistroIS extends Servicios implements Serializable {
         }
 
     }
+
     public void actualizarRegistro(RegistroIngresosSalidasTO registro) {
 
         PreparedStatement ps = null;
 
         try {
             ps = super.getConexion().prepareStatement("UPDATE Registro_Ingreso_Salida SET cedulaInvitadoPermanente=?, cedulaInvitadoTemporal=?, nombreCompletoInvitado=?, nombreEmpresa=?, placaVehiculo=?, detalle=?, fechaIngreso=?, fechaSalida=?, cedulaGuardaSeguridad=?  WHERE idRegistro =?");
-            ps.setInt(1, registro.getCedulaInvitadoPermanente());
-            ps.setInt(2, registro.getCedulaInvitadoTemporal());
+            if (registro.getCedulaInvitadoPermanente() == 0) {
+                ps.setNull(1, Types.INTEGER);
+            } else {
+                ps.setInt(1, registro.getCedulaInvitadoPermanente());
+            }
+            if (registro.getCedulaInvitadoTemporal() == 0) {
+                ps.setNull(2, Types.INTEGER);
+            } else {
+                ps.setInt(2, registro.getCedulaInvitadoTemporal());
+            }
             ps.setString(3, registro.getNombreCompletoInvitado());
             ps.setString(4, registro.getNombreEmpresa());
             ps.setString(5, registro.getPlacaVehicular());
             ps.setString(6, registro.getDetalle());
             ps.setTimestamp(7, registro.getFechaIngreso());
-            ps.setTimestamp(8, registro.getFechaSalida());
+            if (registro.getFechaSalida() == null) {
+                ps.setNull(8, Types.TIMESTAMP);
+            } else {
+                ps.setTimestamp(8, registro.getFechaSalida());
+            }
+           
             ps.setInt(9, registro.getCedulaGuardaSeguridad());
             ps.setInt(10, registro.getIdRegistro());
             ps.execute();
@@ -283,7 +311,6 @@ public class ServicioRegistroIS extends Servicios implements Serializable {
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
-            
 
         }
 

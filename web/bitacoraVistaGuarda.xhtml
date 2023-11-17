@@ -164,12 +164,12 @@
                                     <p:outputLabel for="cedula" style="font-size: 18px; font-weight: bold;">Cédula</p:outputLabel>
                                 </div>
                                 <p:inputText id="cedula" value="#{registrosISController.registroISSeleccionado.cedulaAMostrar}"
-                                             disabled="#{registrosISController.invitadoPermanenteEncontrado}"/>
+                                             disabled="#{registrosISController.invitadoPermanenteEncontrado or registrosISController.habilitarCampos}"/>
                                 <p:tooltip for="cedula" value="Escriba la cédula del invitado." position="right"/>
                                 <p:message id="cedulaMessage" for="cedula" />
                             </div>
 
-                            <p:commandButton value="Verificar Invitado Permanente" actionListener="#{registrosISController.verificarInvitadoPermanente}" 
+                            <p:commandButton value="Verificar Invitado Permanente" disabled="#{registrosISController.botonVerificar}" actionListener="#{registrosISController.verificarInvitadoPermanente}" 
                                              update="cedula nombreCompleto nombreEmpresa placaVehiculo detalle fechaIngreso fechaSalida cedulaGuardaSeguridad" process="cedula @this" />
                             
                             
@@ -218,7 +218,7 @@
                                 <div class="disenho">
                                     <p:outputLabel for="fechaIngreso" style="font-size: 18px; font-weight: bold;">Fecha ingreso</p:outputLabel>
                                 </div>
-                                <p:calendar id="fechaIngreso" value="#{registrosISController.fechaIngreso}"
+                                <p:calendar id="fechaIngreso" value="#{registrosISController.fechaIngresoForm}"
                                             pattern="dd/MM/yyyy HH:mm" showOn="button" disabled="#{not registrosISController.habilitarFechasGuarda}" />
                                 <p:tooltip for="fechaIngreso" value="Seleccione la fecha y hora de ingreso." position="right"/>
                             </div>
@@ -227,7 +227,7 @@
                                 <div class="disenho">
                                     <p:outputLabel for="fechaSalida" style="font-size: 18px; font-weight: bold;">Fecha salida</p:outputLabel>
                                 </div>
-                                <p:calendar id="fechaSalida" value="#{registrosISController.fechaSalida}"
+                                <p:calendar id="fechaSalida" value="#{registrosISController.fechaSalidaForm}"
                                             pattern="dd/MM/yyyy HH:mm" showOn="button" disabled="#{not registrosISController.habilitarFechasGuarda}"/>
                                 <p:tooltip for= "fechaSalida" value="Seleccione la fecha y hora de salida." position="right"/>
                             </div>

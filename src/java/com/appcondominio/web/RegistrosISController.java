@@ -3,6 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
+package com.appcondominio.web;
+
 import com.appcondominio.service.RegistroIngresosSalidasTO;
 import com.appcondominio.service.ServicioRegistroIS;
 import java.io.Serializable;
@@ -35,12 +38,14 @@ public class RegistrosISController implements Serializable{
     private String dialogHeader;
     private Date fechaInicial;
     private Date fechaFinal;
-    private Date fechaIngreso;
-    private Date fechaSalida;
+    private Date fechaIngresoForm;
+    private Date fechaSalidaForm;
     private boolean invitadoPermanenteEncontrado = false;
     private boolean validarFechas = true;
     private boolean habilitarCampos = false;
     private boolean habilitarFechasGuarda = false;
+    private boolean botonVerificar = false;
+   
 
     @ManagedProperty("#{registroISService}")
     private ServicioRegistroIS servicioRegistroIS;
@@ -58,20 +63,35 @@ public class RegistrosISController implements Serializable{
        this.registroISSeleccionado = new RegistroIngresosSalidasTO();
      //  disableSelectOneMenu();
        dialogHeader = "Crear nuevo registro";
-       fechaIngreso = null; // Reinicia la fecha de ingreso(esto no sirve)
-        fechaSalida = null; // Reinicia la fecha de salida
+       fechaIngresoForm = null; // Reinicia la fecha de ingreso(esto no sirve)
+        fechaSalidaForm = null; // Reinicia la fecha de salida
         invitadoPermanenteEncontrado = false;
         this.habilitarCampos = false;
         this.habilitarFechasGuarda = false;
-        
+        botonVerificar = false;
        
     }
     
     public void openEdit() {
         this.registroISSeleccionado = new RegistroIngresosSalidasTO();
        
-        dialogHeader = "Editar registro";
-       
+       dialogHeader = "Editar registro";
+       invitadoPermanenteEncontrado = false;
+       habilitarCampos = true;
+       habilitarFechasGuarda= true;
+       botonVerificar = true;
+       if (registroISSeleccionado.getFechaIngreso() != null) {
+        fechaIngresoForm = new Date(registroISSeleccionado.getFechaIngreso().getTime());
+    } else {
+        fechaIngresoForm = null;
+    }
+
+    // Verificar si la fecha de salida no es nula antes de realizar la conversión
+    if (registroISSeleccionado.getFechaSalida() != null) {
+        fechaSalidaForm = new Date(registroISSeleccionado.getFechaSalida().getTime());
+    } else {
+        fechaSalidaForm = null;
+    }
     }
 
     public void mostrarRegistrosPorFechas() {
@@ -112,32 +132,35 @@ public class RegistrosISController implements Serializable{
 
 public void guardarRegistro() {
     if (validarCampos()) {
-        Integer cedulaIngresada = registroISSeleccionado.getCedulaAMostrar();
-        registroISSeleccionado.setFechaIngreso(new Timestamp(fechaIngreso.getTime()));
-        registroISSeleccionado.setFechaSalida(new Timestamp(fechaSalida.getTime()));
-       // registroISSeleccionado.setCedulaInvitadoPermanente(cedulaIngresada);
-        registroISSeleccionado.setCedulaInvitadoTemporal(cedulaIngresada);
-      //  registroISSeleccionado.setNombreEmpresa("KK");
-       // registroISSeleccionado.setDetalle(null);
-        
-      /*  // Verificar y asignar valores nulos a los campos cuando sea necesario
+   
+      // Verificar y asignar valores nulos a los campos cuando sea necesario
         if (registroISSeleccionado.getCedulaInvitadoPermanente() == null) {
             registroISSeleccionado.setCedulaInvitadoPermanente(null);
         }
         
         if (registroISSeleccionado.getCedulaInvitadoTemporal() == null) {
             registroISSeleccionado.setCedulaInvitadoTemporal(null);
-        }**/
+        }
         if (registroISSeleccionado.getNombreEmpresa() != null && registroISSeleccionado.getNombreEmpresa().isEmpty()) {
             registroISSeleccionado.setNombreEmpresa(null);
         }
-      //  if (registroISSeleccionado.getPlacaVehicular() != null && registroISSeleccionado.getPlacaVehicular().isEmpty()) {
-      //      registroISSeleccionado.setPlacaVehicular(null);
-      //  }
+        if (registroISSeleccionado.getPlacaVehicular() != null && registroISSeleccionado.getPlacaVehicular().isEmpty()) {
+            registroISSeleccionado.setPlacaVehicular(null);
+        }
         if (registroISSeleccionado.getDetalle() != null && registroISSeleccionado.getDetalle().isEmpty()) {
             registroISSeleccionado.setDetalle(null);
         }
+        if (registroISSeleccionado.getFechaSalida() == null){
+            registroISSeleccionado.setFechaSalida(null);
+        }
         
+        registroISSeleccionado.setFechaIngreso(new Timestamp(fechaIngresoForm.getTime()));
+        if (fechaSalidaForm != null) {
+    registroISSeleccionado.setFechaSalida(new Timestamp(fechaSalidaForm.getTime()));
+} else {
+    registroISSeleccionado.setFechaSalida(null);
+}
+
         if (!servicioRegistroIS.buscarIdRegistro(this.registroISSeleccionado.getIdRegistro())) {
             servicioRegistroIS.insertarRegistro(registroISSeleccionado);
             FacesContext.getCurrentInstance().addMessage(null, 
@@ -196,50 +219,27 @@ public void redireccionar(String ruta) {
     if (invitadoPermanente != null) {
         // Si es un Invitado Permanente, completa los campos correspondientes
         registroISSeleccionado.setCedulaInvitadoPermanente(cedulaIngresada);
-        registroISSeleccionado.setCedulaInvitadoTemporal(null);
+        registroISSeleccionado.setCedulaInvitadoTemporal(0);
         registroISSeleccionado.setNombreCompletoInvitado(invitadoPermanente.getNombreCompletoInvitado());
         registroISSeleccionado.setPlacaVehicular(invitadoPermanente.getPlacaVehicular());
         registroISSeleccionado.setNombreEmpresa(null);
         registroISSeleccionado.setDetalle(null);
      
-      
         invitadoPermanenteEncontrado = true;
         habilitarCampos = false;
         habilitarFechasGuarda = true;
     } else {
         // Si no es un Invitado Permanente se asigna cedulaIngresada a cedulaInvitadoTemporal y la perm queda nula
         registroISSeleccionado.setCedulaInvitadoTemporal(cedulaIngresada);
-        registroISSeleccionado.setCedulaInvitadoPermanente(null);
+        registroISSeleccionado.setCedulaInvitadoPermanente(0);
         
         invitadoPermanenteEncontrado = false;
         habilitarCampos=true;
         habilitarFechasGuarda = true;
-        
-        
+     
     }
 }
-    
-    public void cancelarRegistro() {
-    registroISSeleccionado = null; // Establece el registro seleccionado a null para limpiar los datos
-    invitadoPermanenteEncontrado = false;
-    // Limpia las validaciones si es necesario.
-    FacesContext context = FacesContext.getCurrentInstance();
-    if (context.getMessageList().size() > 0) {
-        Iterator<FacesMessage> messages = context.getMessages();
-
-        while (messages.hasNext()) {
-            messages.next();
-            messages.remove();
-        }
-    }
-
-    // Detener cualquier procesamiento adicional (por ejemplo, las validaciones en tu método mostrarRegistrosPorFechas).
-    validarFechas = false; // Establece la variable de control en false
-}
-
-
-
-    
+  
     public List<RegistroIngresosSalidasTO> getRegistroIS() {
         return registroIS;
     }
@@ -296,20 +296,20 @@ public void redireccionar(String ruta) {
         this.nuevoRegistroIS = nuevoRegistroIS;
     }
 
-    public Date getFechaIngreso() {
-        return fechaIngreso;
+    public Date getFechaIngresoForm() {
+        return fechaIngresoForm;
     }
 
-    public void setFechaIngreso(Date fechaIngreso) {
-        this.fechaIngreso = fechaIngreso;
+    public void setFechaIngresoForm(Date fechaIngresoForm) {
+        this.fechaIngresoForm = fechaIngresoForm;
     }
 
-    public Date getFechaSalida() {
-        return fechaSalida;
+    public Date getFechaSalidaForm() {
+        return fechaSalidaForm;
     }
 
-    public void setFechaSalida(Date fechaSalida) {
-        this.fechaSalida = fechaSalida;
+    public void setFechaSalidaForm(Date fechaSalidaForm) {
+        this.fechaSalidaForm = fechaSalidaForm;
     }
 
     public boolean isInvitadoPermanenteEncontrado() {
@@ -339,9 +339,14 @@ public void redireccionar(String ruta) {
     public void setHabilitarFechasGuarda(boolean habilitarFechasGuarda) {
         this.habilitarFechasGuarda = habilitarFechasGuarda;
     }
-    
-    
-    
-    
+
+    public boolean isBotonVerificar() {
+        return botonVerificar;
+    }
+
+    public void setBotonVerificar(boolean botonVerificar) {
+        this.botonVerificar = botonVerificar;
+    }
+
   
 }
