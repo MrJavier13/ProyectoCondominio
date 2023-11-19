@@ -115,10 +115,10 @@
                     <p:column headerText="Detalle" sortBy="#{registroIS.detalle}"   filterMatchMode="contains">
                         <h:outputText value="#{registroIS.detalle}"/>
                     </p:column>
-                    <p:column headerText="Fecha Ingreso" sortBy="#{registroIS.fechaIngreso}"   filterMatchMode="contains">
+                    <p:column headerText="Fecha Ingreso" sortBy="#{registroIS.fechaIngresoDate}"   filterMatchMode="contains">
                         <h:outputText value="#{registroIS.fechaIngreso}"/>
                     </p:column>
-                    <p:column headerText="Fecha Salida" sortBy="#{registroIS.fechaSalida}"   filterMatchMode="contains">
+                    <p:column headerText="Fecha Salida" sortBy="#{registroIS.fechaSalidaDate}"   filterMatchMode="contains">
                         <h:outputText value="#{registroIS.fechaSalida}"/>
                     </p:column>
                     <p:column headerText="Nombre Guarda Seguridad" sortBy="#{registroIS.nombreGuardaSeguridad}"   filterMatchMode="contains">
@@ -171,9 +171,7 @@
 
                             <p:commandButton value="Verificar Invitado Permanente" disabled="#{registrosISController.botonVerificar}" actionListener="#{registrosISController.verificarInvitadoPermanente}" 
                                              update="cedula nombreCompleto nombreEmpresa placaVehiculo detalle fechaIngreso fechaSalida cedulaGuardaSeguridad" process="cedula @this" />
-                            
-                            
-                            
+                           
                             <div class="p-field">
                                 <div class="disenho">
                                     <p:outputLabel for="nombreCompleto" style="font-size: 18px; font-weight: bold;">Nombre Completo Invitado</p:outputLabel>
@@ -218,7 +216,7 @@
                                 <div class="disenho">
                                     <p:outputLabel for="fechaIngreso" style="font-size: 18px; font-weight: bold;">Fecha ingreso</p:outputLabel>
                                 </div>
-                                <p:calendar id="fechaIngreso" value="#{registrosISController.fechaIngresoForm}"
+                                <p:calendar id="fechaIngreso" value="#{registrosISController.registroISSeleccionado.fechaIngresoDate}"
                                             pattern="dd/MM/yyyy HH:mm" showOn="button" disabled="#{not registrosISController.habilitarFechasGuarda}" />
                                 <p:tooltip for="fechaIngreso" value="Seleccione la fecha y hora de ingreso." position="right"/>
                             </div>
@@ -227,7 +225,7 @@
                                 <div class="disenho">
                                     <p:outputLabel for="fechaSalida" style="font-size: 18px; font-weight: bold;">Fecha salida</p:outputLabel>
                                 </div>
-                                <p:calendar id="fechaSalida" value="#{registrosISController.fechaSalidaForm}"
+                                <p:calendar id="fechaSalida" value="#{registrosISController.registroISSeleccionado.fechaSalidaDate}"
                                             pattern="dd/MM/yyyy HH:mm" showOn="button" disabled="#{not registrosISController.habilitarFechasGuarda}"/>
                                 <p:tooltip for= "fechaSalida" value="Seleccione la fecha y hora de salida." position="right"/>
                             </div>

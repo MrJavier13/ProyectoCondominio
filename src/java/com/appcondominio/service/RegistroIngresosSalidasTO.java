@@ -6,16 +6,16 @@
 package com.appcondominio.service;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 /**
  *
- * @author aacas
+ * @author mer
  */
-public class RegistroIngresosSalidasTO implements Serializable{
-    
+public class RegistroIngresosSalidasTO implements Serializable {
+
     private int idRegistro;
     private Integer cedulaInvitadoTemporal;
     private Integer cedulaInvitadoPermanente;
@@ -24,18 +24,19 @@ public class RegistroIngresosSalidasTO implements Serializable{
     private String nombreEmpresa;
     private String placaVehicular;
     private String detalle;
-    private Timestamp  fechaIngreso;
-    private Timestamp  fechaSalida;
+    private Timestamp fechaIngreso;
+    private Timestamp fechaSalida;
+    private Date fechaIngresoDate;
+    private Date fechaSalidaDate;
     private Integer cedulaGuardaSeguridad;
     private String nombreGuardaSeguridad;
     private String primerApellidoGuarda;
     private String segundoApellidoGuarda;
-    
 
     public RegistroIngresosSalidasTO() {
     }
 
-    public RegistroIngresosSalidasTO(Integer idRegistro, Integer cedulaInvitadoPermanente, Integer cedulaInvitadoTemporal, Integer cedulaAMostrar, String nombreCompletoInvitado, String nombreEmpresa, String placaVehicular, String detalle, Timestamp fechaIngreso, Timestamp fechaSalida, int cedulaGuardaSeguridad, String nombreGuardaSeguridad, String primerApellidoGuarda, String segundoApellidoGuarda) {
+    public RegistroIngresosSalidasTO(Integer idRegistro, Integer cedulaInvitadoPermanente, Integer cedulaInvitadoTemporal, Integer cedulaAMostrar, String nombreCompletoInvitado, String nombreEmpresa, String placaVehicular, String detalle, Timestamp fechaIngreso, Timestamp fechaSalida, Date fechaIngresoDate, Date fechaSalidaDate, int cedulaGuardaSeguridad, String nombreGuardaSeguridad, String primerApellidoGuarda, String segundoApellidoGuarda) {
         this.idRegistro = idRegistro;
         this.cedulaInvitadoPermanente = cedulaInvitadoPermanente;
         this.cedulaInvitadoTemporal = cedulaInvitadoTemporal;
@@ -46,16 +47,15 @@ public class RegistroIngresosSalidasTO implements Serializable{
         this.detalle = detalle;
         this.fechaIngreso = fechaIngreso;
         this.fechaSalida = fechaSalida;
+        this.fechaIngresoDate = fechaIngresoDate;
+        this.fechaSalidaDate = fechaSalidaDate;
         this.cedulaGuardaSeguridad = cedulaGuardaSeguridad;
         this.nombreGuardaSeguridad = nombreGuardaSeguridad;
         this.primerApellidoGuarda = primerApellidoGuarda;
         this.segundoApellidoGuarda = segundoApellidoGuarda;
-        
+
     }
 
-   
-
-    
     public Integer getIdRegistro() {
         return idRegistro;
     }
@@ -87,10 +87,6 @@ public class RegistroIngresosSalidasTO implements Serializable{
     public void setCedulaAMostrar(Integer cedulaAMostrar) {
         this.cedulaAMostrar = cedulaAMostrar;
     }
-
-    
-
-    
 
     public String getNombreCompletoInvitado() {
         return nombreCompletoInvitado;
@@ -171,7 +167,21 @@ public class RegistroIngresosSalidasTO implements Serializable{
     public void setSegundoApellidoGuarda(String segundoApellidoGuarda) {
         this.segundoApellidoGuarda = segundoApellidoGuarda;
     }
-    
- 
+
+    public Date getFechaIngresoDate() {
+        return fechaIngresoDate;
+    }
+
+    public void setFechaIngresoDate(Date fechaIngresoDate) {
+        this.fechaIngresoDate = fechaIngresoDate;
+    }
+
+    public Date getFechaSalidaDate() {
+        return fechaSalidaDate;
+    }
+
+    public void setFechaSalidaDate(Date fechaSalidaDate) {
+        this.fechaSalidaDate = fechaSalidaDate;
+    }
 
 }

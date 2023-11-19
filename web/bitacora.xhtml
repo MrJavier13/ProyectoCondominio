@@ -87,20 +87,18 @@
             </div>
 
             <div class="card crud-demo">
-                <h:panelGrid columns="6">
-                    <p:calendar id="fechaInicial" value="#{registrosISController.fechaInicial}" pattern="dd/MM/yyyy" required="false" label="Fecha Inicial" showOn="button" />
-                    <p:calendar id="fechaFinal" value="#{registrosISController.fechaFinal}" pattern="dd/MM/yyyy" required="false" label="Fecha Final" showOn="button" />
+                <h:panelGrid columns="3">
+                    <p:calendar id="fechaInicial" value="#{registrosISController.fechaInicial}" pattern="dd/MM/yyyy" required="true" label="Fecha Inicial" showOn="button" />
+                    <p:calendar id="fechaFinal" value="#{registrosISController.fechaFinal}" pattern="dd/MM/yyyy" required="true" label="Fecha Final" showOn="button" />
                     <p:commandButton value="Buscar por fecha" action="#{registrosISController.mostrarRegistrosPorFechas}" update="dt-registros growl" />
+                </h:panelGrid>
 
-                    
-                </h:panelGrid>                                                  
-
-                <p:dataTable id="dt-registros" widgetVar="dtPegistros" var="registroIS" value="#{registrosISController.registroIS}"
-                             reflow="true" styleClass="products-table"
+                <p:dataTable id="dt-registros" widgetVar="dtRegistros" var="registroIS" value="#{registrosISController.registroIS}"
+                             reflow="true" styleClass="registros-table"
                              paginator="true"
                              rows="10" rowSelectMode="add" paginatorPosition="bottom">
                     <f:facet name="header">
-                        <div class="products-table-header">
+                        <div class="registros-table-header">
                             <span style="font-weight: bold">Registro de Ingresos y Salidas</span>                     
                         </div>
                     </f:facet>
@@ -122,10 +120,10 @@
                     <p:column headerText="Detalle" sortBy="#{registroIS.detalle}"   filterMatchMode="contains">
                         <h:outputText value="#{registroIS.detalle}"/>
                     </p:column>
-                    <p:column headerText="Fecha Ingreso" sortBy="#{registroIS.fechaIngreso}"   filterMatchMode="contains">
+                    <p:column headerText="Fecha Ingreso" sortBy="#{registroIS.fechaIngresoDate}"   filterMatchMode="contains">
                         <h:outputText value="#{registroIS.fechaIngreso}"/>
                     </p:column>
-                    <p:column headerText="Fecha Salida" sortBy="#{registroIS.fechaSalida}"   filterMatchMode="contains">
+                    <p:column headerText="Fecha Salida" sortBy="#{registroIS.fechaSalidaDate}"   filterMatchMode="contains">
                         <h:outputText value="#{registroIS.fechaSalida}"/>
                     </p:column>
                     <p:column headerText="Nombre Guarda Seguridad" sortBy="#{registroIS.nombreGuardaSeguridad}"   filterMatchMode="contains">
