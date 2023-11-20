@@ -26,6 +26,12 @@
             .filter-container span {
                 margin-right: 5px; 
             }
+            .ui-message-error .ui-message-error-icon {
+                display: none; 
+            }
+            .ui-message-warn .ui-message-warn-icon {
+                display: none; 
+            }
             .topbar {
                 background-color: #1e4fa5;
                 color: white;
@@ -34,6 +40,16 @@
                 align-items: center;
                 padding: 10px 20px;
                 transition: background-color 0.3s;
+            }
+            .topbarUsuario {
+                background-color: #e0e7f3;
+                color: black;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 20px;
+                transition: background-color 0.3s;
+                font-weight: bold;
             }
 
 
@@ -80,11 +96,14 @@
                     <p:commandLink value="Cerrar Sesión"  actionListener="#{usuariosController.cerrarSesion}" immediate="true" ajax="false" styleClass="custom-commandlink" />
                 </ul>
             </div>
+            <div class="topbarUsuario">
+                <a >Bienvenido #{loginController.usuario.nombreCompleto}</a>
+            </div>
 
             <div class="card crud-demo">
                 <h:panelGrid columns="3">
-                    <p:calendar id="fechaInicial" value="#{registrosISController.fechaInicial}" pattern="dd/MM/yyyy" required="true" label="Fecha Inicial" showOn="button" />
-                    <p:calendar id="fechaFinal" value="#{registrosISController.fechaFinal}" pattern="dd/MM/yyyy" required="true" label="Fecha Final" showOn="button" />
+                    <p:calendar id="fechaInicial" value="#{registrosISController.fechaInicial}" pattern="dd/MM/yyyy"  label="Fecha Inicial" showOn="button" />
+                    <p:calendar id="fechaFinal" value="#{registrosISController.fechaFinal}" pattern="dd/MM/yyyy"  label="Fecha Final" showOn="button" />
                     <p:commandButton value="Buscar por fecha" action="#{registrosISController.mostrarRegistrosPorFechas}" update="dt-registros growl" />
                 </h:panelGrid>
 
@@ -151,27 +170,25 @@
                 </p:toolbar>
 
                 <p:dialog header="#{registrosISController.dialogHeader}" showEffect="fade" modal="true"
-                          widgetVar="nuevoRegistroISDialog" responsive="true" onHide="resetFormFields();" visible="#{registrosISController.registroISSeleccionado ne null}">
+                          widgetVar="nuevoRegistroISDialog" responsive="true" >
 
                     <p:outputPanel id="administrar-registroIS-content" class="ui-fluid">
                         <p:outputPanel rendered="#{not empty registrosISController.registroISSeleccionado}">
-
-
-
 
                             <div class="p-field">
                                 <div class="disenho">
                                     <p:outputLabel for="cedula" style="font-size: 18px; font-weight: bold;">Cédula</p:outputLabel>
                                 </div>
                                 <p:inputText id="cedula" value="#{registrosISController.registroISSeleccionado.cedulaAMostrar}"
-                                             disabled="#{registrosISController.invitadoPermanenteEncontrado or registrosISController.habilitarCampos}"/>
+                                             disabled="#{registrosISController.invitadoPermanenteEncontrado or registrosISController.habilitarCampos}">
+                                <p:keyFilter mask="num" />
+                                </p:inputText>
                                 <p:tooltip for="cedula" value="Escriba la cédula del invitado." position="right"/>
-                                <p:message id="cedulaMessage" for="cedula" />
+                                <p:message id="cedulaMessage" for="cedula" showDetail="true"/>
                             </div>
 
                             <p:commandButton value="Verificar Invitado Permanente" disabled="#{registrosISController.botonVerificar}" actionListener="#{registrosISController.verificarInvitadoPermanente}" 
-                                             update="cedula nombreCompleto nombreEmpresa placaVehiculo detalle fechaIngreso fechaSalida cedulaGuardaSeguridad" process="cedula @this" />
-                           
+                                             update="cedula nombreCompleto nombreEmpresa placaVehiculo detalle fechaIngreso fechaSalida cedulaGuardaSeguridad cedulaMessage" process="cedula @this" />
                             <div class="p-field">
                                 <div class="disenho">
                                     <p:outputLabel for="nombreCompleto" style="font-size: 18px; font-weight: bold;">Nombre Completo Invitado</p:outputLabel>
@@ -179,7 +196,7 @@
                                 <p:inputText id="nombreCompleto" value="#{registrosISController.registroISSeleccionado.nombreCompletoInvitado}" 
                                              disabled="#{registrosISController.invitadoPermanenteEncontrado or not registrosISController.habilitarCampos}" />
                                 <p:tooltip for="nombreCompleto" value="Escriba el nombre completo del invitado." position="right"/>
-                                <p:message id="nombreCompletoMessage" for="nombreCompleto" />
+                                
                             </div>
 
                             <div class="p-field">
@@ -218,6 +235,7 @@
                                 </div>
                                 <p:calendar id="fechaIngreso" value="#{registrosISController.registroISSeleccionado.fechaIngresoDate}"
                                             pattern="dd/MM/yyyy HH:mm" showOn="button" disabled="#{not registrosISController.habilitarFechasGuarda}" />
+                                 <p:message for="fechaIngreso" />
                                 <p:tooltip for="fechaIngreso" value="Seleccione la fecha y hora de ingreso." position="right"/>
                             </div>
 
@@ -236,8 +254,8 @@
                                 <div class="disenho">
                                     <p:outputLabel for="cedulaGuardaSeguridad" style="font-size: 18px; font-weight: bold;">Cédula Guarda Seguridad</p:outputLabel>
                                 </div>
-                                <p:inputText id="cedulaGuardaSeguridad" value="#{registrosISController.registroISSeleccionado.cedulaGuardaSeguridad}" 
-                                             disabled="#{not registrosISController.habilitarFechasGuarda}" />
+                                <p:inputText id="cedulaGuardaSeguridad" value="#{loginController.usuario.cedulaEmpleado}" 
+                                             disabled="true" />
                                 <p:tooltip for="cedulaGuardaSeguridad" value="Escriba la cédula del guarda de seguridad." position="right"/>
                                 <p:message id="cedulaGuardaSeguridadMessage" for="cedulaGuardaSeguridad" />
                             </div>
@@ -252,8 +270,7 @@
                         <p:commandButton value="Guardar" icon="pi pi-check" actionListener="#{registrosISController.guardarRegistro}" 
                                          update="administrar-registroIS-content" process="administrar-registroIS-content @this"/>
                         <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('nuevoRegistroISDialog').hide();"
-                                         class="ui-button-secondary">
-                            <p:ajax update="form:administrar-registroIS-content" />
+                                         class="ui-button-secondary">                   
                         </p:commandButton>
                     </f:facet>
 

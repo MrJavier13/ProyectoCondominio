@@ -97,6 +97,12 @@ public class ServicioUsuario extends Servicios implements Serializable {
                     usuarios.setCedulaEmpleado(rs.getInt("cedulaEmpleado"));
                     usuarios.setIdRol(rs.getInt("idRol"));
                     usuarios.setEstado(rs.getString("estado"));
+                    if (usuarios.getCedulaEmpleado() != null){
+                        int cedulaEmpleado = usuarios.getCedulaEmpleado();
+                        String nombreCompleto = obtenerNombreCompleto(cedulaEmpleado);
+                        usuarios.setNombreCompleto(nombreCompleto);
+                    }
+                    
                 } else {
                     usuarios = null;
                 }
@@ -121,7 +127,44 @@ public class ServicioUsuario extends Servicios implements Serializable {
         }
         return usuarios;
     }
-    
+    private String obtenerNombreCompleto(int cedulaEmpleado) {
+        Connection conn = super.getConexion();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String nombreCompleto = null;
+
+        try {
+            ps = conn.prepareStatement("SELECT nombreEmpleado, primerApellido, segundoApellido FROM empleado WHERE cedulaEmpleado = ?");
+            ps.setInt(1, cedulaEmpleado);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String nombre = rs.getString("nombreEmpleado");
+                String apellido1 = rs.getString("primerApellido");
+                String apellido2 = rs.getString("segundoApellido");
+
+                // Construir el nombre completo
+                nombreCompleto = nombre + " " + apellido1 + " " + apellido2;
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            // Cerrar recursos
+            try {
+                if (ps != null && !ps.isClosed()) {
+                    ps.close();
+                }
+                if (rs != null && !rs.isClosed()) {
+                    rs.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        return nombreCompleto;
+    }
+
     public int obtenerIdRolPorNombre(String nombreRol) {
     int idRol = 0;
     Connection conn = super.getConexion();

@@ -29,6 +29,15 @@
                 align-items: center;
                 height: 80px; 
             }
+            .topbarUser {
+                background-color: #333;
+                color: #fff;
+                padding: 10px 30px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-weight: bold;
+            }
 
             .topbar-title {
                 font-size: 24px;
@@ -88,6 +97,9 @@
                 <div class="icon-button"></div>
             </div>
         </div>
+            <div class="topbarUser">
+                <a>Bienvenido #{loginController.usuario.nombreCompleto}</a>
+            </div>
             <p:growl id="growl" showDetail="true" />
             <p:messages id="messages" showDetail="true" closable="true">
                 <p:autoUpdate/>

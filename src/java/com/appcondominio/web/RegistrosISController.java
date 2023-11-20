@@ -111,6 +111,12 @@ public class RegistrosISController implements Serializable {
     }
 
     public void guardarRegistro() {
+        if (registroISSeleccionado.getCedulaAMostrar() == null) {
+            FacesContext.getCurrentInstance().addMessage("form:cedula",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ingrese el número de cédula",
+                            "Por favor, ingrese el número de cédula"));
+            return;
+        }
         if (validarCampos()) {
 
             // Verificar y asignar valores nulos a los campos cuando sea necesario
@@ -164,19 +170,17 @@ public class RegistrosISController implements Serializable {
         if (valor == null || valor.isEmpty()) {
             FacesContext.getCurrentInstance().addMessage("form:" + nombreCampo,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Campo " + nombreError + " requerido",
-                            "Por favor, ingrese el " + nombreError.toLowerCase() + "de la amenidad."));
+                            "Por favor, ingrese " + nombreError.toLowerCase() + "."));
             return false;
         }
         return true;
     }
 
     private boolean validarCampos() {
-        if (registroISSeleccionado.getIdRegistro() != null) {
+        if (registroISSeleccionado.getCedulaAMostrar() != null) {
         }
-        return validarCampo(Integer.toString(registroISSeleccionado.getCedulaGuardaSeguridad()), "cedulaGuardaSeguridad", "cedula de guarda de seguridad");
-        //  && validarCampo(registroISSeleccionado.getNombreCompletoInvitado(), "nombreCompletoInvitado", "nombre completo invitado")
-        //    && validarCampo(Integer.toString(registroISSeleccionado.getCedulaInvitadoPermanente()), "cedulaInvitadoPermanente", "cedula invitado permanente") 
-        //  && validarCampo(registroISSeleccionado.getFechaIngreso().toString(), "fechaIngreso", "fecha de ingreso")
+        return validarCampo(registroISSeleccionado.getNombreCompletoInvitado(), "nombreCompleto", "nombre completo")
+        && validarCampo(convertirDateAString(registroISSeleccionado.getFechaIngresoDate()), "fechaIngreso", "fecha ingreso");
         //   && validarCampo(Integer.toString(registroISSeleccionado.getCedulaGuardaSeguridad()), "cedulaGuardaSeguridad", "cedula de guarda de seguridad");
     }
 
@@ -188,6 +192,15 @@ public class RegistrosISController implements Serializable {
         } catch (Exception e) {
 
         }
+    }
+    
+   private String convertirDateAString(Date date) {
+        if (date == null) {
+            return null; 
+        }
+
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return formatoFecha.format(date);
     }
 
     public void verificarInvitadoPermanente() {
@@ -218,6 +231,8 @@ public class RegistrosISController implements Serializable {
             invitadoPermanenteEncontrado = false;
             habilitarCampos = true;
             habilitarFechasGuarda = true;
+            FacesContext.getCurrentInstance().addMessage("form:cedula", 
+                new FacesMessage(FacesMessage.SEVERITY_WARN, "Invitado permanente no encontrado", "Invitado permanente no encontrado, llene los campos correspondientes."));
         }
     }
 
