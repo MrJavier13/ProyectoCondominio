@@ -101,7 +101,7 @@ public class RegistrosISController implements Serializable {
                 Timestamp timestampFin = new Timestamp(calFin.getTimeInMillis());
 
                 // Llama al método del servicio para buscar registros por fechas
-                registroIS = servicioRegistroIS.buscarRegistrosPorFechas(timestampInicio, timestampFin);
+                this.registroIS = servicioRegistroIS.buscarRegistrosPorFechas(timestampInicio, timestampFin);
             } else {
                 // Muestra un mensaje de error
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Las fechas ingresadas no son válidas.");
@@ -142,29 +142,21 @@ public class RegistrosISController implements Serializable {
             if (registroISSeleccionado.getFechaSalidaDate() == null) {
                 registroISSeleccionado.setFechaSalidaDate(null);
             }
-            /*else{
-            registroISSeleccionado.setFechaSalidaDate(registroISSeleccionado.getFechaSalidaDate());
-        }
-        
-        registroISSeleccionado.setFechaIngreso(new Timestamp(fechaIngresoForm.getTime()));
-        if (fechaSalidaForm != null) {
-    registroISSeleccionado.setFechaSalida(new Timestamp(fechaSalidaForm.getTime()));
-} else {
-    registroISSeleccionado.setFechaSalida(null);
-}
-**/
+
             if (!servicioRegistroIS.buscarIdRegistro(this.registroISSeleccionado.getIdRegistro())) {
                 registroISSeleccionado.setCedulaGuardaSeguridad(loginController.getUsuario().getCedulaEmpleado());
+                verificarInvitadoPermanente();
                 servicioRegistroIS.insertarRegistro(registroISSeleccionado);
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Registro agregado"));
             } else {
                 servicioRegistroIS.actualizarRegistro(registroISSeleccionado);
+                mostrarRegistrosPorFechas();
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Registro Actualizado"));
             }
 
-            this.init();
+            
             PrimeFaces.current().executeScript("PF('nuevoRegistroISDialog').hide()");
             PrimeFaces.current().ajax().update("form:growl", "form:dt-registros");
         }
@@ -185,7 +177,7 @@ public class RegistrosISController implements Serializable {
         }
         return validarCampo(registroISSeleccionado.getNombreCompletoInvitado(), "nombreCompleto", "nombre completo")
         && validarCampo(convertirDateAString(registroISSeleccionado.getFechaIngresoDate()), "fechaIngreso", "fecha ingreso");
-        //   && validarCampo(Integer.toString(registroISSeleccionado.getCedulaGuardaSeguridad()), "cedulaGuardaSeguridad", "cedula de guarda de seguridad");
+        
     }
 
     public void redireccionar(String ruta) {

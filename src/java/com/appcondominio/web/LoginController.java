@@ -32,28 +32,25 @@ public class LoginController implements Serializable {
 
         if (this.usuario != null) {
             if (this.usuario.getEstado().equals("Activo")) {
-                if (this.usuario.getIdRol() == 1) {
-                    //si el idRol es 1 es un admin y lleva a la pagina principal
+                String nombreRol = servicioUsuario.obtenerNombreRolPorId(this.usuario.getIdRol());
+
+                if ("Administrador".equals(nombreRol) || "Admin".equals(nombreRol)) {
+                    // si el nombre del rol es "Administrador", lleva a la página principal
                     FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", this.usuario);
                     this.redireccionar("/faces/principal.xhtml");
+                } else if ("Guarda".equals(nombreRol)) {
+                    // si el nombre del rol es "Guarda", lleva a la bitácora para guardas como página inicial
+                    FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", this.usuario);
+                    this.redireccionar("/faces/bitacoraVistaGuarda.xhtml");
                 } else {
-                    if (this.usuario.getIdRol() == 2) {
-                        //si el idRol es 2 es un guarda y lleva a la bitacora para guardas como pantalla incial
-                        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", this.usuario);
-                        this.redireccionar("/faces/bitacoraVistaGuarda.xhtml");
-                    } else {
-                        //Abierto a un futuro rol
-                    }
+                    // Abierto a un futuro rol
                 }
-
             } else {
                 FacesContext.getCurrentInstance().addMessage("sticky-key", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "La cuenta del usuario ingresado actualmente se encuentra inactiva"));
             }
-
         } else {
             FacesContext.getCurrentInstance().addMessage("sticky-key", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Campos inválidos", "El usuario o contraseña no son correctos"));
         }
-
     }
 
     public void verificarSesion() {

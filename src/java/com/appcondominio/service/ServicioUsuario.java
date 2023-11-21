@@ -166,27 +166,50 @@ public class ServicioUsuario extends Servicios implements Serializable {
     }
 
     public int obtenerIdRolPorNombre(String nombreRol) {
-    int idRol = 0;
-    Connection conn = super.getConexion();
-    PreparedStatement ps = null;
-    ResultSet rs = null;
+        int idRol = 0;
+        Connection conn = super.getConexion();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
-    try {
-        ps = conn.prepareStatement("SELECT idRol FROM Rol WHERE nombreRol = ?");
-        ps.setString(1, nombreRol);
-        rs = ps.executeQuery();
+        try {
+            ps = conn.prepareStatement("SELECT idRol FROM Rol WHERE nombreRol = ?");
+            ps.setString(1, nombreRol);
+            rs = ps.executeQuery();
 
-        if (rs.next()) {
-            idRol = rs.getInt("idRol");
+            if (rs.next()) {
+                idRol = rs.getInt("idRol");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            // Cierra recursos (ps y rs) y la conexión
         }
-    } catch (SQLException ex) {
-        ex.printStackTrace();
-    } finally {
-        // Cierra recursos (ps y rs) y la conexión
-    }
 
-    return idRol;
-}
+        return idRol;
+    }
+    
+    public String obtenerNombreRolPorId(int idRol) {
+        Connection conn = super.getConexion();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String nombreRol = null;
+
+        try {
+            ps = conn.prepareStatement("SELECT nombreRol FROM Rol WHERE idRol = ?");
+            ps.setInt(1, idRol);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                nombreRol = rs.getString("nombreRol");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            // Cierra recursos (ps y rs) y la conexión
+        }
+
+        return nombreRol;
+    }
     
     public boolean buscarCedulaUsuario(Integer buscar) {
         PreparedStatement ps = null;
