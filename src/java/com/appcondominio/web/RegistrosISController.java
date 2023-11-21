@@ -44,6 +44,9 @@ public class RegistrosISController implements Serializable {
 
     @ManagedProperty("#{registroISService}")
     private ServicioRegistroIS servicioRegistroIS;
+    
+    @ManagedProperty("#{loginController}")
+    private LoginController loginController;
 
     public RegistrosISController() {
     }
@@ -151,6 +154,7 @@ public class RegistrosISController implements Serializable {
 }
 **/
             if (!servicioRegistroIS.buscarIdRegistro(this.registroISSeleccionado.getIdRegistro())) {
+                registroISSeleccionado.setCedulaGuardaSeguridad(loginController.getUsuario().getCedulaEmpleado());
                 servicioRegistroIS.insertarRegistro(registroISSeleccionado);
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Registro agregado"));
@@ -328,4 +332,12 @@ public class RegistrosISController implements Serializable {
         this.botonVerificar = botonVerificar;
     }
 
+    public LoginController getLoginController() {
+        return loginController;
+    }
+
+    public void setLoginController(LoginController loginController) {
+        this.loginController = loginController;
+    }
+    
 }
