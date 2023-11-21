@@ -180,7 +180,7 @@
                                     <p:outputLabel for="cedula" style="font-size: 18px; font-weight: bold;">Cédula</p:outputLabel>
                                 </div>
                                 <p:inputText id="cedula" value="#{registrosISController.registroISSeleccionado.cedulaAMostrar}"
-                                             disabled="#{registrosISController.invitadoPermanenteEncontrado or registrosISController.habilitarCampos}">
+                                             disabled="#{registrosISController.invitadoPermanenteEncontrado}">
                                 <p:keyFilter mask="num" />
                                 </p:inputText>
                                 <p:tooltip for="cedula" value="Escriba la cédula del invitado." position="right"/>
@@ -194,7 +194,7 @@
                                     <p:outputLabel for="nombreCompleto" style="font-size: 18px; font-weight: bold;">Nombre Completo Invitado</p:outputLabel>
                                 </div>
                                 <p:inputText id="nombreCompleto" value="#{registrosISController.registroISSeleccionado.nombreCompletoInvitado}" 
-                                             disabled="#{registrosISController.invitadoPermanenteEncontrado or not registrosISController.habilitarCampos}" />
+                                             disabled="#{registrosISController.invitadoPermanenteEncontrado}" />
                                 <p:tooltip for="nombreCompleto" value="Escriba el nombre completo del invitado." position="right"/>
                                 
                             </div>
@@ -204,7 +204,7 @@
                                     <p:outputLabel for="nombreEmpresa" style="font-size: 18px; font-weight: bold;">Nombre Empresa</p:outputLabel>
                                 </div>
                                 <p:inputText id="nombreEmpresa" value="#{registrosISController.registroISSeleccionado.nombreEmpresa}" 
-                                             disabled="#{registrosISController.invitadoPermanenteEncontrado or not registrosISController.habilitarCampos}" />
+                                             disabled="#{registrosISController.invitadoPermanenteEncontrado}" />
                                 <p:tooltip for="nombreEmpresa" value="Escriba el nombre de la empresa." position="right"/>
                                 <p:message id="nombreEmpresaMessage" for="nombreEmpresa" />
                             </div>
@@ -214,7 +214,7 @@
                                     <p:outputLabel for="placaVehiculo" style="font-size: 18px; font-weight: bold;">Placa Vehicular</p:outputLabel>
                                 </div>
                                 <p:inputText id="placaVehiculo" value="#{registrosISController.registroISSeleccionado.placaVehicular}" 
-                                             disabled="#{not registrosISController.habilitarFechasGuarda}" />
+                                              />
                                 <p:tooltip for="placaVehiculo" value="Escriba la placa del vehículo." position="right"/>
                                 <p:message id="placaVehiculoMessage" for="placaVehiculo" />
                             </div>
@@ -224,7 +224,7 @@
                                     <p:outputLabel for="detalle" style="font-size: 18px; font-weight: bold;">Detalle</p:outputLabel>
                                 </div>
                                 <p:inputText id="detalle" value="#{registrosISController.registroISSeleccionado.detalle}" 
-                                             disabled="#{registrosISController.invitadoPermanenteEncontrado or not registrosISController.habilitarCampos}" />
+                                             disabled="#{registrosISController.invitadoPermanenteEncontrado}" />
                                 <p:tooltip for="detalle" value="Escriba un detalle." position="right"/>
                                 <p:message id="detalleMessage" for="detalle" />
                             </div>
@@ -234,7 +234,7 @@
                                     <p:outputLabel for="fechaIngreso" style="font-size: 18px; font-weight: bold;">Fecha ingreso</p:outputLabel>
                                 </div>
                                 <p:calendar id="fechaIngreso" value="#{registrosISController.registroISSeleccionado.fechaIngresoDate}"
-                                            pattern="dd/MM/yyyy HH:mm" showOn="button" disabled="#{not registrosISController.habilitarFechasGuarda}" />
+                                            pattern="dd/MM/yyyy HH:mm" showOn="button" />
                                  <p:message for="fechaIngreso" />
                                 <p:tooltip for="fechaIngreso" value="Seleccione la fecha y hora de ingreso." position="right"/>
                             </div>
@@ -244,7 +244,7 @@
                                     <p:outputLabel for="fechaSalida" style="font-size: 18px; font-weight: bold;">Fecha salida</p:outputLabel>
                                 </div>
                                 <p:calendar id="fechaSalida" value="#{registrosISController.registroISSeleccionado.fechaSalidaDate}"
-                                            pattern="dd/MM/yyyy HH:mm" showOn="button" disabled="#{not registrosISController.habilitarFechasGuarda}"/>
+                                            pattern="dd/MM/yyyy HH:mm" showOn="button" />
                                 <p:tooltip for= "fechaSalida" value="Seleccione la fecha y hora de salida." position="right"/>
                             </div>
 
