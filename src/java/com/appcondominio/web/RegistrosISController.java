@@ -120,6 +120,13 @@ public class RegistrosISController implements Serializable {
                             "Por favor, ingrese el número de cédula"));
             return;
         }
+        if (fechaInicial != null && fechaFinal != null && !fechaFinal.before(fechaInicial)) {
+                FacesContext.getCurrentInstance().addMessage("form:fechaSalida",
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "La fecha final debe ser mayor a la fecha inicial",
+                                "La fecha final debe ser mayor a la fecha inicial"));
+                return;
+            }
+        
         if (validarCampos()) {
 
             // Verificar y asignar valores nulos a los campos cuando sea necesario
@@ -227,8 +234,6 @@ public class RegistrosISController implements Serializable {
             invitadoPermanenteEncontrado = false;
             habilitarCampos = true;
             habilitarFechasGuarda = true;
-            FacesContext.getCurrentInstance().addMessage("form:cedula", 
-                new FacesMessage(FacesMessage.SEVERITY_WARN, "Invitado permanente no encontrado", "Invitado permanente no encontrado, llene los campos correspondientes."));
         }
     }
 
