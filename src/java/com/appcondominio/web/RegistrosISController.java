@@ -120,7 +120,7 @@ public class RegistrosISController implements Serializable {
                             "Por favor, ingrese el número de cédula"));
             return;
         }
-        if (fechaInicial != null && fechaFinal != null && !fechaFinal.before(fechaInicial)) {
+        if (registroISSeleccionado.getFechaSalidaDate()!= null && registroISSeleccionado.getFechaSalidaDate().before(registroISSeleccionado.getFechaIngresoDate())) {
                 FacesContext.getCurrentInstance().addMessage("form:fechaSalida",
                         new FacesMessage(FacesMessage.SEVERITY_ERROR, "La fecha final debe ser mayor a la fecha inicial",
                                 "La fecha final debe ser mayor a la fecha inicial"));
