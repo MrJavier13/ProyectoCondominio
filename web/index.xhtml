@@ -4,11 +4,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:botDetect="https://captcha.com/java/jsf">
     <h:head>
         <title>Condominio</title>
-        
     </h:head>
+
     <h:body style="margin: 0; padding: 0; background: linear-gradient(to bottom, #ffffff, #1e4fa5);">
         <style type="text/css">
    
@@ -20,6 +21,9 @@
                 justify-content: center;
                 align-items: center;
                 height: 100vh;
+            }
+            .ui-message-error .ui-message-error-icon {
+                display: none; 
             }
             
         </style>
@@ -44,7 +48,12 @@
                             </f:facet>
                         </p:password>
 
-                    <p:commandButton value="Ingresar" actionListener="#{loginController.ingresar()}" update="messages" styleClass="login-button"/>
+                        <p:outputLabel for="captchaCode" value="Escriba los carácteres de la imagen:" style="font-weight:bold"/>
+                        <botDetect:jsfCaptcha id="exampleCaptcha" userInputID="captchaCode" binding="#{loginController.captcha}" />
+                        <br></br>
+                        <p:inputText id="captchaCode" value="#{loginController.captchaCode}" />
+
+                        <p:commandButton value="Ingresar" actionListener="#{loginController.ingresar()}" update="messages" styleClass="login-button" />
                 </div>
                 
                

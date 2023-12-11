@@ -7,6 +7,7 @@ package com.appcondominio.web;
 
 import com.appcondominio.service.ServicioUsuario;
 import com.appcondominio.service.UsuarioTO;
+import com.captcha.botdetect.web.jsf.JsfCaptcha;
 import java.io.Serializable;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -21,6 +22,8 @@ public class LoginController implements Serializable {
     private UsuarioTO usuario = new UsuarioTO();
     private String correo;
     private String contrasenna;
+    private JsfCaptcha captcha;
+    private String captchaCode;
 
     public LoginController() {
     }
@@ -29,27 +32,32 @@ public class LoginController implements Serializable {
         ServicioUsuario servicioUsuario = new ServicioUsuario();
 
         this.usuario = servicioUsuario.UsuarioContrasenna(correo, contrasenna);
+        boolean isHuman = captcha.validate(captchaCode);
+        
+        if (isHuman) {
+            if (this.usuario != null) {
+                if (this.usuario.getEstado().equals("Activo")) {
+                    String nombreRol = servicioUsuario.obtenerNombreRolPorId(this.usuario.getIdRol());
 
-        if (this.usuario != null) {
-            if (this.usuario.getEstado().equals("Activo")) {
-                String nombreRol = servicioUsuario.obtenerNombreRolPorId(this.usuario.getIdRol());
-
-                if ("Administrador".equals(nombreRol) || "Admin".equals(nombreRol)) {
-                    // si el nombre del rol es "Administrador", lleva a la página principal
-                    FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", this.usuario);
-                    this.redireccionar("/faces/principal.xhtml");
-                } else if ("Guarda".equals(nombreRol)) {
-                    // si el nombre del rol es "Guarda", lleva a la bitácora para guardas como página inicial
-                    FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", this.usuario);
-                    this.redireccionar("/faces/bitacoraVistaGuarda.xhtml");
+                    if ("Administrador".equals(nombreRol) || "Admin".equals(nombreRol)) {
+                        // si el nombre del rol es "Administrador", lleva a la página principal
+                        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", this.usuario);
+                        this.redireccionar("/faces/principal.xhtml");
+                    } else if ("Guarda".equals(nombreRol)) {
+                        // si el nombre del rol es "Guarda", lleva a la bitácora para guardas como página inicial
+                        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", this.usuario);
+                        this.redireccionar("/faces/bitacoraVistaGuarda.xhtml");
+                    } else {
+                        // Abierto a un futuro rol
+                    }
                 } else {
-                    // Abierto a un futuro rol
+                    FacesContext.getCurrentInstance().addMessage("sticky-key", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "La cuenta del usuario ingresado actualmente se encuentra inactiva"));
                 }
             } else {
-                FacesContext.getCurrentInstance().addMessage("sticky-key", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "La cuenta del usuario ingresado actualmente se encuentra inactiva"));
+                FacesContext.getCurrentInstance().addMessage("sticky-key", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Campos inválidos", "El usuario o contraseña no son correctos"));
             }
         } else {
-            FacesContext.getCurrentInstance().addMessage("sticky-key", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Campos inválidos", "El usuario o contraseña no son correctos"));
+            FacesContext.getCurrentInstance().addMessage("captchaError", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error del captcha", "Por favor vuelve a escribirlo."));
         }
     }
 
@@ -120,6 +128,23 @@ public class LoginController implements Serializable {
 
         }
     }
+
+    public JsfCaptcha getCaptcha() {
+        return captcha;
+    }
+
+    public void setCaptcha(JsfCaptcha captcha) {
+        this.captcha = captcha;
+    }
+
+    public String getCaptchaCode() {
+        return captchaCode;
+    }
+
+    public void setCaptchaCode(String captchaCode) {
+        this.captchaCode = captchaCode;
+    }
+    
 
     public UsuarioTO getUsuario() {
         return usuario;

@@ -173,8 +173,10 @@
                                     <p:outputLabel for="estado" style="font-size: 18px; font-weight: bold;">Estado</p:outputLabel>
                                 </div>
                                 <p:selectOneMenu id="estado" value="#{reservasAmenidadesController.reservaAmenidadSeleccionada.estado}" style="width:12rem" >
-                                    <f:selectItem itemLabel="Activo" itemValue="Activo"/>
-                                    <f:selectItem itemLabel="Inactivo" itemValue="Inactivo"/>
+                                    <f:selectItem itemLabel="Aprobado" itemValue="Aprobado"/>
+                                    <f:selectItem itemLabel="Desaprobado" itemValue="Desaprobado"/>
+                                    <f:selectItem itemLabel="Pendiente" itemValue="Pendiente"/>
+                                    <f:selectItem itemLabel="Cancelado" itemValue="Cancelado"/>
                                 </p:selectOneMenu>
                             </div>
 
