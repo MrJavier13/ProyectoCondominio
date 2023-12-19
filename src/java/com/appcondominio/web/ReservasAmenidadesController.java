@@ -168,7 +168,7 @@ public class ReservasAmenidadesController implements Serializable{
                 FacesContext.getCurrentInstance().addMessage(null, 
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Reserva Actualizada"));
             }
-        this.init();
+        
         PrimeFaces.current().executeScript("PF('nuevaReservaDialog').hide()");
         PrimeFaces.current().ajax().update("form:growl", "form:dt-reservasAmenidades");
     }
