@@ -28,6 +28,7 @@
             
         </style>
 
+
         <div class="Login">
             <h:form>
                 <h:outputStylesheet library="resources" name="estilos.css" />
@@ -49,11 +50,11 @@
                         </p:password>
 
                         <p:outputLabel for="captchaCode" value="Escriba los carácteres de la imagen:" style="font-weight:bold"/>
-                        <botDetect:jsfCaptcha id="exampleCaptcha" userInputID="captchaCode" binding="#{loginController.captcha}" />
+                        <botDetect:jsfCaptcha id="exampleCaptcha" userInputID="captchaCode" binding="#{loginController.captcha}"/>
                         <br></br>
                         <p:inputText id="captchaCode" value="#{loginController.captchaCode}" />
 
-                        <p:commandButton value="Ingresar" actionListener="#{loginController.ingresar()}" update="messages" styleClass="login-button" />
+                        <p:commandButton value="Ingresar" actionListener="#{loginController.ingresar()}" update="@form messages" styleClass="login-button" />
                 </div>
                 
                

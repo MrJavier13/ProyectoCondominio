@@ -6,7 +6,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
         <title>Registro de Ingresos y Salidas</title>
-
+        <f:event type="preRenderView" listener="#{loginController.verificarSesion()}"/>
         <style>
             .disenho
             {

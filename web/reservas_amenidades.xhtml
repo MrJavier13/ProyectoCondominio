@@ -79,12 +79,7 @@
                 border-bottom: 5px solid white;
             }
         </style>
-        <script type="text/javascript">
-            function resetFormFields() {
-                document.getElementById('form:nombreAmenidad').value = ' ';
-                document.getElementById('form:descripcion').value = ' ';
-            }
-        </script>
+
     </h:head>
     <h:body style=" background: linear-gradient(to bottom, #ffffff, #1e4fa5);">
 
@@ -115,17 +110,6 @@
                              reflow="true" styleClass="products-table"
                              paginator="true"
                              rows="10" rowSelectMode="add" paginatorPosition="bottom">
-                    <f:facet name="header">
-                        <div class="reservasAmenidades-table-header">
-                            <div class="filter-container">
-                                <span>Mostrar:</span>
-                                <p:selectBooleanButton value="#{reservasAmenidadesController.activo}" 
-                                                       onLabel="Inactivo" offLabel="Activo">
-                                    <p:ajax update="dt-reservasAmenidades" listener="#{reservasAmenidadesController.filtrarReservasAmenidades}" />
-                                </p:selectBooleanButton>
-                            </div>
-                        </div>
-                    </f:facet>
 
                     <p:column headerText="Identificador" sortBy="#{reservaAmenidad.idReservaAmenidad}"  filterMatchMode="contains">
                         <h:outputText value="#{reservaAmenidad.idReservaAmenidad}"/>
@@ -145,6 +129,9 @@
                     <p:column headerText="Fecha final" sortBy="#{reservaAmenidad.fechaFin}"  filterMatchMode="contains">
                         <h:outputText value="#{reservaAmenidad.fechaFin}"/>
                     </p:column>
+                    <p:column headerText="Estado" sortBy="#{reservaAmenidad.estado}"  filterMatchMode="contains">
+                        <h:outputText value="#{reservaAmenidad.estado}"/>
+                    </p:column>
 
 
 
@@ -163,7 +150,7 @@
                 </p:dataTable>
 
                 <p:dialog header="#{reservasAmenidadesController.dialogHeader}" showEffect="fade" modal="true"
-                          widgetVar="nuevaReservaDialog" responsive="true" onHide="resetFormFields();" visible="#{reservasAmenidadesController.reservaAmenidadSeleccionada ne null}">
+                          widgetVar="nuevaReservaDialog" responsive="true">
 
                     <p:outputPanel id="administrar-reservaAmenidad-content" class="ui-fluid">
                         <p:outputPanel rendered="#{not empty reservasAmenidadesController.reservaAmenidadSeleccionada}">
@@ -174,7 +161,7 @@
                                 </div>
                                 <p:selectOneMenu id="estado" value="#{reservasAmenidadesController.reservaAmenidadSeleccionada.estado}" style="width:12rem" >
                                     <f:selectItem itemLabel="Aprobado" itemValue="Aprobado"/>
-                                    <f:selectItem itemLabel="Desaprobado" itemValue="Desaprobado"/>
+                                    <f:selectItem itemLabel="Rechazado" itemValue="Rechazado"/>
                                     <f:selectItem itemLabel="Pendiente" itemValue="Pendiente"/>
                                     <f:selectItem itemLabel="Cancelado" itemValue="Cancelado"/>
                                 </p:selectOneMenu>
@@ -187,7 +174,7 @@
                     <f:facet name="footer">
                         <p:commandButton value="Guardar" icon="pi pi-check" actionListener="#{reservasAmenidadesController.guardarReserva}"
                                          update="administrar-reservaAmenidad-content" process="administrar-reservaAmenidad-content @this"/>
-                        <p:commandButton value="Cancelar" icon="pi pi-times" onclick="resetFormFields(); PF('nuevaReservaDialog').hide(); return false;"
+                        <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('nuevaReservaDialog').hide();"
                                          class="ui-button-secondary">
                             <p:ajax update="form:administrar-reservaAmenidad-content" />
                         </p:commandButton>
