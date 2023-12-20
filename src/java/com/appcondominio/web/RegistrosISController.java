@@ -154,6 +154,7 @@ public class RegistrosISController implements Serializable {
                 registroISSeleccionado.setCedulaGuardaSeguridad(loginController.getUsuario().getCedulaEmpleado());
                 verificarInvitadoPermanente();
                 servicioRegistroIS.insertarRegistro(registroISSeleccionado);
+                mostrarRegistrosPorFechas();
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Registro agregado"));
             } else {
