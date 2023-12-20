@@ -340,13 +340,9 @@ public class ServicioUsuario extends Servicios implements Serializable {
         PreparedStatement ps = null;
 
         try {
-            ps = super.getConexion().prepareStatement("UPDATE usuario SET usuario=?, cedulaResidente=?, cedulaEmpleado=?, idRol=?, estado=?  WHERE idUsuario =?");
-            ps.setString(1, usuario.getUsuario());
-            ps.setInt(2, usuario.getCedulaResidente());
-            ps.setInt(3, usuario.getCedulaEmpleado());
-            ps.setInt(4, usuario.getIdRol());
-            ps.setString(5, usuario.getEstado());
-            ps.setInt(6, usuario.getIdUsuario());
+            ps = super.getConexion().prepareStatement("UPDATE usuario SET estado=?  WHERE idUsuario =?");
+            ps.setString(1, usuario.getEstado());
+            ps.setInt(2, usuario.getIdUsuario());
             ps.execute();
 
         } catch (Exception ex) {

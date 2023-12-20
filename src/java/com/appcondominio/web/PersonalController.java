@@ -6,7 +6,6 @@ import com.appcondominio.service.ServicioRol;
 import com.appcondominio.service.ServicioUsuario;
 import com.appcondominio.service.UsuarioTO;
 import java.io.Serializable;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

@@ -116,6 +116,7 @@ public class UsuariosController implements Serializable{
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Usuario Actualizado"));
                 PrimeFaces.current().executeScript("PF('nuevoUsuarioDialog').hide()");
                 PrimeFaces.current().ajax().update("form:messages", "form:dt-usuarios");
+                init();
     }
     
     public void filtrarUsuarios() {
