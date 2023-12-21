@@ -231,7 +231,6 @@ public class ResidentesController implements Serializable {
                     usuario.setContrasena(contrasena);
                     usuario.setEstado(residenteSeleccionado.getEstado());
 
-                    // Obtener el ID del rol "Residente" por nombre
                     String nombreRolResidente = "Residente";
                     int idRolResidente = servicioUsuario.obtenerIdRolPorNombre(nombreRolResidente);
 
@@ -241,6 +240,7 @@ public class ResidentesController implements Serializable {
 
                     FacesContext.getCurrentInstance().addMessage(null,
                             new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Residente y usuario agregado"));
+                    mostrarNotificacionUsuarioContraseña(usuario.getUsuario(), usuario.getContrasena());
                 } else {
                     FacesContext.getCurrentInstance().addMessage(null,
                             new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "La cédula ingresada ya existe en el sistema."));
@@ -258,6 +258,12 @@ public class ResidentesController implements Serializable {
             PrimeFaces.current().executeScript("PF('nuevoResidenteDialog').hide()");
             PrimeFaces.current().ajax().update("form:messages", "form:dt-residentes");
         }
+    }
+    
+    private void mostrarNotificacionUsuarioContraseña(String usuario, String contrasena) {
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Usuario y Contraseña",
+                "Usuario: " + usuario + "   Contraseña: " + contrasena);
+        PrimeFaces.current().dialog().showMessageDynamic(message);
     }
 
     private String generarContrasenaAleatoria(String nombre) {
